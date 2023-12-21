@@ -1,0 +1,232 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>SKRYMHEAD</title>
+	<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet"
+		integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
+	<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.2/font/bootstrap-icons.min.css">
+	<style>
+		input::-webkit-outer-spin-button,
+		input::-webkit-inner-spin-button {
+			-webkit-appearance: none;
+			margin: 0;
+		}
+	</style>
+</head>
+
+<body>
+
+	<nav class=" navbar navbar-expand-lg bg-dark sticky-top">
+		<a class="text-white navbar-brand" href="#" style="padding-left: 15px; font-family: 'Lucida Sans' ">
+			<h4><strong>SKRYMHEAD</strong></h4>
+		</a>
+		<!-- <img src="/public/images/zel_logo.jpg"  width="45" height="45" alt=""> -->
+		<button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent"
+			aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+			<span class="navbar-toggler-icon"></span>
+		</button>
+		<div class="collapse navbar-collapse" style="padding-right: 15px; margin-right: 10px;"
+			id="navbarSupportedContent">
+			<ul class="navbar-nav navbar-light ms-auto ">
+				<li class="nav-item ">
+					<a href="/admin/dashboard" class="m-2" style="text-decoration: none; ">Dashboard
+					</a>
+
+				</li>
+				<li class="nav-item ">
+					<a href="/admin/addproduct" class="m-2" style="text-decoration: none; ">Product</a>
+
+				</li>
+				<li class="nav-item">
+					<a href="/admin/category" class="m-2" style="text-decoration: none; ">Category
+					</a>
+
+				</li>
+				<li class="nav-item">
+					<a href="/admin/users" class="m-2" style="text-decoration: none; ">Users
+					</a>
+
+				</li>
+				<li class="nav-item">
+					<a href="/admin/logout" class="m-2" style="text-decoration: none;">logout</a>
+				</li>
+			</ul>
+		</div>
+	</nav>
+
+	<div class="mx-5 d-flex ">
+		<div class="my-3">
+			<h2>ADD PRODUCT</h2>
+			<a href="/admin/products" style="text-decoration: none;">&#x2190; go back</a>
+		</div>
+	</div>
+
+	<div class="ms-5 d-flex justify-content-center">
+		<div class="mx-3 col-md-5 border rounded  bg-dark text-white">
+
+			<!-- basic details -->
+			<div class="mx-3">
+				<!-- form -->
+				<form action="/admin/addproduct" method="post" enctype="multipart/form-data" id="productForm">
+					<div class="row">
+						<div class="form-group my-3 col-md-6">
+							<label for="Brand">Brand</label>
+							<input type="text" class="form-control form-control-sm" id="nameInput" name="brand"
+								required>
+						</div>
+						<div class="form-group my-3 col-md-6">
+							<label for="model">Model</label>
+							<input type="text" pattern="^[A-Za-z0-9\s\-]+$" class="form-control form-control-sm"
+								id="brandInput" name="model" required>
+						</div>
+					</div>
+
+					<div class="row">
+						<div class="form-group my-3 col-md-6">
+							<label for="category">Category</label>
+							<select class="form-select form-control-sm" id="CategoryInput" name="category" required>
+								<option value='' selected disabled>Select a category</option>
+								<% categories.forEach((category)=>{ %>
+									<option value='<%= category.category %>'>
+										<%= category.category %>
+									</option>
+									<% }) %>
+							</select>
+						</div>
+					</div>
+					<div class="form-group my-3">
+						<label for="descriptionInput">Specification</label>
+						<textarea class="form-control form-control-sm" id="descriptionInput" name="specification"
+							rows="3" required></textarea>
+					</div>
+					<div class="d-flex" id="imagePreview">
+
+					</div>
+					<div class="form-group mb-3">
+						<label for="productImage">Add Image's: </label>
+						<input type="file" class="form-control-file" accept="image/*" name="images" id="productImages"
+							multiple required>
+						<button type="submit" class="btn btn-primary my-3">Submit</button>
+					</div>
+			</div>
+		</div>
+
+		<!-- variant -->
+		<div class="container me-5 border rounded bg-dark text-white"
+			style="overflow:auto;height: 500px; overflow-x: hidden;">
+			<div class="m-2">
+				<p class="me-3 mb-0">Select number of variants:</p>
+				<div class="form-check form-check-inline">
+					<input class="form-check-input" type="radio" required id="1" name="variant" value="1">
+					<label class="form-check-label" for="1">1</label>
+				</div>
+				<div class="form-check form-check-inline">
+					<input class="form-check-input" type="radio" required id="2" name="variant" value="2">
+					<label class="form-check-label" for="2">2</label>
+				</div>
+				<div class="form-check form-check-inline">
+					<input class="form-check-input" type="radio" required id="3" name="variant" value="3">
+					<label class="form-check-label" for="3">3</label>
+				</div>
+			</div>
+
+			<div class="row" id="variantsContainer">
+				<div class="variant variant1 col-md-5 my-2 mx-3 rounded border" style="height: 190px;">
+					<h4 class="text-white">Variant 1</h4>
+					<input type="color" value="#ff0000" required class="form-control form-control-sm" name="color1">
+					<input type="number" required class="form-control form-control-sm" placeholder="Stock"
+						name="stock1">
+					<input type="number" required class="form-control form-control-sm" placeholder="Price"
+						name="price1">
+				</div>
+				<div class="variant variant2 col-md-5 my-2 mx-3 rounded border" style="height: 190px;">
+					<h4 class="text-white">Variant 2</h4>
+					<input type="color" value="#ff0000" required class="form-control form-control-sm" name="color2">
+					<input type="number"  class="form-control form-control-sm" placeholder="Stock"
+						name="stock2">
+					<input type="number"  class="form-control form-control-sm" placeholder="Price"
+						name="price2">
+				</div>
+				<div class="variant variant3 col-md-5 my-2 mx-3 rounded border" style="height: 190px;">
+					<h4 class="text-white">Variant 3</h4>
+					<input type="color" value="#ff0000" required class="form-control form-control-sm" name="color3">
+					<input type="number"  class="form-control form-control-sm" placeholder="Stock"
+						name="stock3">
+					<input type="number"  class="form-control form-control-sm" placeholder="Price"
+						name="price3">
+				</div>
+			</div>
+		</div>
+		</form>
+	</div>
+
+
+	<script>
+		const imgPreview = document.getElementById('imagePreview');
+		const inputField = document.getElementById('productImages');
+
+		inputField.addEventListener('change', function (event) {
+			const files = event.target.files;
+			imgPreview.innerHTML = ''; // Clear the previous preview images
+
+			for (let i = 0; i < files.length; i++) {
+				const file = files[i];
+				const reader = new FileReader();
+
+				reader.onload = function (e) {
+					const img = document.createElement('img');
+					img.src = e.target.result;
+					img.style.maxWidth = '100px'; // Set max width for the preview image
+
+					const deleteBtn = document.createElement('button');
+					deleteBtn.innerText = 'X';
+					deleteBtn.style.borderRadius = '100%'; // Makes the button round
+					deleteBtn.style.backgroundColor = 'black'; // Sets the background color to red
+					deleteBtn.style.color = 'white'; // Sets the text color to white
+					deleteBtn.style.border = 'none'; // Removes the button border
+					deleteBtn.style.padding = '5px 10px'; // Adjusts padding for better appearance
+					deleteBtn.style.marginBlockEnd = '5px'; // Adjusts padding for better appearance
+
+					deleteBtn.addEventListener('click', function () {
+						img.parentNode.removeChild(img); // Remove the image element
+						deleteBtn.parentNode.removeChild(deleteBtn);
+						removeAndReconstructInput(file); // Remove the file and reconstruct the input field
+					});
+
+					const container = document.createElement('div');
+					container.appendChild(img);
+					container.appendChild(deleteBtn);
+					imgPreview.appendChild(container); // Append the new image preview with delete button
+				};
+
+				reader.readAsDataURL(file);
+			}
+		});
+
+		function removeAndReconstructInput(fileToRemove) {
+			const index = Array.from(inputField.files).findIndex(file => file === fileToRemove);
+			if (index !== -1) {
+				removeFileFromFileList(index); // Call the removeFileFromFileList function passing the index
+			}
+		}
+
+		function removeFileFromFileList(index) {
+			const dt = new DataTransfer();
+			const files = inputField.files;
+
+			for (let i = 0; i < files.length; i++) {
+				if (index !== i) {
+					const file = files[i];
+					dt.items.add(file); // Exclude the file based on the provided index
+				}
+			}
+
+			inputField.files = dt.files; // Assign the updated file list to the input field
+		}
+	</script>
+</body>
+
+</html>

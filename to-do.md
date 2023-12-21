@@ -1,0 +1,3 @@
+color PICKR
+pagination
+Dropzone

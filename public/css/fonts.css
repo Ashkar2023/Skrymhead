@@ -1,0 +1,66 @@
+@font-face {
+  font-family: viga;
+  src: url('../fonts/Viga/Viga-Regular.ttf');
+}
+
+@font-face {
+  font-family: koulen;
+  src: url('../fonts/Koulen/Koulen-Regular.ttf');
+}
+
+.btn:focus {
+  box-shadow: none;
+}
+
+/* Override the default focus style for form inputs */
+.form-control:focus {
+  box-shadow: none;
+}
+.buttonselected{
+  border: 3px solid #ffd500 ;
+}
+
+.viga {
+  font-family: "viga";
+}
+
+.koulen {
+  font-family: "koulen";
+}
+
+#sidebar-list a {
+  color: white;
+  margin: 5px 0px;
+  border-radius: 10px;
+}
+
+#sidebar-list a:active,
+#sidebar-list a:hover {
+  color: black;
+  background-color: white;
+}
+
+#sidebar-list a:not(:active):not(:hover) {
+  color: white;
+  background-color: transparent;
+  /* or any other default background color */
+}
+
+.navbar-sm {
+  height: 80px;
+}
+
+input::-webkit-outer-spin-button,
+input::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+.dropdown-item:active{
+  background-color: rgb(158, 156, 156);
+  color: black;
+}
+
+.m-brand{
+  margin-left: 150px;
+}

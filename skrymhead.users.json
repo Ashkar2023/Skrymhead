@@ -1,0 +1,108 @@
+[{
+  "_id": {
+    "$oid": "656aee2ec5ccec2ab6a936e3"
+  },
+  "name": "ashkar",
+  "email": "mashkar803@gmail.com",
+  "password": "$2b$10$Gm.STUt3OMdMuM75t.9IWeEVOqRykmLJo/9cpeLlWdi.HJGCk7ZdK",
+  "phone": {
+    "$numberLong": "66345345357"
+  },
+  "isVerified": true,
+  "otp": "0632",
+  "createdOn": {
+    "$date": "2023-12-02T08:43:26.216Z"
+  },
+  "__v": 0,
+  "isBlocked": false
+},
+{
+  "_id": {
+    "$oid": "656d9642cdf0062acdeebb15"
+  },
+  "name": "sanjay security",
+  "email": "sanjayskumar437@gmail.com",
+  "password": "$2b$10$pR7Z4VSIr1sFzuFv/M1.GO3kJQ48THtkASGIwWtC154FO2ivb8wVW",
+  "phone": {
+    "$numberLong": "66344345357"
+  },
+  "isVerified": true,
+  "otp": "1275",
+  "createdOn": {
+    "$date": "2023-12-04T09:05:06.590Z"
+  },
+  "__v": 0,
+  "isBlocked": false
+},
+{
+  "_id": {
+    "$oid": "656ea803353f8958a0f9e849"
+  },
+  "name": "jasim",
+  "email": "jasimmtp84@gmail.com",
+  "password": "$2b$10$JptNYjpDJsUCk8ZY2LIp6ehMVriAlG/z19xaRN5MC2P/R703Ttu9i",
+  "phone": {
+    "$numberLong": "8938884888"
+  },
+  "isBlocked": false,
+  "isVerified": true,
+  "otp": "4515",
+  "createdOn": {
+    "$date": "2023-12-05T04:33:07.171Z"
+  },
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "656f0328cdab173b41883ee5"
+  },
+  "name": "anandu",
+  "email": "anandurpallam@gmail.com",
+  "password": "$2b$10$K.qeHYcVuCOCtFYVQb0VhuCFe2rJbo32KesmQp7PBaWIzGfTQPtlC",
+  "phone": {
+    "$numberLong": "7474774747"
+  },
+  "isBlocked": false,
+  "isVerified": true,
+  "otp": "5002",
+  "createdOn": {
+    "$date": "2023-12-05T11:02:00.470Z"
+  },
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "6572e6a91f068c3167b7a45d"
+  },
+  "name": "Muhammed Ashkar",
+  "email": "pmashkar41@gmail.com",
+  "password": "$2b$10$upv1APi9K9SmOamHoAoVResMrap.Iz.vTdEk1MwWh5gG1F6oq/i..",
+  "phone": {
+    "$numberLong": "66345345357"
+  },
+  "isBlocked": false,
+  "isVerified": true,
+  "otp": "6367",
+  "createdOn": {
+    "$date": "2023-12-08T09:49:29.844Z"
+  },
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "657400f2d78006c51b9e1b30"
+  },
+  "name": "ashkar",
+  "email": "ashkar5@gmail.com",
+  "password": "$2b$10$YDtZ1mLiheCOBToCom7COeVDsouVUczN97rfud4sTfMK7IIpupUTu",
+  "phone": {
+    "$numberLong": "66345345357"
+  },
+  "isBlocked": false,
+  "isVerified": false,
+  "otp": "4301",
+  "createdOn": {
+    "$date": "2023-12-09T05:53:54.926Z"
+  },
+  "__v": 0
+}]
