@@ -9,6 +9,11 @@
         integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.2/font/bootstrap-icons.min.css">
     <link rel="stylesheet" href="css/fonts.css">
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/toastify-js/src/toastify.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/toastify-js"></script>
+    <link rel="stylesheet" href="css/main.css">
+
 </head>
 
 <body>
@@ -69,16 +74,25 @@
         </div>
     </nav>
     <div class="container mt-5 d-flex justify-content-center">
-        <div class="col-lg-4">
-            <form action="/updateprofile" id="userForm">
-                <div class="text-center">
-                    <img src="/images/gallery-03.jpg" alt="User Image" class="rounded-circle mb-4" style="max-width: 150px;">
-                </div>
+        <div class="col-lg-6">
+            <div class="text-center">
+                <img src="/images/gallery-03.jpg" alt="User Image" class="rounded-circle mb-4"
+                    style="max-width: 150px;">
+            </div>
 
-                <div class="form-group m-4">
-                    <label for="email">Email</label>
-                    <input value="<%= userData.email %>" type="email" disabled readonly class="form-control" id="email" name="email" title="non-editable">
-                </div>
+            <div class="m-4 text-center mtext-103 p-3 border-1 border-black border">
+                <span class="">
+                    <%= userData.email %>
+                </span>
+            </div>
+
+        </div>
+    </div>
+
+    <div class="container d-flex justify-content-center">
+        <div class="col-lg-4">
+
+            <form id="userForm">
 
                 <div class="form-group m-4">
                     <label for="name">Name</label>
@@ -87,49 +101,111 @@
 
                 <div class="form-group m-4">
                     <label for="phone">Mobile</label>
-                    <input value="<%= userData.phone %>" type="number" disabled class="form-control" id="phone" name="phone">
+                    <input value="<%= userData.phone %>" type="number" disabled class="form-control" id="phone"
+                        name="phone">
                 </div>
 
                 <div class="text-center">
                     <button type="button" id="editButton" class="btn btn-dark my-2 btn-block"><i
                             class="bi bi-pencil-square"></i>Edit</button>
                     <button type="submit" id="submitButton" class="btn btn-dark my-2 btn-block d-none">Submit</button>
+                    <button type="button" id="cancelButton" class="btn btn-dark my-2 btn-block d-none">Cancel</button>
                 </div>
             </form>
         </div>
     </div>
 
     <script>
-        document.addEventListener('DOMContentLoaded', function () {
-            const editButton = document.getElementById('editButton');
-            const submitButton = document.getElementById('submitButton');
-            const form = document.getElementById('userForm');
+        const editButton = document.getElementById('editButton');
+        const submitButton = document.getElementById('submitButton');
+        const cancelButton = document.getElementById('cancelButton');
+        const form = document.getElementById('userForm');
 
-            // Initially hide the submit button and make the form non-editable
+
+        toggleFormEditable(false);
+
+        editButton.addEventListener('click', function (event) {
+            toggleFormEditable(true);
+
+            submitButton.classList.remove('d-none');
+            cancelButton.classList.remove('d-none');
+            editButton.classList.add('d-none');
+        });
+
+        cancelButton.addEventListener('click', function (event) {
             toggleFormEditable(false);
 
-            editButton.addEventListener('click', function () {
-                toggleFormEditable(true);
-                
-                submitButton.classList.remove('d-none');
-                editButton.classList.add('d-none');
-            });
-
-            form.addEventListener('submit', function (event) {
-                event.preventDefault();
-
-                toggleFormEditable(false);
-                editButton.classList.remove('d-none');
-                submitButton.classList.add('d-none');
-            });
-
-            function toggleFormEditable(editable) {
-                const inputs = form.querySelectorAll('input')
-                inputs.forEach(input => {
-                    input.disabled = !editable;
-                });
-            }
+            submitButton.classList.add('d-none');
+            cancelButton.classList.add('d-none');
+            editButton.classList.remove('d-none');
         });
+
+        form.addEventListener('submit', function (event) {
+            event.preventDefault();
+            const inputs = form.querySelectorAll('input');
+            inputs.forEach(input => {
+                input.removeAttribute('disabled');
+            });
+
+            const name = document.getElementById("name").value;
+            const phone = document.getElementById("phone").value;
+
+            fetch('/updateprofile', {
+                method: 'POST',
+                headers: {
+                    "Content-type": 'application/json',
+                },
+                body: JSON.stringify({
+                    name: name,
+                    phone: phone
+                })
+            })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.success) {
+                        Toastify({
+                            text: "Profile Updated!",
+                            duration: 3000,
+                            gravity: "top",
+                            position: "center",
+                            backgroundColor: "#03c03c",
+                            stopOnFocus: true
+                        }).showToast();
+                    } else {
+                        Toastify({
+                            text: "Profile updation failed!",
+                            backgroundColor: "#FD6C1F",
+                            duration: 3000, 
+                            close: true, 
+                            gravity: "top",
+                            position: "center",
+                            stopOnFocus: true, 
+                        }).showToast();
+
+                    }
+                    console.log(data.message);
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                })
+                .finally(() => {
+                    toggleFormEditable(false);
+
+                    submitButton.classList.add('d-none');
+                    cancelButton.classList.add('d-none');
+                    editButton.classList.remove('d-none');
+
+                })
+        });
+
+        function toggleFormEditable(editable) {
+            const inputs = form.querySelectorAll('input');
+            inputs.forEach(input => {
+                if (input.name !== "email") {
+                    input.disabled = !editable;
+                }
+            });
+        }
     </script>
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"

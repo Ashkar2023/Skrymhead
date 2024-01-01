@@ -2280,7 +2280,7 @@ input.num-product::-webkit-inner-spin-button {
 
 .mtext-102 {
   font-family: Poppins-SemiBold;
-  font-size: 16px;
+  font-size: 14px;
   line-height: 1.6;
 }
 
@@ -2568,6 +2568,9 @@ input.num-product::-webkit-inner-spin-button {
   max-width: 270px;
 }
 
+.size-half {
+  width: calc(100% / 2);
+}
 .size-202 {
   width: calc(100% / 3);
 }
@@ -2743,7 +2746,7 @@ input.num-product::-webkit-inner-spin-button {
 }
 
 .bor12 {
-  border-bottom: 1px dashed #d9d9d9;
+  border-bottom: 1px solid #111111;
 }
 
 .bor13 {

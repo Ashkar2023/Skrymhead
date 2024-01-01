@@ -1,17 +1,20 @@
-const PaymentStatus = {
+const payment = {
   PENDING: 'Pending',
   PAID: 'Paid',
   FAILED: 'Failed',
 };
 
-const OrderStatus = {
+const order = {
   PROCESSING: 'Processing',
   SHIPPED: 'Shipped',
   DELIVERED: 'Delivered',
+  RETURNED:"Returned",
+  CANCELLED:"Cancelled",
+  CBA:"Cancelled by Admin"
 };
 
 module.exports = {
-  PaymentStatus,
-  OrderStatus,
+  payment,
+  order
 };
 

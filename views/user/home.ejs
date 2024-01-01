@@ -53,7 +53,7 @@
 	
 	<!-- Header -->
 	<header>
-		<nav class="navbar navbar-expand-lg border-bottom fixed-top bg-white">
+		<nav class="navbar navbar-expand-lg border-bottom fixed-top bg-white border-3 border-black">
 			<div class="container-fluid">
 				<a class="m-brand navbar-brand d-flex align-items-center" href="#">
 					<svg width="38" height="48" viewBox="0 0 38 48" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -219,7 +219,7 @@
 					<div class="container h-full">
 						<div class="flex-col-l-m h-full p-t-100 p-b-30 respon5">
 							
-							<div class="layer-slick1 animated visible-false" data-appear="fadeInUp" data-delay="800">
+							<div class="layer-slick1 animated visible-false" data-appear="fadeInUp" data-delay="500">
 								<h2 class="cl10 respon1" style="font-family: 'Montserrat-Bold';">
 									BOSE
 								</h2>
@@ -231,7 +231,7 @@
 								</span>
 							</div>
 								
-							<div class="layer-slick1 animated visible-false" data-appear="zoomIn" data-delay="1600">
+							<div class="layer-slick1 animated visible-false" data-appear="zoomIn" data-delay="1200">
 								<a href="product.html" class="flex-c-m text-white stext-101 cl0 size-101 bg5 m-t-25 bor1 hov-btn1 p-lr-15 trans-04">
 									Shop Now
 								</a>
@@ -239,8 +239,31 @@
 						</div>
 					</div>
 				</div>
-
-				
+				<div class="item-slick1" style="background-image: url(images/banner2.webp);">
+					<div class="container h-full">
+						<div class="flex-col-l-m h-full p-t-100 p-b-30 respon5">
+							
+							<div class="layer-slick1 animated visible-false" data-appear="fadeInUp" data-delay="500">
+								<h2 class="cl9 respon1" style="font-family: 'Montserrat-Bold';">
+									BEATS
+								</h2>
+							</div>
+							
+							<div class="layer-slick1 animated visible-false" data-appear="fadeInDown" data-delay="0">
+								<span class="ltext-101 cl9 p-b-43 respon2">
+									Headphones
+								</span>
+							</div>
+								
+							<div class="layer-slick1 animated visible-false" data-appear="zoomIn" data-delay="1200">
+								<a href="product.html" class="flex-c-m text-white stext-101 text-dark size-101 bg9 m-t-25 bor1 hov-btn1 p-lr-15 trans-04">
+									Shop Now
+								</a>
+							</div>
+						</div>
+					</div>
+				</div>
+								
 			</div>
 		</div>
 	</section>
@@ -502,7 +525,7 @@
 
 				<% products.forEach((product)=>{ %>
 
-					<div class="col-sm-6 col-md-4 col-lg-3 p-b-35 isotope-item border " height="100px" width="100px">
+					<div class="col-sm-6 col-md-4 col-lg-3 p-b-35 isotope-item" height="100px" width="100px">
 						<!-- //block2 -->
 						<div class="">
 							<div class="block2-pic hov-img0">
@@ -513,7 +536,7 @@
 								</a>
 							</div>
 
-							<div class=" pt-2">
+							<div class="pt-2">
 								<div class="d-flex justify-content-between">
 									<a href="shop/product?id=<%= product._id %>" class="text-decoration-none text-secondary ">
 										<%= product.brand+" "+product.model %>
@@ -521,7 +544,7 @@
 									<button class="btn btn-dark px-3 border rounded-5" onclick="addToCart('<%= product._id %>','<%= product.variants[0]._id %>')"><i class="bi bi-cart"></i></button>
 								</div>
 								<div>
-									<span class="">
+									<span class="stext-105">
 										<i class="bi bi-currency-rupee" style="font-size: medium;"></i>
 										<%= product.variants[0].price.toLocaleString('en-IN') %>
 									</span>
@@ -1026,45 +1049,6 @@ Copyright &copy;<script>document.write(new Date().getFullYear());</script> All r
 	</script>
 <!--===============================================================================================-->
 	<script src="vendor/isotope/isotope.pkgd.min.js"></script>
-<!--===============================================================================================-->
-	<script src="vendor/sweetalert/sweetalert.min.js"></script>
-	<script>
-		$('.js-addwish-b2').on('click', function(e){
-			e.preventDefault();
-		});
-
-		$('.js-addwish-b2').each(function(){
-			var nameProduct = $(this).parent().parent().find('.js-name-b2').html();
-			$(this).on('click', function(){
-				swal(nameProduct, "is added to wishlist !", "success");
-
-				$(this).addClass('js-addedwish-b2');
-				$(this).off('click');
-			});
-		});
-
-		$('.js-addwish-detail').each(function(){
-			var nameProduct = $(this).parent().parent().parent().find('.js-name-detail').html();
-
-			$(this).on('click', function(){
-				swal(nameProduct, "is added to wishlist !", "success");
-
-				$(this).addClass('js-addedwish-detail');
-				$(this).off('click');
-			});
-		});
-
-		/*---------------------------------------------*/
-
-		$('.js-addcart-detail').each(function(){
-			var nameProduct = $(this).parent().parent().parent().parent().find('.js-name-detail').html();
-			$(this).on('click', function(){
-				swal(nameProduct, "is added to cart !", "success");
-			});
-		});
-	
-	</script>
-<!--===============================================================================================-->
 	<script src="vendor/perfect-scrollbar/perfect-scrollbar.min.js"></script>
 	<script>
 		$('.js-pscroll').each(function(){

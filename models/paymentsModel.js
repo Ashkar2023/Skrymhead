@@ -1,12 +1,14 @@
 const mongoose = require("mongoose");
 
 const paymentsSchema = new mongoose.Schema({
-    types:[{
         name:{
             type:String,
             required:true
+        },
+        listed:{
+            type:Boolean,
+            default:true
         }
-    }]
 })
 
-module.exports = mongoose.model("payments",paymentsSchema)
+module.exports = mongoose.model("payment",paymentsSchema)

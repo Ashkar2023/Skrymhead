@@ -1,10 +1,12 @@
 const mongoose = require("mongoose");
+const User = require('../models/userModel');
 const { payment, order } = require("../config/enums");
 
 const orderSchema = new mongoose.Schema({
     order_id:{
         type:Number,
-        required:true
+        required:true,
+        unique:true
     },
     customer_id:{
         type:mongoose.Types.ObjectId,
@@ -14,25 +16,27 @@ const orderSchema = new mongoose.Schema({
     status:{
         type:String,
         enum:Object.values(order),
-        required:true
+        default:order.PROCESSING
     },
     payment_type:{
-        type:mongoose.Types.ObjectId,
-        ref:"payments",
+        type:String,
         required:true
+        // type:mongoose.Types.ObjectId,
+        // ref:"payment",
+        // required:true
     },
     payment_status:{
         type:String,
         enum:Object.values(payment),
         required:true,
-        default:"pending"
+        default:payment.PENDING
     },
     totalPrice:{
         type:Number,
         required:true
     },
     address:{
-        type:mongoose.Types.ObjectId,
+        type:mongoose.Types.ObjectId, //change it to object
         ref:"address",
         required:true
     },
@@ -61,6 +65,6 @@ const orderSchema = new mongoose.Schema({
             }
         }
     ]
-
-
 })
+
+module.exports = mongoose.model("order",orderSchema);

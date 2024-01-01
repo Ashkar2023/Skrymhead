@@ -6,18 +6,7 @@ const User = require("../models/userModel")
 const Cart = require("../models/cartModel")
 const TempUser = require("../models/tempUserModel")
 const Products = require("../models/productModel");
-const { find } = require("../models/addressModel");
 
-// middlewares
-// const otpverification = async (req,res,next)=>{
-//     const Email = req.body.email;
-//     const userData = await User.findOne({email:Email});
-//     if(userData.isVerified===false){
-//         console.log(userData.isVerified)
-//         res.redirect("/verifyotp");
-//     }
-//     next();
-// }
 
 //Controllers
 const getSignUp = async (req, res) => {
@@ -258,7 +247,7 @@ const getHome = async (req, res) => {
 
 const getShop = async (req, res) => {
     try {
-        const product = await Products.find({})
+        const product = await Products.find({}).populate("variants")
         res.render('user/shop', { products: product })
     } catch (error) {
         console.log(error.message)

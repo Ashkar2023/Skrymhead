@@ -4,6 +4,7 @@ const Product = require("../models/productModel");
 const mongoose = require("mongoose");
 const { ObjectId } = require("mongodb");
 const { findOneAndDelete } = require("../models/adminModel");
+const { userIn } = require("../authentication/userAuth");
 
 const getCart = async (req,res)=>{
     try{ 
@@ -128,11 +129,22 @@ const cartItemDelete = async(req,res)=>{
     }
 }
 
+const getCheckout = async(req,res)=>{
+    try{
+        const cart = await Cart.findOne({user_id:req.session.userid }).populate("user_id").populate("items.variant_id").populate("items.product_id");
+        const user = await User.findById(req.session.userid);
+        
+        res.render("user/checkout", {cart:cart,addresses:user.addresses});
+    }catch(error){
+        console.log(error.message)
+    }
+}
+
 module.exports = {
     getCart,
     addToCart,
     productAddToCart,
     updateCart,
-    cartItemDelete
-
+    cartItemDelete,
+    getCheckout
 };

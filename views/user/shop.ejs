@@ -44,7 +44,7 @@
 	
 	<!-- Header -->
 	<header class="">
-		<nav class="navbar navbar-expand-lg border-bottom fixed-top bg-white">
+		<nav class="navbar navbar-expand-lg border-bottom fixed-top bg-white border-3 border-black">
 			<div class="container-fluid">
 				<a class="m-brand navbar-brand d-flex align-items-center " href="#">
 					<svg width="38" height="48" viewBox="0 0 38 48" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -452,7 +452,7 @@
 									
 									<span class="stext-105 cl3">
 										<i class="bi bi-currency-rupee" style="font-size: medium;"></i>
-										<%= product.variant[0].price.toLocaleString('en-IN') %>
+										<%= product.variants[0].price.toLocaleString("en-IN") %>
 									</span>
 								</div>
 
