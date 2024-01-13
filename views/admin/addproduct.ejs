@@ -51,6 +51,11 @@
 
 				</li>
 				<li class="nav-item">
+					<a href="/admin/orders" class="m-2" style="text-decoration: none; ">Orders
+					</a>
+
+				</li>
+				<li class="nav-item">
 					<a href="/admin/logout" class="m-2" style="text-decoration: none;">logout</a>
 				</li>
 			</ul>
@@ -67,30 +72,27 @@
 	<div class="ms-5 d-flex justify-content-center">
 		<div class="mx-3 col-md-5 border rounded  bg-dark text-white">
 
-			<!-- basic details -->
 			<div class="mx-3">
 				<!-- form -->
-				<form action="/admin/addproduct" method="post" enctype="multipart/form-data" id="productForm">
+				<form action="/admin/addproduct" method="post" enctype="multipart/form-data" id="productForm" onsubmit="return validate()">
 					<div class="row">
 						<div class="form-group my-3 col-md-6">
-							<label for="Brand">Brand</label>
-							<input type="text" class="form-control form-control-sm" id="nameInput" name="brand"
-								required>
+							<label for="Brand">Brand<small class="badge ms-3 bg-danger" id="B"></small></label>
+							<input type="text" class="form-control form-control-sm" id="brand" name="brand">
 						</div>
 						<div class="form-group my-3 col-md-6">
-							<label for="model">Model</label>
-							<input type="text" pattern="^[A-Za-z0-9\s\-]+$" class="form-control form-control-sm"
-								id="brandInput" name="model" required>
+							<label for="model">Model<small class="badge ms-3 bg-danger" id="M"></small></label>
+							<input type="text" class="form-control form-control-sm" id="model" name="model">
 						</div>
 					</div>
 
 					<div class="row">
 						<div class="form-group my-3 col-md-6">
-							<label for="category">Category</label>
-							<select class="form-select form-control-sm" id="CategoryInput" name="category" required>
-								<option value='' selected disabled>Select a category</option>
+							<label for="category">Category<small class="badge ms-3 bg-danger" id="C"></small></label>
+							<select class="form-select form-control-sm" id="category" name="category">
+								<option value='' selected disabled>- Select a category -</option>
 								<% categories.forEach((category)=>{ %>
-									<option value='<%= category.category %>'>
+									<option value='<%= category._id %>'>
 										<%= category.category %>
 									</option>
 									<% }) %>
@@ -98,21 +100,77 @@
 						</div>
 					</div>
 					<div class="form-group my-3">
-						<label for="descriptionInput">Specification</label>
-						<textarea class="form-control form-control-sm" id="descriptionInput" name="specification"
-							rows="3" required></textarea>
+						<label for="specification">Specification<small class="badge ms-3 bg-danger" id="DI"></small></label>
+						<textarea class="form-control form-control-sm" id="specification" name="specification"
+							rows="3"></textarea>
 					</div>
 					<div class="d-flex" id="imagePreview">
 
 					</div>
 					<div class="form-group mb-3">
-						<label for="productImage">Add Image's: </label>
+						<label for="productImage">Add Image's: <small class="badge ms-3 bg-danger" id="PI"></small></label><br>
 						<input type="file" class="form-control-file" accept="image/*" name="images" id="productImages"
-							multiple required>
-						<button type="submit" class="btn btn-primary my-3">Submit</button>
+							multiple>
+						<br>
+						<div class="text-end">
+							<button type="submit" class="btn btn-primary my-3">Submit</button>
+						</div>
 					</div>
 			</div>
 		</div>
+		<script>
+			function validate() {
+				let brand = document.getElementById('brand').value;
+				let model = document.getElementById('model').value;
+				let category = document.getElementById('category').value;
+				let specification = document.getElementById('specification').value;
+				let images = document.getElementById('productImages').files;
+
+				const regex = /^[a-zA-Z0-9\s]+$/;
+
+				let OK = true;
+
+				let brandError = document.getElementById("B");
+				let modelError = document.getElementById("M");
+				let categoryError = document.getElementById("C");
+				let specificError = document.getElementById("DI");
+				let imagesError = document.getElementById("PI");
+
+				brandError.textContent = "";
+				modelError.textContent = "";
+				categoryError.textContent = "";
+				specificError.textContent = "";
+				imagesError.textContent = "";
+
+				if (brand.length < 2 || !regex.test(brand)) {
+					brandError.textContent = "Min 2 chars, No special symbols";
+					OK = false;
+				}
+
+				if (model.length < 3 || !regex.test(model)) {
+					modelError.textContent = "Min 3 chars, No special symbols";
+					OK = false;
+				}
+
+				if (category === '') {
+					categoryError.textContent = "Please select a category";
+					OK = false;
+				}
+
+				if (specification.length < 10) {
+					specificError.textContent = "Min 10 characters";
+					OK = false;
+				}
+
+				if (images.length === 0) {
+					imagesError.textContent = "Min 1 image required";
+					OK = false;
+				}
+
+				console.log("broooo",OK)
+				return OK;
+			}
+		</script>
 
 		<!-- variant -->
 		<div class="container me-5 border rounded bg-dark text-white"
@@ -144,26 +202,24 @@
 				</div>
 				<div class="variant variant2 col-md-5 my-2 mx-3 rounded border" style="height: 190px;">
 					<h4 class="text-white">Variant 2</h4>
-					<input type="color" value="#ff0000" required class="form-control form-control-sm" name="color2">
-					<input type="number"  class="form-control form-control-sm" placeholder="Stock"
-						name="stock2">
-					<input type="number"  class="form-control form-control-sm" placeholder="Price"
-						name="price2">
+					<input type="color" value="#ff0000" class="form-control form-control-sm" name="color2">
+					<input type="number" class="form-control form-control-sm" placeholder="Stock" name="stock2">
+					<input type="number" class="form-control form-control-sm" placeholder="Price" name="price2">
 				</div>
 				<div class="variant variant3 col-md-5 my-2 mx-3 rounded border" style="height: 190px;">
 					<h4 class="text-white">Variant 3</h4>
-					<input type="color" value="#ff0000" required class="form-control form-control-sm" name="color3">
-					<input type="number"  class="form-control form-control-sm" placeholder="Stock"
-						name="stock3">
-					<input type="number"  class="form-control form-control-sm" placeholder="Price"
-						name="price3">
+					<input type="color" value="#ff0000" class="form-control form-control-sm" name="color3">
+					<input type="number" class="form-control form-control-sm" placeholder="Stock" name="stock3">
+					<input type="number" class="form-control form-control-sm" placeholder="Price" name="price3">
 				</div>
 			</div>
 		</div>
 		</form>
 	</div>
 
+	<script>
 
+	</script>
 	<script>
 		const imgPreview = document.getElementById('imagePreview');
 		const inputField = document.getElementById('productImages');

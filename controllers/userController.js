@@ -1,5 +1,7 @@
 const bcrypt = require("bcrypt");
 const nodemailer = require("nodemailer");
+const mongoose = require("mongoose")
+const { ObjectId } = require("mongodb");
 
 // models/schema
 const User = require("../models/userModel")
@@ -238,8 +240,10 @@ const getHome = async (req, res) => {
     try {
         delete req.session.Email; //Used to store the email for signup
 
-        const products = await Products.find({}).populate("variants")
-        res.render('user/home', { products: products })
+        const products = await Products.find({listed:true}).populate("variants");
+        const cart = await Cart.findOne({user_id:new ObjectId(req.session.userid)});
+        console.log(cart)
+        res.render('user/home', { products: products, cartitems: cart.items.length })
     } catch (error) {
         console.log(error.message)
     }
@@ -247,8 +251,10 @@ const getHome = async (req, res) => {
 
 const getShop = async (req, res) => {
     try {
-        const product = await Products.find({}).populate("variants")
-        res.render('user/shop', { products: product })
+        const product = await Products.find({listed:true}).populate("variants")
+        const cart = await Cart.findOne({user_id:new ObjectId(req.session.userid)});
+
+        res.render('user/shop', { products: product, cartitems: cart.items.length})
     } catch (error) {
         console.log(error.message)
     }
@@ -257,10 +263,11 @@ const getShop = async (req, res) => {
 const getProduct = async (req, res) => {
     try {
         const id = req.query.id;
-        const prd = await Products.findOne({ _id: id }).populate("variants");
+        const prd = await Products.findOne({ _id: id }).populate("variants").populate("category");
+        const cart = await Cart.findOne({user_id:new ObjectId(req.session.userid)});
         const specification = prd.specification.split(".");
         
-        res.render("user/product", { product: prd, details: specification })
+        res.render("user/product", { product: prd, details: specification, cartitems: cart.items.length })
     } catch (error) {
         console.log(error.message)
         res.status(500).send("internal server error");

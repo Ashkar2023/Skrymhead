@@ -18,6 +18,10 @@ const orderSchema = new mongoose.Schema({
         enum:Object.values(order),
         default:order.PROCESSING
     },
+    CBA:{
+        type:Boolean,
+        default:false
+    },
     payment_type:{
         type:String,
         required:true
@@ -36,8 +40,7 @@ const orderSchema = new mongoose.Schema({
         required:true
     },
     address:{
-        type:mongoose.Types.ObjectId, //change it to object
-        ref:"address",
+        type:Object,
         required:true
     },
     order_date:{

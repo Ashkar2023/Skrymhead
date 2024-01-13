@@ -28,6 +28,14 @@
   font-family: "koulen";
 }
 
+.bg-offwhite{
+  background-color: wheat;
+}
+
+.bg-offwhite2{
+  background-color: rgb(237, 235, 230);
+}
+
 #sidebar-list a {
   color: white;
   margin: 5px 0px;
@@ -64,3 +72,4 @@ input::-webkit-inner-spin-button {
 .m-brand{
   margin-left: 150px;
 }
+

@@ -37,7 +37,7 @@ accountController.changePassword = async(req,res)=>{
             const passwordChange = await User.findOneAndUpdate({_id:req.session.userid},{$set:{password:newPassword}});
             res.status(200).json({message:"Password change successful",success:true});
         }else{
-            res.status(400).json({message:"Old password donot match",success:false});
+            res.status(400).json({message:"Old password don't match",success:false});
         }
     }catch(error){
         res.status(500).send("Internal server error!");
@@ -80,14 +80,13 @@ accountController.getAddress = async(req,res)=>{
 accountController.addAddress = async(req,res)=>{
     try{
         const userEmail = req.session.user;
-        const addressName = req.body.name.trim()
         const user = await User.findOne({_id:req.session.userid});
 
-        const addressFound = await User.findOne({email:userEmail,"addresses.address_name":addressName});
+        const addressFound = await User.findOne({email:userEmail,"addresses.address_name":req.body.name});
         if(!addressFound){
             
             const newAddress = {
-                address_name: addressName,
+                address_name:req.body.name,
                 house_name: req.body.house,
                 street_address: req.body.street,
                 state: req.body.state,
@@ -100,10 +99,12 @@ accountController.addAddress = async(req,res)=>{
             user.addresses.push(newAddress);
             const userData = await user.save()
             console.log(userData)
-            if(userData) res.status(200).json({success:true,message:"Address added successfully!",user:userData})
-            
+
+            if(userData){
+              res.status(200).json({success:true,message:"Address added successfully!",user:userData})
+            }
         }else{
-            res.status(400).json({message:'address with the name already exists!',success:false});
+            res.status(200).json({message:'address with the name already exists!',success:false});
         }   
         
     }catch(error){
@@ -130,8 +131,18 @@ accountController.deleteAddress = async(req,res)=>{
 
 accountController.getOrders = async(req,res)=>{
     try{
-        const orders = await Order.find({customer_id:req.session.userid}).populate("customer_id")
+        const orders = await Order.find({customer_id:req.session.userid}).populate("customer_id").populate("items.product_id").populate("items.variant_id").sort({order_id:-1})
         res.render("user/orders",{orders:orders});
+    }catch(error){
+        console.log(error.message)
+    }
+}
+
+accountController.orderDetails = async(req,res)=>{
+    try{
+        const ID = req.params.id;
+        const order = await Order.findOne({order_id:ID}).populate("customer_id").populate("items.product_id").populate("items.variant_id");
+        res.render("user/orderDetails",{order:order});
     }catch(error){
         console.log(error.message)
     }
@@ -139,8 +150,8 @@ accountController.getOrders = async(req,res)=>{
 
 accountController.cancelOrder = async(req,res)=>{
     try{
-        const orderId = new ObjectId(req.body.orderId)
-        const order = await Order.findByIdAndUpdate(orderId,{$set:{
+        const orderId = req.body.orderId
+        const order = await Order.findOneAndUpdate({order_id:orderId},{$set:{
                 status:orderStatus.CANCELLED
             }})
             

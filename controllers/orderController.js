@@ -1,6 +1,5 @@
 const Order = require("../models/orderModel");
 const User = require("../models/userModel");
-const productModel = require("../models/productModel");
 const Cart = require("../models/cartModel");
 const Variant = require("../models/variantModel");
 const mongoose = require("mongoose");
@@ -17,12 +16,17 @@ const createOrder = async(req,res)=>{
         const items = cart.items;
         const lastOrder = await Order.findOne({}).sort({order_id:-1})
         const newOrderId = lastOrder ? lastOrder.order_id+1 : 1001;
+        const address = await User.findOne({
+            _id:req.session.userid,
+            "addresses._id":new ObjectId(body.address)
+        },{"addresses.$":1,_id:0});
+        const selectedAddress = address.addresses[0];
 
         const currentOrder = new Order({
             order_id:newOrderId,
             customer_id:req.session.userid,
             payment_type:body.payment,
-            address:body.address,
+            address:selectedAddress,
             totalPrice:body.total,
             items:items.map((item)=>item)
         })

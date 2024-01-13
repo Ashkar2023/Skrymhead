@@ -94,7 +94,7 @@
 							<a href="/profile" style="color:inherit"><i class="zmdi zmdi-account-o"></i></a>
 						</div>
 	
-						<div class="icon-header-item cl2 hov-cl1 trans-04 p-l-22 p-r-11 icon-header-noti" data-notify="2">
+						<div class="icon-header-item cl2 hov-cl1 trans-04 p-l-22 p-r-11 icon-header-noti" id="cartNotify" data-notify="<%= cartitems %>">
 							<a href="/cart"><i class="zmdi zmdi-shopping-cart"></i></a>
 						</div>
 	
@@ -550,8 +550,9 @@
 									</span>
 								</div>
 							</div>
-							<script>
+							<script>								
 								function addToCart(product,variant){
+									let notify = document.querySelector("#cartNotify");
 									
 									fetch("/addtocart",{
 										method:"PUT",
@@ -574,6 +575,7 @@
 									.then(result=>{
 										if(result.success){
 											console.log(result.message)
+											notify.dataset.notify = Number(notify.dataset.notify)++;
 											
 											Swal.fire({
   											icon: 'success',
@@ -616,11 +618,10 @@
 	</section>
 
 	<!-- Banner -->
-	<div class="sec-banner bg0 p-t-80 p-b-50">
+	<!-- <div class="sec-banner bg0 p-t-80 p-b-50">
 		<div class="container">
 			<div class="row">
 				<div class="col-md-6 col-xl-4 p-b-30 m-lr-auto">
-					<!-- Block1 -->
 					<div class="block1 wrap-pic-w">
 						<img src="images/banner-01.jpg" alt="IMG-BANNER">
 
@@ -645,7 +646,6 @@
 				</div>
 
 				<div class="col-md-6 col-xl-4 p-b-30 m-lr-auto">
-					<!-- Block1 -->
 					<div class="block1 wrap-pic-w">
 						<img src="images/banner-02.jpg" alt="IMG-BANNER">
 
@@ -670,7 +670,6 @@
 				</div>
 
 				<div class="col-md-6 col-xl-4 p-b-30 m-lr-auto">
-					<!-- Block1 -->
 					<div class="block1 wrap-pic-w">
 						<img src="images/banner-03.jpg" alt="IMG-BANNER">
 
@@ -695,7 +694,7 @@
 				</div>
 			</div>
 		</div>
-	</div>
+	</div> -->
 	
 
 	<!-- Footer -->

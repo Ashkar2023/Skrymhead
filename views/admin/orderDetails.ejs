@@ -1,0 +1,215 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>SKRYMHEAD</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
+
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.2/font/bootstrap-icons.min.css" />
+    <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/toastify-js/src/toastify.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/toastify-js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <link rel="stylesheet" href="/css/fonts.css" />
+</head>
+
+<body>
+    <div class="container bg-white border border-dark mt-5 p-0">
+        <h1 class="text-center text-dark-50 bg-offwhite py-2 koulen">ORDER DETAILS</h1>
+
+        <div class="row">
+            <div class="col-md-5 border-right border-dark">
+                <ul class="list-group list-group-flush">
+                    <li class="list-group-item">ID: <span class="fw-bold">#<%= order.order_id %></span></li>
+                    <li class="list-group-item d-flex justify-content-between">
+                        Order Date: <span class="text-muted">
+                            <%= order.order_date.toUTCString() %>
+                        </span>
+                    </li>
+                    <li class="list-group-item d-flex justify-content-between">
+                        <% let currentDate=order.order_date %>
+                            <% let returnDate=new Date(currentDate.setDate(currentDate.getDate()+7)) %>
+                                Return Valid till : <span class="text-muted">
+                                    <%= returnDate.toUTCString().slice(0,16) %>
+                                </span>
+                    </li>
+                    <li class="list-group-item">Status:
+                        <% let stts=order.status; %>
+                            <% if(order.CBA || stts==="Cancelled" || stts==="Returned" ){ %>
+                                <span class="badge bg-danger">
+                                    <%= order.status %>
+                                </span>
+                                <% }else if(stts==="Shipped" || stts==="Processing" ){ %>
+                                    <span class="badge bg-warning text-dark" id="status">
+                                        <%= order.status %>
+                                    </span>
+                                    <% }else{ %>
+                                        <span class="badge bg-success">
+                                            <%= order.status %>
+                                        </span>
+                                        <% } %>
+
+                    <li class="list-group-item">Payment: <span class="badge bg-success">
+                            <%= order.payment_type %>
+                        </span>
+                </ul>
+            </div>
+            <div class="col-md-3 text-center">
+                <h4>Delivery Address</h4>
+                <address>
+                    <h6 class="badge bg-black">
+                        <%= order.address.address_name %>
+                    </h6>
+                    <p class="lead m-0">
+                        <%= order.address.house_name+", "+order.address.street_address %></p>
+                    <p class=" lead m-0">
+                            <%= order.address.city+", "+order.address.state+" , "+order.address.pincode  %></p>
+                    <p class=" lead m-0">Phone: <%= order.address.phone %>
+                    </p>
+                    <p class="lead m-0">Alt Phone: <%= order.address.alt_phone %>
+                    </p>
+                </address>
+            </div>
+            <div class="col-md-3 p-0">
+                <span class="d-flex"><h6>Username :&nbsp;</h6><%= order.customer_id.name %></span>
+                <span class="d-flex"><h6>User-email :&nbsp;</h6><%= order.customer_id.email %></span>
+                <% if(order.status=="Processing" || order.status=="Shipped" ){ %>
+                    <button class="btn border mt-3 rounded-0 btn-danger" onclick="cancelOrder(<%= order.order_id %>)"
+                        id="cancel">Cancel
+                        Order</button>
+                    <button class="btn border mt-3 rounded-0 btn-warning" onclick="markAsDelivered(<%= order.order_id %>)"
+                        id="markAsDelivered">Mark As Delivered</button>
+                    <% } %>
+            </div>
+        </div>
+
+        <div class="row m-4">
+            <div class="order-items border border-dark p-0">
+                <h4 class="bg-offwhite2 text-center koulen py-1 m-0">ITEMS</h4>
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th></th>
+                            <th>Product</th>
+                            <th>Unit Price</th>
+                            <th>Quantity</th>
+                            <th>Subtotal</th>
+                        </tr>
+                    </thead>
+                    <tbody class="border-bottom border-secondary">
+                        <% order.items.forEach(item=> { %>
+                            <tr>
+                                <td></td>
+                                <td><img height="50px"
+                                        src="/products/<%= item.product_id.brand+' '+item.product_id.model +'/'+ item.product_id.images[0].url %>">
+                                    <%= item.product_id.brand+" "+item.product_id.model %>
+                                </td>
+                                <td>&#x20B9;<%= item.variant_id.price %></td>
+                                <td><%= item.quantity %></td>
+                                <td>&#x20B9;<%= item.quantity*item.variant_id.price %></td>
+                            </tr>
+                            <% }); %>
+                    </tbody>
+                </table>
+                <div class="row mt-3">
+                    <div class="col-md-12 text-end">
+                        <h4 class="me-5">Total: &#x20B9; <%= order.totalPrice %></h4>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+    </div>
+
+        <script>
+            function cancelOrder(id) {
+                Swal.fire({
+                    title: " Are you sure?", text: "Once canceled, you cannot undo this action!", icon: "warning",
+                    showCancelButton: true, confirmButtonText: "Confirm",
+                    cancelButtonText: "Cancel", confirmButtonColor: "#d33",
+                    cancelButtonColor: "#3085d6",
+                }).then((result) => {
+                    if (result.isConfirmed) {
+
+                        fetch("/admin/cancelorder", {
+                            method: "PUT",
+                            headers: {
+                                "Content-Type": "application/json",
+                            },
+                            body: JSON.stringify({
+                                orderId: id,
+                            }),
+                        })
+                            .then(response => {
+                                return response.json();
+                            })
+                            .then(data => {
+                                if (data.success === true) {
+                                    Swal.fire("Success!", "Order cancelled successfully.", "success");
+                                    document.getElementById(`cancel`).remove();
+                                    document.getElementById(`markAsDelivered`).remove();
+                                    let sttsBadge = document.getElementById(`status`);
+                                    sttsBadge.textContent = "Cancelled";
+                                    sttsBadge.classList.replace("bg-warning", "bg-danger")
+                                } else {
+                                    Swal.fire("Failed!", "Order cancellation failed.", "error");
+                                }
+                            })
+                            .catch(error => {
+                                console.error(error);
+                                Swal.fire("Error!", "An error occurred during order cancellation.", "error");
+                            });
+                    } else {
+                        Swal.fire("Cancelled", "Operation canceled.", "info");
+                    }
+                });
+            }
+
+            function markAsDelivered(id) {
+                Swal.fire({
+                    title: " Are you sure?", text: "Once marked delivered, there's no going back!", icon: "warning",
+                    showCancelButton: true, confirmButtonText: "Confirm",
+                    cancelButtonText: "Cancel", confirmButtonColor: "#d33",
+                    cancelButtonColor: "#3085d6",
+                }).then((result) => {
+                    if (result.isConfirmed) {
+
+                        fetch("/admin/markasdelivered", {
+                            method: "PUT",
+                            headers: {
+                                "Content-Type": "application/json",
+                            },
+                            body: JSON.stringify({
+                                orderId: id,
+                            }),
+                        })
+                            .then(response => {
+                                return response.json();
+                            })
+                            .then(data => {
+                                if (data.success === true) {
+                                    Swal.fire("Success!", "Order marked as delivered successfully.", "success");
+                                    document.getElementById(`markAsDelivered`).remove();
+                                    let sttsBadge = document.getElementById(`status`);
+                                    sttsBadge.textContent = "Delivered";
+                                    sttsBadge.classList.replace("bg-warning", "bg-success")
+                                } else {
+                                    Swal.fire("Failed!", "Marking delivered failed.", "error");
+                                }
+                            })
+                            .catch(error => {
+                                console.error(error);
+                            });
+                            
+                    } else {
+                        Swal.fire("Cancelled", "Operation canceled.", "info");
+                    }
+                });
+            }
+
+        </script>
+</body>
+
+</html>
