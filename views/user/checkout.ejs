@@ -13,11 +13,13 @@
 	<!--===============================================================================================-->
 	<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet"
 		integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
-
 	<script src="https://code.jquery.com/jquery-3.6.4.slim.min.js"></script>
 	<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.10.2/dist/umd/popper.min.js"></script>
 	<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.min.js"></script>
+	<script src="https://js.stripe.com/v3/"></script>
+	<script src="/js/checkout.js" defer></script>
 
+	<!-- ///////////////////////////////////////////////////////////////////////// -->
 	<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.2/font/bootstrap-icons.min.css">
 	<!--===============================================================================================-->
 	<link rel="stylesheet" type="text/css" href="fonts/font-awesome-4.7.0/css/font-awesome.min.css">
@@ -39,6 +41,7 @@
 	<link rel="stylesheet" type="text/css" href="css/util.css">
 	<link rel="stylesheet" type="text/css" href="css/main.css">
 	<link rel="stylesheet" type="text/css" href="/css/fonts.css">
+	<link rel="stylesheet" type="text/css" href="/css/checkout.css">
 	<!--===============================================================================================-->
 	<style>
 		#addressWrapper {
@@ -95,6 +98,63 @@
 </head>
 
 <body class="animsition">
+	<script>
+		const eventSource = new EventSource("/sseconnect");
+
+		eventSource.onopen = () => {
+			console.log("OPENED");
+		}
+
+		eventSource.onmessage = (event) => {
+			const eventData = JSON.parse(event.data);
+
+			if(eventData.message==="payment succeeded"){
+				swal.fire({
+					title: "Order placed successfully!",
+					text: `OrderID : #${eventData.orderID}`,
+					icon: "success",
+					confirmButtonText: "Show My Orders",
+					showDenyButton: true,
+					denyButtonText: "Go to home",
+					allowOutsideClick: false
+
+				}).then((result) => {
+
+					if (result.isConfirmed) {
+						window.location.href = "/orders";
+					} else if (result.isDenied) {
+						window.location.href = "/home";
+					}
+				});
+			}else if(eventData.message==="payment failed"){
+				swal.fire({
+					title: eventData.message,
+					text: `OrderID : #${eventData.orderID}`,
+					icon: "error",
+					confirmButtonText: "Retry",
+					showDenyButton: true,
+					denyButtonText: "Go to home",
+					allowOutsideClick: false
+				}).then((result) => {
+
+					if (result.isConfirmed) {
+						swal.close();
+					} else if (result.isDenied) {
+						window.location.href = "/home";
+					}
+				});
+			}
+			console.log(eventData)
+		}
+
+		window.addEventListener("unload",()=>{
+			eventSource.close();
+		})
+
+		eventSource.onerror = (error) =>{
+			console.log(error)
+		}
+	</script>
 
 	<!-- Header -->
 	<header>
@@ -408,7 +468,7 @@
 								if (data.success) {
 									let closeButton = document.getElementById("closeButton");
 									closeButton.click();
-									
+
 									Toastify({
 										text: "address added and selected.",
 										duration: 2000,
@@ -444,6 +504,35 @@
 					})
 
 				</script>
+			</div>
+		</div>
+	</div>
+
+
+	<!-- Display a payment form -->
+	<div class="modal fade" style="backdrop-filter: blur(5px);" id="stripe-modal" data-bs-backdrop="static"
+		data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+		<div class="modal-dialog">
+			<div class="modal-content rounded-0 border border-2 border-dark bg-good">
+				<div class="my-2 d-flex justify-content-between">
+					<h1></h1>
+					<h3 class="border-bottom border-dark pb-1 align-self-center koulen text-dark">COMPLETE PAYMENT</h3>
+					<button type="button" id="closeButton" class="m-2 align-self-end btn-close" data-bs-dismiss="modal"
+						aria-label="Close">
+					</button>
+				</div>
+				<div class="modal-body">
+					<form id="payment-form" style="border-radius: 0px;">
+						<div id="payment-element">
+							<!--Stripe.js injects the Payment Element-->
+						</div>
+						<button id="submit">
+							<div class="spinner" id="spinner"></div>
+							<span id="button">Pay now</span>
+						</button>
+						<div id="payment-message" class="hidden"></div>
+					</form>
+				</div>
 			</div>
 		</div>
 	</div>
@@ -609,11 +698,19 @@
 						<h5 class="m-3 pb-2 border-bottom border-black mtext-109 text-dark text-center">Payment Methods
 						</h5>
 					</div>
-					<div class="d-flex justify-content-center">
+					<div class="d-flex justify-content-start ms-3">
 						<div class="d-flex form-check my-3">
 							<input class="form-check-input" type="radio" id="COD" required value="COD"
 								name="paymentoptions">
 							<label class="ms-2 form-check-label" for="COD">COD</label>
+						</div>
+					</div>
+					<div class="d-flex justify-content-start ms-3">
+						<div class="d-flex form-check my-3">
+							<input class="form-check-input" type="radio" id="STRIPE" required value="STRIPE"
+								name="paymentoptions">
+							<label class="ms-2 form-check-label" for="STRIPE">Stripe<i
+									class="ms-2 bi bi-stripe"></i></label>
 						</div>
 					</div>
 				</div>
@@ -621,8 +718,10 @@
 		</div>
 	</div>
 	<script>
-		function placeOrder() {
+		async function placeOrder() {
 			const address = document.querySelector('input[name="address"]:checked');
+			const paymentOption = document.querySelector('input[name="paymentoptions"]:checked');
+			const addressSelected = document.querySelector("input[name='address']:checked");
 
 			function validateAddress() {
 				if (!address) {
@@ -645,9 +744,9 @@
 				}
 			}
 
+
 			function validatePayment() {
-				const codRadioButton = document.getElementById('COD');
-				if (!codRadioButton.checked) {
+				if (!paymentOption) {
 					Toastify({
 						text: "Select a payment Method",
 						duration: 3000,
@@ -670,54 +769,93 @@
 			if (!validateAddress()) return false;
 			if (!validatePayment()) return false;
 
-			const paymentOption = document.querySelector('input[name="paymentoptions"]:checked');
-			const addressSelected = document.querySelector("input[name='address']:checked");
-			fetch("/order", {
-				method: "PUT",
-				headers: {
-					"Content-Type": "application/json"
-				},
-				body: JSON.stringify({
-					addressName: address.value,
-					payment: paymentOption.value,
-					address: addressSelected.value,
-					total: TOTAL
-				})
-			})
-				.then(response => {
-					if (response.ok) {
-						return response.json()
-					}
-				})
-				.then(data => {
-					if (data.success) {
-						swal.fire({
-							title: "Order placed successfully!",
-							text: `OrderID : #${data.orderId}`,
-							icon: "success",
-							confirmButtonText: "Show My Orders",
-							showDenyButton: true,
-							denyButtonText: "Go to home",
-							allowOutsideClick: false
-						}).then((result) => {
-							if (result.isConfirmed) {
-								window.location.href = "/orders"
-							} else if (result.isDenied) {
-								window.location.href = "/home"
-							}
+			let response;
+
+			try {
+
+				if (paymentOption.value === "COD") {
+
+					response = await fetch("/order", {
+						method: "PUT",
+						headers: {
+							"Content-Type": "application/json"
+						},
+						body: JSON.stringify({
+							addressName: address.value,
+							payment: paymentOption.value,
+							address: addressSelected.value
 						})
+					});
+			
+					if (response.ok) {
+						const data = await response.json();
+
+						if (data.success) {
+							swal.fire({
+								title: "Order placed successfully!",
+								text: `OrderID : #${data.orderId}`,
+								icon: "success",
+								confirmButtonText: "Show My Orders",
+								showDenyButton: true,
+								denyButtonText: "Go to home",
+								allowOutsideClick: false
+							}).then((result) => {
+								if (result.isConfirmed) {
+									window.location.href = "/orders";
+								} else if (result.isDenied) {
+									window.location.href = "/home";
+								}
+							});
+						} else {
+							swal.fire({
+								title: "Order Unsuccessful!",
+								text: "Please retry",
+								icon: "error",
+								confirmButtonText: "OK"
+							});
+						}
 					} else {
-						swal.fire({
-							title: "Order Unsuccessful!",
-							text: `Please retry`,
-							icon: "error",
-							confirmButtonText: "OK"
-						});
+						throw new Error("Order placement failed");
 					}
-				})
-				.catch(error => {
-					console.log(error.message);
-				})
+			
+				} else { //for online payment
+
+					let newOrderId ;
+					fetch("/create-online-order",{
+						method:"POST",
+						headers:{
+							"Content-Type":"application/json",
+						},
+						body: JSON.stringify({
+							addressName: address.value,
+							payment: paymentOption.value,
+							address: addressSelected.value
+						})
+					})
+					.then(response=>{
+						if(response.ok){
+							return response.json();
+						}else{
+							throw new Error(`server responded with status ${response.status}`);
+						}
+					})
+					.then(data=>{
+						if(data.success){
+							newOrderId = data.orderId;
+							initialize(newOrderId);
+						}else{
+							throw new Error("Failed to create a new Order!");
+						}
+					})
+					.catch(error=>{
+						console.log(error)
+					})
+				}
+
+			} catch (error) {
+				console.log(error.message);
+			}
+
 		}
 	</script>
 

@@ -8,10 +8,10 @@
 	<!--===============================================================================================-->
 	<link rel="icon" type="image/png" href="/images/icons/favicon.png" />
 	<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+	<link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/toastify-js/src/toastify.min.css">
 	<!--===============================================================================================-->
 	<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet"
-	integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN"
-	crossorigin="anonymous">
+		integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
 	<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.2/font/bootstrap-icons.min.css">
 	<!--===============================================================================================-->
 	<link rel="stylesheet" type="text/css" href="/fonts/font-awesome-4.7.0/css/font-awesome.min.css">
@@ -24,7 +24,7 @@
 	<!--===============================================================================================-->
 	<link rel="stylesheet" type="text/css" href="/vendor/css-hamburgers/hamburgers.min.css">
 	<!--===============================================================================================-->
-	<link rel="stylesheet" type="text/css" href="/vendor/animsition/css/animsition.min.css">
+	<!-- <link rel="stylesheet" type="text/css" href="/vendor/animsition/css/animsition.min.css"> -->
 	<!--===============================================================================================-->
 	<link rel="stylesheet" type="text/css" href="/vendor/select2/select2.min.css">
 	<!--===============================================================================================-->
@@ -51,16 +51,18 @@
 			<div class="container-fluid">
 				<a class="m-brand navbar-brand d-flex align-items-center" href="#">
 					<svg width="38" height="48" viewBox="0 0 38 48" fill="none" xmlns="http://www.w3.org/2000/svg">
-						<path d="M34 1H4L1 5.63571M34 1L37 5.63571L25 24.1786M34 1L22 19.5429M1 5.63571H25L19 14.9071L16 10.2714M1 5.63571L16 28.8143L4 47.3571M1 5.63571L22 38.0857H16H28L10 10.2714M16 10.2714L28 28.8143M16 10.2714L37 42.7214M22 10.2714H10M10 10.2714L22 28.8143M37 42.7214L34 47.3571H4M37 42.7214H13L19 33.45M4 47.3571L1 42.7214L13 24.1786" stroke="black" stroke-linecap="round" stroke-linejoin="round"/>
+						<path
+							d="M34 1H4L1 5.63571M34 1L37 5.63571L25 24.1786M34 1L22 19.5429M1 5.63571H25L19 14.9071L16 10.2714M1 5.63571L16 28.8143L4 47.3571M1 5.63571L22 38.0857H16H28L10 10.2714M16 10.2714L28 28.8143M16 10.2714L37 42.7214M22 10.2714H10M10 10.2714L22 28.8143M37 42.7214L34 47.3571H4M37 42.7214H13L19 33.45M4 47.3571L1 42.7214L13 24.1786"
+							stroke="black" stroke-linecap="round" stroke-linejoin="round" />
 					</svg>
 					<h1 class="m-2 text-dark koulen">SKRYMHEAD</h1>
 				</a>
-	
+
 				<button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav"
 					aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
 					<span class="navbar-toggler-icon"></span>
 				</button>
-	
+
 				<div class="collapse navbar-collapse me-5" id="navbarNav">
 					<ul class="navbar-nav ms-auto">
 						<li class="nav-item">
@@ -77,22 +79,25 @@
 						</li>
 					</ul>
 				</div>
-	
+
 				<div class="navbar-text me-5">
 					<div class="wrap-icon-header flex-w flex-r-m">
 						<div class="icon-header-item cl2 hov-cl1 trans-04 p-l-22 p-r-11 js-show-modal-search">
 							<i class="zmdi zmdi-search"></i>
 						</div>
-	
+
 						<div class="icon-header-item cl2 hov-cl1 trans-04 p-l-22 p-r-11 js-show-account">
 							<a href="/profile" style="color:inherit"><i class="zmdi zmdi-account-o"></i></a>
 						</div>
-	
-						<div class="icon-header-item cl2 hov-cl1 trans-04 p-l-22 p-r-11 icon-header-noti" data-notify="<%= cartitems %>">
+
+						<div class="icon-header-item cl2 hov-cl1 trans-04 p-l-22 p-r-11 icon-header-noti"
+							data-notify="<%= cartitems %>">
 							<a href="/cart"><i class="zmdi zmdi-shopping-cart"></i></a>
 						</div>
-	
-						<a href="#" class="dis-block icon-header-item cl2 hov-cl1 trans-04 p-l-22 p-r-11 icon-header-noti" data-notify="0">
+
+						<a href="#"
+							class="dis-block icon-header-item cl2 hov-cl1 trans-04 p-l-22 p-r-11 icon-header-noti"
+							data-notify="0">
 							<i class="zmdi zmdi-favorite-outline"></i>
 						</a>
 					</div>
@@ -229,12 +234,11 @@
 								<% let name=product.brand+" "+product.model; 
 								 for(let i=0;i < product.images.length;i++){ %>
 									
-								<div class=" item-slick3" id="slickdiv" data-thumb="/products/<%= name+'/'+product.images[i].url %>">
+								<div class="item-slick3" id="slickdiv" data-thumb="/products/<%= name+'/'+product.images[i].url %>">
 									<div class="wrap-pic-w pos-relative" id="zoomdiv">
 										<img src="/products/<%= name+'/'+product.images[i].url %>" id="product"
 											alt="IMG-PRODUCT">
 									</div>
-									<div id="zoom" class="img-zoom-result"></div>
 							</div>
 
 
@@ -246,6 +250,8 @@
 			</div>
 
 
+			<div id="zoom" class="img-zoom-result"
+				style="position: absolute;top:250px;left:900px;z-index:1;background-color: aliceblue;"></div>
 			<div class="col-md-6 col-lg-5 p-b-30">
 				<div class="p-r-50 p-t-5 p-lr-0-lg">
 					<h4 class="mtext-105 cl2 js-name-detail p-b-14">
@@ -271,19 +277,28 @@
 							<div class="d-flex">
 								Color
 								<div class="ms-3">
-								<% let v=product.variants %>
-									<% for(let i=0; i < v.length; i++) { %>
-										
-										<button  id="V<%= i %>" style="background-color: <%= product.variants[i].color %>;"
-											class=" btn <%= i==0?'btn-lg':''; %>"
-											onclick="selectVariant('<%= i %>')">
-										</button>
-										<% } %>
+									<% let v=product.variants %>
+										<% for(let i=0; i < v.length; i++) { %>
+
+											<button id="V<%= i %>"
+												style="background-color: <%= product.variants[i].color %>;"
+												class=" btn <%= i==0?'btn-lg':''; %>"
+												onclick="selectVariant('<%= i %>')">
+											</button>
+											<% } %>
 								</div>
 								<div class="mx-3 border rounded text-warning">
-									<span class="m-2">Stock left : <span id="stock" class="text-dark">
-											<%= product.variants[0].stock %>
-										</span></span>
+									<span class="m-2">
+										<% if(product.variants[0].stock){ %>
+											<span id="stock" class="text-dark">
+												<%= product.variants[0].stock+" Units left" %>
+											</span>
+										<% }else{ %>
+											<span id="stock" class="text-danger">
+												Out of stock
+											</span>
+										<% } %>
+									</span>
 								</div>
 							</div>
 						</div>
@@ -313,9 +328,10 @@
 					<script>
 						let currentVariant = 0;
 						let cartQuantity = document.getElementById("cartQuantity");
-						
+						let stock = document.getElementById("stock");
+
 						function addToCart(product) {
-							if(cartQuantity.value<1){
+							if(cartQuantity.value < 1) {
 								Swal.fire({
 									icon: 'warning',
 									title: 'Invalid Quantity!',
@@ -387,7 +403,7 @@
 								})
 								.then(data => {
 									if (data.success) {
-										variantUpdate(data.variantData,data.index)
+										variantUpdate(data.variantData, data.index)
 									} else {
 										console.log(data.message);
 									}
@@ -397,7 +413,7 @@
 								});
 						}
 
-						function variantUpdate(variant,index) {
+						function variantUpdate(variant, index) {
 							let button = document.querySelector(".btn-lg");
 							button.classList.remove("btn-lg");
 							document.getElementById(`V${Number(index)}`).classList.add("btn-lg");
@@ -405,9 +421,9 @@
 							console.log(currentVariant)
 
 							let price = document.getElementById("price");
-							let stock = document.getElementById("stock");
 							price.innerHTML = variant.price.toLocaleString("en-IN");
-							stock.innerHTML = variant.stock;
+							stock.textContent = variant.stock? `${variant.stock} Units left`: "Out of stock" ;
+							!variant.stock? stock.classList.replace("text-dark","text-danger") : stock.classList.replace("text-danger","text-dark")
 						}
 					</script>
 
@@ -965,9 +981,10 @@
 	</div>
 
 	<!--===============================================================================================-->
+	<script src="https://cdn.jsdelivr.net/npm/toastify-js"></script>
 	<script src="/vendor/jquery/jquery-3.2.1.min.js"></script>
 	<!--===============================================================================================-->
-	<script src="/vendor/animsition/js/animsition.min.js"></script>
+	<!-- <script src="/vendor/animsition/js/animsition.min.js"></script> -->
 	<!--===============================================================================================-->
 	<script src="/vendor/bootstrap/js/popper.js"></script>
 	<script src="/vendor/bootstrap/js/bootstrap.min.js"></script>
@@ -1084,8 +1101,8 @@
 			/*insert lens:*/
 			img.parentElement.insertBefore(lens, img);
 			/*calculate the ratio between result DIV and lens:*/
-			cx = result.offsetWidth / lens.offsetWidth;
-			cy = result.offsetHeight / lens.offsetHeight;
+			cx = result.offsetWidth / (lens.offsetWidth * 3.5);
+			cy = result.offsetHeight / (lens.offsetHeight * 3.5);
 			/*set background properties for the result DIV:*/
 			result.style.backgroundImage = "url('" + img.src + "')";
 			result.style.backgroundSize = (img.width * cx) + "px " + (img.height * cy) + "px";
@@ -1101,9 +1118,9 @@
 				e.preventDefault();
 				/*get the cursor's x and y positions:*/
 				pos = getCursorPos(e);
-				/*calculate the position of the lens:*/
-				x = pos.x - (lens.offsetWidth / 2);
-				y = pos.y - (lens.offsetHeight / 2);
+				/*calculate the position of the lens, centered on the cursor:*/
+				x = pos.x - 20;
+				y = pos.y + 20;
 				/*prevent the lens from being positioned outside the image:*/
 				if (x > img.width - lens.offsetWidth) { x = img.width - lens.offsetWidth; }
 				if (x < 0) { x = 0; }
@@ -1113,6 +1130,7 @@
 				lens.style.left = x + "px";
 				lens.style.top = y + "px";
 				/*display what the lens "sees":*/
+				result.style.backgroundRepeat = "no-repeat";
 				result.style.backgroundPosition = "-" + (x * cx) + "px -" + (y * cy) + "px";
 			}
 			function getCursorPos(e) {

@@ -136,7 +136,6 @@ const getCheckout = async (req, res) => {
 
         if (cart.items.length === 0) {
             res.redirect("/cart");
-            console.log("carted")
             return
         }
         res.render("user/checkout", { cart: cart, addresses: user.addresses });
@@ -167,7 +166,6 @@ const checkoutAddAddress = async (req, res) => {
 
             user.addresses.push(newAddress);
             const userData = await user.save()
-            console.log(userData)
 
             if (userData) {
                 res.status(200).json({ success: true, message: "Address added successfully!", user: userData })
@@ -178,8 +176,8 @@ const checkoutAddAddress = async (req, res) => {
 
     }catch (error) {
         res.status(500).send("Internal server Error");
-    console.log(error.message)
-}
+        onsole.log(error.message)
+    }
 }
 
 module.exports = {

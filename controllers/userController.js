@@ -242,7 +242,7 @@ const getHome = async (req, res) => {
 
         const products = await Products.find({listed:true}).populate("variants");
         const cart = await Cart.findOne({user_id:new ObjectId(req.session.userid)});
-        console.log(cart)
+
         res.render('user/home', { products: products, cartitems: cart.items.length })
     } catch (error) {
         console.log(error.message)
@@ -270,7 +270,6 @@ const getProduct = async (req, res) => {
         res.render("user/product", { product: prd, details: specification, cartitems: cart.items.length })
     } catch (error) {
         console.log(error.message)
-        res.status(500).send("internal server error");
     }
 }
 const getVariant = async (req, res) => {

@@ -40,8 +40,8 @@
 <!--===============================================================================================-->
 	<link rel="stylesheet" type="text/css" href="vendor/perfect-scrollbar/perfect-scrollbar.css">
 <!--===============================================================================================-->
-	<link rel="stylesheet" type="text/css" href="css/util.css">
-	<link rel="stylesheet" type="text/css" href="css/main.css">
+	<link rel="stylesheet" type="text/css" href="/css/util.css">
+	<link rel="stylesheet" type="text/css" href="/css/main.css">
 	<link rel="stylesheet" type="text/css" href="/css/fonts.css">
 	<style>
 		html{
@@ -50,7 +50,7 @@
 	</style>
 </head>
 <body class="animsition">
-	
+
 	<!-- Header -->
 	<header>
 		<nav class="navbar navbar-expand-lg border-bottom fixed-top bg-white border-3 border-black">
@@ -575,7 +575,7 @@
 									.then(result=>{
 										if(result.success){
 											console.log(result.message)
-											notify.dataset.notify = Number(notify.dataset.notify)++;
+											notify.dataset.notify = Number(notify.dataset.notify)+1;
 											
 											Swal.fire({
   											icon: 'success',

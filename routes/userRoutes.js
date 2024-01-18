@@ -8,6 +8,7 @@ const cartController = require("../controllers/cartController");
 const orderController = require("../controllers/orderController");
 const auth = require("../authentication/userAuth");
 
+
 //middlewares
 user_router.use(bodyParser.json());
 user_router.use(bodyParser.urlencoded({extended:true}));
@@ -41,11 +42,19 @@ user_router.put("/addtocart",auth.userValid,auth.userIn,cartController.addToCart
 user_router.put("/productaddtocart",auth.userValid,auth.userIn,cartController.productAddToCart);
 user_router.patch("/updatecart",auth.userValid,auth.userIn,cartController.updateCart);
 user_router.delete("/deletecartitem",auth.userValid,auth.userIn,cartController.cartItemDelete);
+
+// checkout
 user_router.get("/checkout",auth.userValid,auth.userIn,cartController.getCheckout);
 user_router.post("/checkoutaddaddress",auth.userValid,auth.userIn,upload.none(),cartController.checkoutAddAddress);
 
 // order
 user_router.put("/order",auth.userValid,auth.userIn,orderController.createOrder);
+user_router.post("/create-online-order",auth.userValid,auth.userIn,orderController.createOrder);
+user_router.post("/create-payment-intent",auth.userValid,auth.userIn,orderController.createPaymentIntent);
+
+// webhook & sse
+user_router.post("/webhook",express.json({raw:"application/json"}),orderController.listenToStripe);
+user_router.get("/sseconnect",auth.userValid,auth.userIn,orderController.sseSetup);
 
 
 //account

@@ -54,10 +54,15 @@
                                             <%= order.status %>
                                         </span>
                                         <% } %>
-
+                    </li>
                     <li class="list-group-item">Payment: <span class="badge bg-success">
-                            <%= order.payment_type %>
+                        <%= order.payment_type %>
                         </span>
+                    </li>
+                    <li class="list-group-item">Payment Status: <span class="text-secondary">
+                        <%= order.payment_status %>
+                        </span>
+                    </li>
                 </ul>
             </div>
             <div class="col-md-4 text-center">

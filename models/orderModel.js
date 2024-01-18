@@ -11,7 +11,7 @@ const orderSchema = new mongoose.Schema({
     customer_id:{
         type:mongoose.Types.ObjectId,
         ref:'user',
-        requierd:true
+        required:true
     },
     status:{
         type:String,
@@ -25,9 +25,6 @@ const orderSchema = new mongoose.Schema({
     payment_type:{
         type:String,
         required:true
-        // type:mongoose.Types.ObjectId,
-        // ref:"payment",
-        // required:true
     },
     payment_status:{
         type:String,
