@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" data-bs-theme="dark">
 
 <head>
 	<!-- Required meta tags -->
@@ -8,6 +8,10 @@
 	<title>SKRYMHEAD</title>
 	<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet"
 		integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
+	<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://cdn.datatables.net/1.13.7/js/jquery.dataTables.min.js"></script>
+    <script src="https://cdn.datatables.net/1.13.7/js/dataTables.bootstrap5.min.js"></script>
+	<link rel="stylesheet" href="https://cdn.datatables.net/1.13.7/css/jquery.dataTables.min.css">
 	<style>
 		#logo {
 			margin-right: 5px;
@@ -65,24 +69,25 @@
 		</div>
 	</nav>
 
-	<div class="container">
-		<div class="row">
-			<div class="col-md-10 pt-5">
+	<div class="container-fluid">
+		<div class="m-3 mb-0 d-flex justify-content-between">
+			<div class="">
 				<h1 class="text-white">Categories</h1>
 			</div>
-			<div class="col-md-2 pt-5">
+			<div class="">
 				<a href="/admin/addcategory" style="text-decoration: none;">Add Category</a>
 			</div>
 		</div>
 	</div>
 
 	<div class="container">
-		<div class="m-3 mt-5 px-4 text-center col-md-12">
-			<table class="table rounded table-dark">
-				<thead class="table-light " style="font-family: Arial, Helvetica, sans-serif;">
+		<div class="mt-1 px-5 text-center col-md-12">
+			<table class="table rounded table-dark" id="categoryTable">
+				<thead class="table-light " style="font-family: Arial, Helvetica, sans-serif;" >
 					<tr>
 						<th scope="col">Category Name</th>
 						<th scope="col">Action</th>
+						<th scope="col" class="">Offer</th>
 						<th scope="col" class="">Edit</th>
 					</tr>
 				</thead>
@@ -102,6 +107,7 @@
 											data-id="<%= category._id %>">List</button>
 									<% } %>
 							</td>
+							<td><%= category.offer ? category.offer+"%" : "" %></td>
 							<td><a href="/admin/editcategory?id=<%= category._id %>">Edit</a></td>
 						</tr>
 						<% }) %>
@@ -114,6 +120,12 @@
 	<!-- nav0 -->
 
 	<script>
+		$(document).ready(function () {
+				new DataTable('#categoryTable', {
+					"lengthMenu": [ 10, 20, 50],
+					"pageLength": 10
+				});
+		});
 		const togglebtn = document.querySelectorAll(".toggle-button");
 
 		togglebtn.forEach((button) => {

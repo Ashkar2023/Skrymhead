@@ -1,13 +1,19 @@
 const bcrypt = require("bcrypt");
 const nodemailer = require("nodemailer");
-const mongoose = require("mongoose")
+const mongoose = require("mongoose");
 const { ObjectId } = require("mongodb");
 
 // models/schema
-const User = require("../models/userModel")
-const Cart = require("../models/cartModel")
-const TempUser = require("../models/tempUserModel")
+const User = require("../models/userModel");
+const Cart = require("../models/cartModel");
+const TempUser = require("../models/tempUserModel");
 const Products = require("../models/productModel");
+const Category = require("../models/categoryModel");
+const Wallet = require("../models/walletModel");
+
+//modules
+const {sort} = require("../config/enums");
+const categoryModel = require("../models/categoryModel");
 
 
 //Controllers
@@ -42,7 +48,7 @@ const insertTempUser = async (req, res) => {
         } else if (tempUser) {
             req.session.Email = Email;
             let OTP = generateOTP();
-            const updateComplete = await TempUser.findOneAndUpdate({ email: tempUser.email }, { $set: { otp: OTP, expireAt: Date.now() + 60 * 1000 } });
+            const updateComplete = await TempUser.findOneAndUpdate({ email: tempUser.email }, { $set: { otp: OTP, expireAt: Date.now() + 90 * 1000 } });
             
             if(updateComplete){
                 sendVerifyMail(Email, Email, OTP);
@@ -119,7 +125,7 @@ const updateOTP = async (req, res) => {
     try {
         const Email = req.session.Email;
         const OTP = generateOTP();
-        const updateComplete = await TempUser.findOneAndUpdate({ email: Email }, { $set: { otp: OTP, expireAt: Date.now() + 60 * 1000 } });
+        const updateComplete = await TempUser.findOneAndUpdate({ email: Email }, { $set: { otp: OTP, expireAt: Date.now() + 60 * 1000, deleteOn: Date.now() } });
         if(updateComplete){
             console.log("otp updated")
             sendVerifyMail(Email, Email, OTP);
@@ -138,10 +144,9 @@ const verifyOTP = async (req, res) => {
     try {
         const Email = req.session.Email;
         const formData = req.body;
-
         const tempUser = await TempUser.findOne({ email: Email })
 
-        if (req.body.otp === tempUser.otp) {
+        if (formData.otp === tempUser.otp) {
 
             const hashPassword = await securePassword(req.body.password);
 
@@ -158,6 +163,8 @@ const verifyOTP = async (req, res) => {
                 const user = await User.findOne({email:Email}); 
                 const newCart = new Cart({user_id:user._id,products:[]})
                 await newCart.save();
+                const wallet = new Wallet({user_id:user._id})
+                await wallet.save();
                 
                 delete Email;
                 let deleteTemp = await TempUser.findOneAndDelete({email:Email});
@@ -240,7 +247,7 @@ const getHome = async (req, res) => {
     try {
         delete req.session.Email; //Used to store the email for signup
 
-        const products = await Products.find({listed:true}).populate("variants");
+        const products = await Products.find({listed:true}).populate("variants").limit(4);
         const cart = await Cart.findOne({user_id:new ObjectId(req.session.userid)});
 
         res.render('user/home', { products: products, cartitems: cart.items.length })
@@ -251,10 +258,11 @@ const getHome = async (req, res) => {
 
 const getShop = async (req, res) => {
     try {
-        const product = await Products.find({listed:true}).populate("variants")
+        const product = await Products.find({listed:true}).populate("variants").populate("category")
         const cart = await Cart.findOne({user_id:new ObjectId(req.session.userid)});
+        const categories = await Category.find()
 
-        res.render('user/shop', { products: product, cartitems: cart.items.length})
+        res.render('user/shop', { products: product, cartitems: cart.items.length, categories : categories})
     } catch (error) {
         console.log(error.message)
     }
@@ -263,7 +271,7 @@ const getShop = async (req, res) => {
 const getProduct = async (req, res) => {
     try {
         const id = req.query.id;
-        const prd = await Products.findOne({ _id: id }).populate("variants").populate("category");
+        const prd = await Products.findOne({ _id: id,listed:true}).populate("variants").populate("category");
         const cart = await Cart.findOne({user_id:new ObjectId(req.session.userid)});
         const specification = prd.specification.split(".");
         
@@ -272,10 +280,114 @@ const getProduct = async (req, res) => {
         console.log(error.message)
     }
 }
+
+const getFilteredProducts = async(req,res)=>{
+    try{
+        let priceRanges, categoryFilter ;
+        
+        const filterPrice = req.body.price;
+        const category = req.body.category;
+        const sortOption = sort[req.body.sort];
+
+        const categoryArray = category instanceof Array ? category : category==="none" ? ["none"] : [category] ;
+        const priceArray = filterPrice === "all" ? null : filterPrice ; 
+        
+        if(priceArray instanceof Array && priceArray.length !== 1 ){
+            priceRanges = priceArray.map((price)=>{
+                let temp = price.split("-");
+                let [ lower,upper ] = temp.map(Number);
+                return {$and:[{$gte:["$$variant.price",lower]}, {$lte:["$$variant.price",upper]}]};
+            })
+        }else if(filterPrice==="all"){
+            priceRanges = {$gte:["$$variant.price",0]};
+        }else{
+            let temp = filterPrice.split("-");
+            let [lower,upper]= temp.map(Number);
+            priceRanges = [ {$and:[{$gte:["$$variant.price",lower]}, {$lte:["$$variant.price",upper]}]} ]
+        }
+
+        if(categoryArray.includes("none")){
+            categoryFilter = {"category.category" :{ $ne : "none" } };
+        }else{
+            categoryFilter = {"category.category" :{ $in : categoryArray } };
+        }
+
+        const PRODUCTS = await Products.aggregate([
+            {
+                $match:{
+                    listed:true
+                }
+            },
+            {
+                $lookup: {
+                    from: "variants",
+                    foreignField: "_id",
+                    localField: "variants",
+                    as: "variants"
+                }
+            },
+            {
+                $lookup: {
+                    from: "categories",
+                    foreignField: "_id",
+                    localField: "category",
+                    as: "category"
+                }
+            },
+            {
+                $addFields:{
+                    "variants":{
+                        $filter:{
+                            input:"$variants",
+                            as:"variant",
+                            cond:{
+                                $or:priceRanges
+                            }
+                        }
+                    },
+                    "category":{
+                       $arrayElemAt:["$category",0]
+                    }
+                }
+            },
+            {
+                $match: {
+                    $and: [
+                        {
+                            variants: {
+                                $not: {
+                                    $size: 0
+                                }
+                            }
+                        },
+                        categoryFilter
+                    ]
+                }
+            },
+            {
+                $unwind:"$variants"
+            },
+            {
+                $sort:sortOption
+            }
+        ]);
+
+        
+        if(PRODUCTS){
+            res.status(200).json({message:"Filtered products successfully",success:true, products: PRODUCTS,});
+        }else{
+            res.status(400).json({message:"Couldn't find the products",success:false}); 
+        }
+    }catch(error){
+        console.log(error.message)
+        res.status(500).send("Internal server error");
+    }
+}
+
 const getVariant = async (req, res) => {
     try {
         const index = Number(req.params.index);
-        const prd = await Products.findById({ _id:req.query.id }).populate("variants");
+        const prd = await Products.findById({ _id:req.query.id }).populate("variants").populate("category");
         const variantDetails = index ? prd.variants[index] : prd.variants[0];
 
         if(variantDetails){
@@ -305,6 +417,7 @@ module.exports = {
     getShop,
     getVariant,
     getProduct,
+    getFilteredProducts,
     updateOTP,
     verifyLogin,
     getSignUp,

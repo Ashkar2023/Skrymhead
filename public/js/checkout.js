@@ -54,7 +54,6 @@ async function handleSubmit(e) {
 	}
 	
 	setLoading(false);
-	$('#stripe-modal').modal('hide');
 }
 
 
@@ -69,7 +68,8 @@ function showMessage(messageText) {
 	setTimeout(function () {
 		messageContainer.classList.add("hidden");
 		messageContainer.textContent = "";
-	}, 4000);
+		$('#stripe-modal').modal('hide');
+	}, 5000);
 }
 
 // Show a spinner on payment submission

@@ -145,7 +145,8 @@
         var $grid = $topeContainer.each(function () {
             $(this).isotope({
                 itemSelector: '.isotope-item',
-                layoutMode: 'fitRows',
+                layoutMode: 'masonry',
+                itemPositionDataEnabled: true,
                 percentPosition: true,
                 animationEngine : 'best-available',
                 masonry: {
@@ -169,6 +170,7 @@
 
     /*==================================================================
     [ Filter / Search product ]*/
+    
     $('.js-show-filter').on('click',function(){
         $(this).toggleClass('show-filter');
         $('.panel-filter').slideToggle(400);

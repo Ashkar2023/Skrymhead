@@ -1,6 +1,7 @@
 const Cart = require("../models/cartModel");
 const User = require("../models/userModel");
 const Product = require("../models/productModel");
+const Coupon = require("../models/couponModel");
 const mongoose = require("mongoose");
 const { ObjectId } = require("mongodb");
 
@@ -42,8 +43,7 @@ const addToCart = async (req, res) => {
                 return res.status(400).json({ message: "Couldn't update cart", success: false });
             }
         }
-
-
+        
     } catch (error) {
         res.status(500).send("Internal server Error!");
         console.log(error.message)
@@ -180,6 +180,44 @@ const checkoutAddAddress = async (req, res) => {
     }
 }
 
+const applyCoupon = async(req,res)=>{
+    try{
+        const { coupon : cartCoupon  } = await Cart.findOne({user_id:req.session.userid});
+        const coupon = await Coupon.findOne({code:req.body.coupon, active: true});
+
+        if(cartCoupon){
+            return res.status(400).json({message:"A coupon has already been applied.",success:false, color:"#ff9800"});
+        }else if(coupon && coupon.price_limit <= req.body.total){
+            const cart = await Cart.findOneAndUpdate({user_id:req.session.userid},{$set:{coupon:req.body.coupon,discount:coupon.discount}});
+            return res.status(200).json({message:"Coupon applied successfully",success:true, code: coupon.code, discount: coupon.discount});
+        }else if(coupon){
+            return res.status(400).json({message:`This coupon's eligiible only for orders o/a ${coupon.price_limit}`,success:false, color:"#ff9800"});
+        }else{
+            return res.status(400).json({message:"Coupon not found",success:false});
+        }
+
+    }catch(error){
+        console.log(error.message)
+        res.status(500).send("Internal server error");
+    }
+}
+
+const removeCoupon = async(req,res)=>{
+    try{
+        const cart = await Cart.findOneAndUpdate({user_id:req.session.userid},{$unset:{coupon:1,discount:1}});
+        
+        if(cart){
+            res.status(200).json({message:"Coupon removed successfully",success:true});
+        }else{
+            res.status(400).json({message:"No applied coupons found",success:false});
+        }
+
+    }catch(error){
+        console.log(error.message)
+        res.status(500).send("Internal server error");
+    }
+}
+
 module.exports = {
     getCart,
     addToCart,
@@ -187,5 +225,7 @@ module.exports = {
     updateCart,
     cartItemDelete,
     getCheckout,
-    checkoutAddAddress
+    checkoutAddAddress,
+    applyCoupon,
+    removeCoupon
 };

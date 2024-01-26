@@ -61,6 +61,11 @@
                                     <i class="bi bi-box-seam-fill"> </i> Orders
                                 </a>
                             </li>
+                            <li class="dropdown-item ">
+                                <a class="nav-link" href="/wallet">
+                                    <i class="bi bi-wallet2"> </i> Skrym-Wallet
+                                </a>
+                            </li>
                         </ul>
                     </li>
                     <li class="nav-item">
@@ -164,7 +169,7 @@
                 <div class="row">
                     <div class="col-md-6 mb-3">
                         <div class="form-outline">
-                            <label for="addressName">Address Name</label>
+                            <label for="addressName">Address Name<small class="badge ms-2 bg-danger" id="AN"></small></label>
                             <input type="text" id="addressName" name="name" class="form-control">
                         </div>
                     </div>
@@ -172,56 +177,101 @@
                         <h3 class="viga">&#129144; ADD ADDRESS</h3>
                     </div>
                 </div>
-
+        
                 <div class="row mb-3">
                     <div class="col">
                         <div class="form-outline">
-                            <label class="form-label" for="houseName">House Name</label>
+                            <label class="form-label" for="houseName">House Name<small class="badge ms-2 bg-danger"
+                                    id="HN"></small></label>
                             <input type="text" id="houseName" name="house" class="form-control" />
                         </div>
                     </div>
                     <div class="col">
                         <div class="form-outline">
-                            <label class="form-label" for="streetName">Street Name</label>
+                            <label class="form-label" for="streetName">Street Name<small class="badge ms-2 bg-danger"
+                                    id="SN"></small></label>
                             <input type="text" id="streetName" name="street" class="form-control" />
                         </div>
                     </div>
                 </div>
-
+        
                 <div class="row">
                     <div class="col-md-6">
                         <div class="form-outline mb-3">
-                            <label class="form-label" for="city">City</label>
+                            <label class="form-label" for="city">City<small class="badge ms-2 bg-danger"
+                                    id="C"></small></label>
                             <input type="text" id="city" name="city" class="form-control" />
                         </div>
                     </div>
-
+        
                     <div class="col-md-6">
                         <div class="form-outline mb-3">
-                            <label class="form-label" for="state">State</label>
-                            <input type="text" id="state" name="state" class="form-control" />
+                            <label class="form-label" for="state">State<small class="badge ms-2 bg-danger"
+                                    id="S"></small></label>
+                            <select id="state" name="state" class="form-control">
+                                <option value="" disabled selected>- Select State -</option>
+                                <option value="Andhra Pradesh">Andhra Pradesh</option>
+                                <option value="Arunachal Pradesh">Arunachal Pradesh</option>
+                                <option value="Assam">Assam</option>
+                                <option value="Bihar">Bihar</option>
+                                <option value="Chhattisgarh">Chhattisgarh</option>
+                                <option value="Goa">Goa</option>
+                                <option value="Gujarat">Gujarat</option>
+                                <option value="Haryana">Haryana</option>
+                                <option value="Himachal Pradesh">Himachal Pradesh</option>
+                                <option value="Jharkhand">Jharkhand</option>
+                                <option value="Karnataka">Karnataka</option>
+                                <option value="Kerala">Kerala</option>
+                                <option value="Madhya Pradesh">Madhya Pradesh</option>
+                                <option value="Maharashtra">Maharashtra</option>
+                                <option value="Manipur">Manipur</option>
+                                <option value="Meghalaya">Meghalaya</option>
+                                <option value="Mizoram">Mizoram</option>
+                                <option value="Nagaland">Nagaland</option>
+                                <option value="Odisha">Odisha</option>
+                                <option value="Punjab">Punjab</option>
+                                <option value="Rajasthan">Rajasthan</option>
+                                <option value="Sikkim">Sikkim</option>
+                                <option value="Tamil Nadu">Tamil Nadu</option>
+                                <option value="Telangana">Telangana</option>
+                                <option value="Tripura">Tripura</option>
+                                <option value="Uttar Pradesh">Uttar Pradesh</option>
+                                <option value="Uttarakhand">Uttarakhand</option>
+                                <option value="West Bengal">West Bengal</option>
+                                <option value="Andaman and Nicobar Islands">Andaman and Nicobar Islands</option>
+                                <option value="Chandigarh">Chandigarh</option>
+                                <option value="Dadra and Nagar Haveli">Dadra and Nagar Haveli</option>
+                                <option value="Daman and Diu">Daman and Diu</option>
+                                <option value="Lakshadweep">Lakshadweep</option>
+                                <option value="Delhi">Delhi</option>
+                                <option value="Puducherry">Puducherry</option>
+                            </select>
+
                         </div>
                     </div>
                 </div>
-
+        
                 <div class="col-md-3">
                     <div class="form-outline mb-3">
-                        <label class="form-label" for="pinCode">Pin-Code</label>
+                        <label class="form-label" for="pinCode">Pin-Code<small class="badge ms-2 bg-danger"
+                                id="PC"></small></label>
                         <input type="number" id="pinCode" name="pincode" class="form-control" />
                     </div>
                 </div>
-
+        
                 <div class="row">
                     <div class="col-md-6">
                         <div class="form-outline mb-3">
-                            <label class="form-label" for="phoneNumber">Phone Number</label>
+                            <label class="form-label" for="phoneNumber">Phone Number<small class="badge ms-2 bg-danger"
+                                    id="PN"></small></label>
                             <input type="number" id="phoneNumber" name="phone" class="form-control" />
                         </div>
                     </div>
-
+        
                     <div class="col-md-6">
                         <div class="form-outline mb-3">
-                            <label class="form-label" for="altPhoneNumber">Alt Phone Number</label>
+                            <label class="form-label" for="altPhoneNumber">Alt Phone Number<small class="badge ms-2 bg-danger"
+                                    id="APN"></small></label>
                             <input type="number" id="altPhoneNumber" name="altphone" class="form-control" />
                         </div>
                     </div>
@@ -239,24 +289,95 @@
         const submit = document.getElementById("formSubmit");
         const addressWrapper = document.getElementById("addressWrapper");
 
-        // Function to update the address wrapper content
-        function updateAddressWrapper(addresses) {
-            const html = addresses.map(address =>
-                `<div class="card mb-2">
-                    <div class="card-body">
-                        <h5 class="card-title">${address.address_name}</h5>
-                        <p class="card-text m-0">${address.house_name}, ${address.street_address}</p>
-                        <p class="card-text m-0">${address.city}, ${address.state}, ${address.pincode}</p>
-                        <p class="card-text m-0">Phone: ${address.phone}</p>
-                        <p class="card-text m-0">Alt Phone: ${address.alt_phone}</p>
-                    </div>
-                </div>`).join('');
-            console.log(html)
-            addressWrapper.innerHTML = html;
+        function validate() {
+            const addressName = document.getElementById("addressName").value;
+            const houseName = document.getElementById("houseName").value;
+            const streetName = document.getElementById("streetName").value;
+            const city = document.getElementById("city").value;
+            const state = document.getElementById("state").value;
+            const pinCode = document.getElementById("pinCode").value;
+            const phoneNumber = document.getElementById("phoneNumber").value;
+            const altPhoneNumber = document.getElementById("altPhoneNumber").value;
+
+            let formOK = true;
+            let AddressRegex = /^[0-9A-Za-z\s\.,#-]+$/;
+            let numberRegex = /^\d$/;
+
+            if (addressName.length < 3) {
+                document.getElementById("AN").textContent = "at least 3 characters";
+                formOK = false
+            } else if (!addressName.match(AddressRegex)) {
+                document.getElementById("AN").textContent = "Only the specified special characters [ . , # - ] allowed."
+                formOK = false
+            } else {
+                document.getElementById("AN").textContent = "";
+            }
+
+            if (houseName.length < 3) {
+                document.getElementById("HN").textContent = "at least 3 characters";
+                formOK = false
+            } else if (!houseName.match(AddressRegex)) {
+                document.getElementById("HN").textContent = "Only the specified special characters [ . , # - ] allowed."
+                formOK = false
+            } else {
+                document.getElementById("HN").textContent = "";
+            }
+
+            if (streetName.length < 3) {
+                document.getElementById("SN").textContent = "at least 3 characters";
+                formOK = false
+            } else if (!streetName.match(AddressRegex)) {
+                document.getElementById("SN").textContent = "Only the specified special characters [ . , # - ] allowed."
+                formOK = false
+            } else {
+                document.getElementById("SN").textContent = "";
+            }
+
+            if (city.length < 3) {
+                document.getElementById("C").textContent = "at least 3 characters";
+                formOK = false
+            } else if (!city.match(AddressRegex)) {
+                document.getElementById("C").textContent = "Only the specified special characters [ . , # - ] allowed."
+                formOK = false
+            } else {
+                document.getElementById("C").textContent = "";
+            }
+
+            if (state === '') {
+                document.getElementById("S").textContent = "please select one option";
+                formOK = false
+            } else {
+                document.getElementById("S").textContent = "";
+            }
+
+            if (pinCode.length !== 6 && !pinCode.match(numberRegex)) {
+                document.getElementById("PC").textContent = "Enter a valid 6-digit";
+                formOK = false
+            } else {
+                document.getElementById("PC").textContent = "";
+            }
+
+            if (phoneNumber.length !== 10 && !phoneNumber.match(numberRegex)) {
+                document.getElementById("PN").textContent = "Enter a valid 10-digit";
+                formOK = false
+            } else {
+                document.getElementById("PN").textContent = "";
+            }
+
+            if (altPhoneNumber.length === 0 || altPhoneNumber.length === 10) {
+                document.getElementById("APN").textContent = "";
+            } else if ((altPhoneNumber.length >= 1 && altPhoneNumber.length < 10) && !altPhoneNumber.match(numberRegex)) {
+                document.getElementById("APN").textContent = "Enter a valid 10-digit";
+                formOK = false;
+            }
+
+            return formOK;
         }
 
         submit.addEventListener("click", (e) => {
             e.preventDefault();
+
+            if(!validate()) return;
 
             const formData = {
                 name: document.getElementById("addressName").value,
@@ -279,7 +400,7 @@
                 .then(response => {
                     if (response.ok) {
                         return response.json();
-                    }else{
+                    } else {
                         throw new Error("Internal server error!!")
                     }
                 })
@@ -294,20 +415,46 @@
                             stopOnFocus: true
                         }).showToast();
                         updateAddressWrapper(data.user.addresses);
-                    }else{
+                    } else {
                         Toastify({
-                                text: data.message,
-                                duration: 2000,
-                                gravity: "bottom",
-                                position: "left",
-                                backgroundColor: "#ff0000",
-                                stopOnFocus: true
-                            }).showToast();
+                            text: data.message,
+                            duration: 2000,
+                            gravity: "bottom",
+                            position: "left",
+                            backgroundColor: "#ff0000",
+                            stopOnFocus: true
+                        }).showToast();
                     }
                 })
                 .catch(error => {
                     console.error(error.message);
                 });
+
+            // Function to update the address wrapper content
+            function updateAddressWrapper(addresses) {
+                const html = addresses.map((address, index) =>
+                        `<div class="card mb-2" id="address${index}">
+                            <div class="card-body">
+                                <div class="d-flex justify-content-between">
+                                    <h5 class="card-title">
+                                        ${address.address_name}
+                                    </h5>
+                                    <button class="btn btn-dark" onclick="deleteAddress('${address._id}', ${index})">Delete</button>
+                                </div>
+                                <p class="card-text m-0">
+                                    ${address.house_name}, ${address.street_address}
+                                </p>
+                                <p class="card-text m-0">
+                                    ${address.city}, ${address.state}, ${address.pincode}
+                                </p>
+                                <p class="card-text m-0">Phone: ${address.phone}</p>
+                                <p class="card-text m-0">Alt Phone: ${address.alt_phone}</p>
+                            </div>
+                        </div>`).join('');
+
+                console.log(html)
+                addressWrapper.innerHTML = html;
+            }
         });
     </script>
 

@@ -1762,6 +1762,9 @@ button.mfp-close {
 .filter-col2 {width: 27%;}
 .filter-col3 {width: 26%;}
 .filter-col4 {width: 20%;}
+.hover-subtle{
+  color: #555555;
+}
 
 /*---------------------------------------------*/
 .filter-link {
@@ -2278,6 +2281,11 @@ input.num-product::-webkit-inner-spin-button {
   line-height: 1.333333;
 }
 
+.mtext-100 {
+  font-family: Helvetica, sans-serif;
+  font-size: 14px;
+}
+
 .mtext-102 {
   font-family: Poppins-SemiBold;
   font-size: 14px;
@@ -2288,6 +2296,12 @@ input.num-product::-webkit-inner-spin-button {
   font-family: Poppins-Bold;
   font-size: 18px;
   line-height: 1.333333;
+  text-transform: uppercase;
+}
+
+.mtext-010 {
+  font-family: Poppins-Bold;
+  font-size: 15px;
   text-transform: uppercase;
 }
 
@@ -3071,7 +3085,7 @@ input.num-product::-webkit-inner-spin-button {
 
 .hov-cl0:hover {color: #fff;}
 .hov-bg0:hover {background-color: #fff;}
-.hov-cl1:hover {color: #717fe0;}
+.hov-cl1:hover {color: #65aac8;}
 .hov-bg1:hover {background-color: #717fe0;}
 
 /*---------------------------------------------*/

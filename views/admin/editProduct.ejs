@@ -7,13 +7,19 @@
 	<title>SKRYMHEAD</title>
 	<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet"
 		integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
-	<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"
-		integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL"
-		crossorigin="anonymous"></script>
+
+	<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 	<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.2/font/bootstrap-icons.min.css" />
+	<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.6.1/cropper.min.css"
+	integrity="sha512-hvNR0F/e2J7zPPfLC9auFe3/SE0yG4aJCOd/qxew74NN7eyiSKjr7xJJMu1Jy2wf7FXITpWS1E/RY8yzuXN7VA=="
+	crossorigin="anonymous" referrerpolicy="no-referrer" />
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.6.1/cropper.min.js"
+	integrity="sha512-9KkIqdfN7ipEW6B6k+Aq20PV31bjODg4AA52W+tYtAE0jE0kMx49bjJ3FgvS56wzmyfMUHbQ4Km2b7l9+Y/+Eg=="
+	crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+
 	<link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/toastify-js/src/toastify.min.css">
 	<script src="https://cdn.jsdelivr.net/npm/toastify-js"></script>
-	<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 	<style>
 		input::-webkit-outer-spin-button,
 		input::-webkit-inner-spin-button {
@@ -74,6 +80,121 @@
 			<a href="/admin/products" style="text-decoration: none;">&#x2190; go back</a>
 		</div>
 	</div>
+
+	<!-- Modal -->
+	<div class="modal fade" id="cropModal" tabindex="-1" aria-labelledby="cropModal" aria-hidden="true"
+		data-bs-keyboard="false" data-bs-backdrop="static" >
+		<div class="modal-dialog">
+			<div class="modal-content">
+				<div class="d-flex justify-content-between m-3">
+					<h1 class="modal-title fs-5" id="cropModalLabel">Select & crop image</h1>
+					<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+				</div>
+				<div class="modal-body">
+					<div class="image-container">
+						<canvas id="cropperCanvas" style="max-width: 400px;"></canvas>
+					</div>
+				</div>
+
+				<div class="modal-footer">
+					<button class="btn btn-dark" id="saveButton">save</button>
+				</div>
+			</div>
+		</div>
+	</div>
+
+	<script>
+		$(window).on("load",function () {
+			const canvas = document.getElementById('cropperCanvas');
+			let cropper,imageUrl,parent,childImg;
+
+			function initCropper(imageUrl) {
+				const image = new Image();
+				image.src = imageUrl;
+
+
+				image.onload = function () {
+					canvas.width = image.width;
+					canvas.height = image.height;
+					const ctx = canvas.getContext('2d');
+					ctx.clearRect(0, 0, canvas.width, canvas.height); // Clear the canvas
+					ctx.drawImage(image, 0, 0, image.width, image.height);
+
+					if (cropper) {
+						cropper.replace(imageUrl);
+					}
+
+					cropper = new Cropper(canvas, {
+						aspectRatio: 1,
+						viewMode: 1,
+						responsive: true,
+						zoomable: false,
+						crop: function (event) {
+						},
+					});
+
+				}
+			}
+
+			$('.crop-image-button').on('click', function (event) {
+				imageUrl = $(this).data('imageurl');
+				parent = this.closest("div")
+
+				setTimeout(() => {
+					initCropper(`/products/<%= product.brand+' '+product.model %>/${imageUrl}`);
+				}, 700);
+			});
+
+
+			$('#saveButton').on('click', async function () {
+				obj = cropper.getCroppedCanvas();
+				obj.toBlob((blob) => {
+
+					const formData = new FormData();
+					formData.append("image", blob, imageUrl);
+					formData.append("oldImage",imageUrl);
+					
+					fetch("/admin/cropimages", {
+						method: "POST",
+						body: formData
+					})
+						.then(response => response.json())
+						.then(data => {
+
+							if (data.success) {
+								childImg = parent.querySelector("img");
+								childDltBtn = parent.querySelector("button.delete-image-button");
+								childCropBtn = parent.querySelector("button.crop-image-button");
+
+								childImg.src = "/products/<%= product.brand+' '+product.model %>/"+data.imageUrl;
+								
+								childDltBtn.dataset.imageurl = childImg.dataset.imageurl = childCropBtn.dataset.imageurl = data.imageUrl;
+
+								document.querySelector("button.btn-close").click();
+								cropper.destroy();
+
+								Toastify({
+									text: data.message,
+									duration: 2000,
+									gravity: "top",
+									position: "center",
+									backgroundColor: "#0c912b",
+									stopOnFocus: true,
+									offset: {
+										y: 20
+									}
+								}).showToast();
+							}
+						})
+						.catch(error => {
+							console.log(error.message);
+						});
+
+				})
+			});
+		})
+	</script>
+
 	<div class="ms-5 d-flex justify-content-center">
 		<div class="mx-3 col-md-5 border rounded  bg-dark text-white">
 
@@ -85,8 +206,11 @@
 					<div class="d-flex flex-wrap">
 						<% product.images.forEach((image, index)=> { %>
 							<div class="m-2 position-relative" id="img<%= index %>">
-								<button class="btn position-absolute start-0 top-0 delete-image-button"
+								<button class="btn position-absolute ps-1 p-0 start-0 top-0 delete-image-button"
 									data-imageurl="<%= image.url %>"><i class="bi bi-trash"></i></button>
+								<button class="btn position-absolute pe-1 p-0 end-0 top-0 crop-image-button"
+									data-bs-target="#cropModal" data-bs-toggle="modal"
+									data-imageurl="<%= image.url %>"><i class="bi bi-crop"></i></button>
 								<img src="/products/<%= product.brand+' '+product.model %>/<%= image.url %>"
 									alt="Product Image" width="70">
 							</div>
@@ -100,7 +224,7 @@
 						deleteButtons.forEach(button => {
 							button.addEventListener('click', function (event) {
 								const imgURL = this.dataset.imageurl;
-								console.log(imgURL);
+
 								const imgContainerId = event.currentTarget.parentNode.id
 								const imgContainer = document.getElementById(imgContainerId);
 
@@ -177,7 +301,7 @@
 									Toastify({
 										text: data.message,
 										backgroundColor: "linear-gradient(to right, #00b09b, #96c93d)",
-										duration: 2000,
+										duration: 1300,
 										close: true,
 										gravity: 'top',
 										position: 'center',
@@ -185,7 +309,7 @@
 
 									setTimeout(() => {
 										window.location.reload();
-									}, 2000);
+									}, 1400);
 								} else {
 									Toastify({
 										text: data.message,
@@ -215,7 +339,7 @@
 						<div class="form-group my-3 col-md-6">
 							<label for="model">Model<small class="ms-1 text-danger" id="M"></small></label>
 							<input type="text" pattern="^[A-Za-z0-9\s\-]+$" class="form-control form-control-sm"
-								value="<%= product.model %>" id="model" name="model" >
+								value="<%= product.model %>" id="model" name="model">
 						</div>
 					</div>
 					<div class="form-group my-3">
@@ -227,18 +351,18 @@
 					<div class="row">
 						<div class="form-group my-3 col-md-6">
 							<label for="category">Category<small class="ms-1 text-danger" id="C"></small></label>
-							<select class="form-select form-control-sm" id="category" name="category" >
+							<select class="form-select form-control-sm" id="category" name="category">
 								<% categories.forEach((category)=>{ %>
-									<% if(product.category===category.category){ %>
+									<% if( category._id === product.category){ %>
+										<option value='<%= category._id %>'>
+											<%= category.category %>
+										</option>
+									<% }else{ %>
 										<option selected value='<%= category._id %>'>
 											<%= category.category %>
 										</option>
-										<% }else{ %>
-											<option value='<%= category._id %>'>
-												<%= category.category %>
-											</option>
-										<% } %>
-									<% }) %>
+									<% } %>
+								<% }) %>
 							</select>
 						</div>
 						<div class="form-group my-3 col-md-6 d-flex align-items-end">
@@ -294,12 +418,12 @@
 			}
 
 			const productForm = document.getElementById("productForm");
-			productForm.addEventListener("submit",(event)=>{
+			productForm.addEventListener("submit", (event) => {
 				event.preventDefault()
-				
+
 				if (validate()) {
-					
-					(async function updateDetails(){
+
+					(async function updateDetails() {
 						const formData = new FormData(productForm);
 
 						try {
@@ -320,10 +444,10 @@
 										gravity: "top",
 										position: "center",
 										stopOnFocus: true,
-										offset:{
-											y:25
+										offset: {
+											y: 25
 										},
-										style:{
+										style: {
 											background: "linear-gradient(to right, #228B22, #4CAF50)",
 										}
 									}).showToast();
@@ -346,8 +470,8 @@
 								position: "center",
 								backgroundColor: "#ff0000",
 								stopOnFocus: true,
-								offset:{
-									y:25
+								offset: {
+									y: 25
 								}
 							}).showToast();
 						}
@@ -369,7 +493,7 @@
 				<div class="d-flex justify-content-between align-items-center">
 					<H1 class="">Variants</H1>
 					<div>
-						<button class="btn btn-danger" type="submit" form="variantForm" id="update">Update</button>
+						<button class="btn btn-success" type="submit" form="variantForm" id="update">Update</button>
 						<button type="button" class="btn btn-info" data-bs-toggle="modal"
 							data-bs-target="#addVariantModal">Add variant</button>
 					</div>
@@ -402,12 +526,18 @@
 								<% let productVar=JSON.stringify(product.variants) %>
 					</div>
 				</form>
+
+
 				<script>
 					let variantForm = document.getElementById("variantForm");
 					let update = document.getElementById("update");
 					let productVariants = JSON.parse('<%- productVar %>')
 
-					function isVariantChanged(variant) {
+					// the logic is, by taking the only variants where any of the input fields of variant where changed before submission
+					// so the payload will only consist of the changed variants feilds
+					// at the backend assign the the names of fields for updating variant fields.
+
+					function isVariantChanged(variant) { 
 						const variantInputs = document.querySelectorAll(`.input${variant.v_name}`);
 						return Array.from(variantInputs).some(input => input.value !== input.defaultValue);
 					}
@@ -449,11 +579,7 @@
 							body: formBody,
 						})
 							.then(response => {
-								if (response.ok) {
-									return response.json();
-								} else {
-									throw new Error("Failed to update variants");
-								}
+								return response.json();
 							})
 							.then(data => {
 								if (data.success) {
@@ -471,6 +597,8 @@
 									setTimeout(() => {
 										window.location.reload();
 									}, 2000);
+								}else{
+									throw new Error(data.message)
 								}
 							})
 							.catch(error => {
@@ -487,8 +615,108 @@
 					})
 				</script>
 			</div>
+			<!-- offer section -->
+			<div>
+				<form id="offerForm">
+					<div class="d-flex justify-content-between align-items-center mt-3">
+						<h1 class="">Offer</h1>
+					</div>
+					<div class="row col-md-7">
+						<div class="input-group mb-3  mt-2">
+							<input type="number" class="form-control" placeholder="%" name="product_offer" id="offerInput">
+							<button class="btn btn-outline-success" type="button" onclick="AddOffer()">Add Offer</button>
+							<button type="button" class="btn btn-outline-danger" onclick="removeOffer()">Remove Offer</button>
+						</div>
+					</div>
+				</form>
+			</div>
 		</div>
 		<script>
+			async function AddOffer(){
+				let value = document.querySelector("input[name='product_offer']").value;
+				
+				if(value <= 0 || value >= 100){
+					alert("value should be in between 0-100");
+					return;
+				}
+				
+				try {
+					const response = await fetch('/admin/addprodoff', {
+						method: "PUT",
+						headers:{
+							'Content-Type': 'application/json',
+						},
+						body: JSON.stringify({ value })
+					});
+
+					const result = await response.json();
+					if (response.ok) {
+						Toastify({
+							text: result.message,
+							duration: 2000,
+							gravity: "top",
+							position: 'right',
+							backgroundColor: "limegreen",
+							offset: {
+								x: 30,
+								y: 80
+							}
+						}).showToast();
+					} else {
+						Toastify({
+							text: result.message,
+							duration: 2000,
+							gravity: "top",
+							position: 'right',
+							backgroundColor: "orangered",
+							offset: {
+								x: 30,
+								y: 80
+							}
+						}).showToast();
+					}
+				} catch (error) {
+					console.log(error.message);
+				}
+			}
+
+			async function removeOffer(){
+				try {
+					const response = await fetch('/admin/remprodoff', {
+						method: "DELETE"
+					});
+
+					const result = await response.json();
+					if (response.ok) {
+						Toastify({
+							text: result.message,
+							duration: 2000,
+							gravity: "top",
+							position: 'right',
+							backgroundColor: "limegreen",
+							offset: {
+								x: 30,
+								y: 80
+							}
+						}).showToast();
+					} else {
+						Toastify({
+							text: result.message,
+							duration: 2000,
+							gravity: "top",
+							position: 'right',
+							backgroundColor: "orangered",
+							offset: {
+								x: 30,
+								y: 80
+							}
+						}).showToast();
+					}
+				} catch (error) {
+					console.log(error.message);
+				}
+			}
+
 			const imgPreview = document.getElementById('imagePreview');
 			const inputField = document.getElementById('productImages');
 
@@ -622,6 +850,9 @@
 				});
 		})	
 	</script>
+	<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"
+		integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL"
+		crossorigin="anonymous"></script>
 </body>
 
 </html>

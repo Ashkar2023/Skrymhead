@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" data-bs-theme="dark">
 
 <head>
 	<!-- Required meta tags -->
@@ -10,9 +10,27 @@
 		integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
 	<link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/toastify-js/src/toastify.min.css">
 	<script src="https://cdn.jsdelivr.net/npm/toastify-js"></script>
+	<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+	<script src="https://cdn.datatables.net/1.13.7/js/jquery.dataTables.min.js"></script>
+    <script src="https://cdn.datatables.net/1.13.7/js/dataTables.bootstrap5.min.js"></script>
+	<link rel="stylesheet" href="https://cdn.datatables.net/1.13.7/css/jquery.dataTables.min.css">
 	<style>
 		#logo {
 			margin-right: 5px;
+		}
+
+		.paginate_button{
+            padding: 0px !important;
+            margin-left: 0px !important;
+        }
+
+		.tableImagesCell{
+			display: table-cell;
+			vertical-align: middle;
+		}
+
+		.prdtableImages{
+			background-color: white;
 		}
 
 		body {
@@ -67,31 +85,32 @@
 		</div>
 	</nav>
 
-	<div class="container">
+	<div class="container my-3">
 		<div class="row">
 			<div class="col-md-10 pt-2">
 				<h1 class="text-white">PRODUCTS</h1>
 
 			</div>
-			<div class="col-md-2 pt-5 d-flex justify-content-center align-items-center">
-				<a href="/admin/addproduct" style="text-decoration: none;">Add Product</a>
+			<div class="col-md-2 d-flex justify-content-end align-items-center">
+				<a href="/admin/addproduct" style="text-decoration: none;"><button class="btn btn-outline-primary">Add Product</button></a>
 			</div>
 		</div>
 	</div>
 
 	<div class="container ">
-		<div class="m-3 mt-5 px-4 text-center col-md-12">
-			<table class="table table-dark table-bordered border">
+		<div class="m-3 mt-1 px-4 text-center col-md-12">
+			<table class="table table-dark border" id="productTable">
 				<thead class="table-light" style="font-family: Arial, Helvetica, sans-serif;">
 					<tr>
-						<th scope="col"></th>
+						<th scope="col">image</th>
 						<th scope="col">Brand</th>
 						<th scope="col">Model</th>
 						<th scope="col">Price</th>
 						<th scope="col">Stock</th>
 						<th scope="col">Category</th>
 						<th scope="col">Color</th>
-						<th colspan="2">Action</th>
+						<th scope="col">Offer</th>
+						<th scope="col">Action</th>
 					</tr>
 				</thead>
 
@@ -100,9 +119,11 @@
 						<% let v=product.variants,totalStock=0; %>
 
 							<tr>
-								<td style="background-color: azure;"><img
+								<td class="tableImagesCell">
+									<img class="prdtableImages"
 										src="/products/<%= product.brand+' '+product.model %>/<%= product.images[0].url %>"
-										width="60px" style="border-radius: 20%;" alt="image"></td>
+										width="60px" style="border-radius: 20%;" alt="image">
+								</td>
 								<td>
 									<%= product.brand %>
 								</td>
@@ -175,7 +196,7 @@
 												<% } %>
 									</div>
 								</td>
-
+								<td class="text-warning"><%= product.product_offer? product.product_offer+"%" : "" %></td>
 								<td>
 									<a href="/admin/editproduct?id=<%= product._id %>"><button
 											class="btn btn-sm btn-primary">Edit</button></a>
@@ -252,11 +273,18 @@
 									}
 								</script>
 				</tbody>
-
 			</table>
 		</div>
 	</div>
 	<script>
+
+		$(document).ready(function () {
+			new DataTable('#productTable', {
+				"lengthMenu": [5, 10, 15, 30],
+				"pageLength": 5
+			});
+		});
+	
 		let expected = "http://localhost:8000/admin/addproduct";
 		let q = new URLSearchParams(window.location.search);
 		let success = q.get("success");

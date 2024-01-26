@@ -12,8 +12,42 @@
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/toastify-js/src/toastify.min.css">
     <script src="https://cdn.jsdelivr.net/npm/toastify-js"></script>
-    <link rel="stylesheet" href="css/main.css">
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.6.1/cropper.min.css" integrity="sha512-hvNR0F/e2J7zPPfLC9auFe3/SE0yG4aJCOd/qxew74NN7eyiSKjr7xJJMu1Jy2wf7FXITpWS1E/RY8yzuXN7VA==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.6.1/cropper.min.js" integrity="sha512-9KkIqdfN7ipEW6B6k+Aq20PV31bjODg4AA52W+tYtAE0jE0kMx49bjJ3FgvS56wzmyfMUHbQ4Km2b7l9+Y/+Eg==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+    <style>
+        #imageDiv {
+            min-width: 150px;
+            min-height: 150px;
+            position: relative;
+            transition: filter 0.3s ease;
+        }
+        
+        #imageDiv:hover {
+            filter: sepia(50%);
+        }
+        
+        #currentImage{
+            min-width: 150px;
+            min-height: 150px;
+            max-width:200px;
+            border-radius: 50%;
+        }
+        
+        #imageEdit{
+            position: absolute;
+            top:50%;
+            left:50%;
+            transform: translate(-50%, -50%);
+            opacity: 1%;
+            transition: opacity 0.3s ease;
+        }
 
+        #imageDiv:hover #imageEdit{
+            visibility: visible;
+            opacity: 100%;
+        }
+    </style>
 </head>
 
 <body>
@@ -64,6 +98,11 @@
                                     <i class="bi bi-box-seam-fill"> </i> Orders
                                 </a>
                             </li>
+                            <li class="dropdown-item ">
+                                <a class="nav-link" href="/wallet">
+                                    <i class="bi bi-wallet2"> </i> Skrym-Wallet
+                                </a>
+                            </li>
                         </ul>
                     </li>
                     <li class="nav-item">
@@ -73,11 +112,18 @@
             </div>
         </div>
     </nav>
+
+
     <div class="container mt-5 d-flex justify-content-center">
         <div class="col-lg-6">
-            <div class="text-center">
-                <img src="/images/gallery-03.jpg" alt="User Image" class="rounded-circle mb-4"
-                    style="max-width: 150px;">
+            <div class="d-flex justify-content-center" id="PODiv">
+                <div class="d-flex border rounded-pill" id="imageDiv">
+                    <img src="/users/<%= userData.image_url %>" alt="Profile Image" id="currentImage">
+
+                    <!-- button -->
+                    <button class="w-100 h-100 border rounded-pill btn btn-lg btn-transparent" id="imageEdit" data-bs-target="#cropModal" data-bs-toggle="modal">
+                        <i class="bi bi-pencil-fill h2 text-white"></i></button>
+                </div>
             </div>
 
             <div class="m-4 text-center mtext-103 p-3 border-1 border-black border">
@@ -88,6 +134,111 @@
 
         </div>
     </div>
+
+    <!-- Modal -->
+    <div class="modal fade" id="cropModal" tabindex="-1" aria-labelledby="cropModal" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="d-flex justify-content-between m-3">
+                    <h1 class="modal-title fs-5" id="cropModalLabel">Select & crop image</h1>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body" id="cropModal">
+                    <div class="image-container" style="height: 300px;">
+                            <canvas id="cropperCanvas" style="max-width: 400px;"></canvas>
+                    </div>
+                    <div id="newImage">
+
+                    </div>
+                </div>
+                
+                <div class="modal-footer">
+                    <div class="d-flex">
+                        <input type="file" accept="image/*" class="form-control" id="inputImage">
+                        <button class="btn btn-dark" id="saveButton">save</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+<!-- JavaScript to initialize Cropper -->
+<script>
+    $(document).ready(function () {
+        const canvas = document.getElementById('cropperCanvas');
+        const ctx = canvas.getContext('2d');
+        let cropper; 
+
+        $('#inputImage').on('change', function (e) {
+            const input = e.target;
+            const file = input.files[0];
+
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = function (e) {
+                    const img = new Image();
+                    img.onload = function () {
+                        canvas.width = img.width;
+                        canvas.height = img.height;
+                        ctx.drawImage(img, 0, 0, img.width, img.height);
+
+                        if (cropper) {
+                            cropper.destroy();
+                        }
+                        cropper = new Cropper(canvas, {
+                            aspectRatio: 1,
+                            viewMode: 1,
+                            responsive: true,
+                            zoomable: false,
+                            crop: function (event) {
+
+                                console.log(event.detail);
+                            },
+                        });
+
+                    };
+
+                    img.src = e.target.result;
+                };
+                reader.readAsDataURL(file);
+            }
+        });
+        
+        $("button.btn-close").on("click",()=>{
+            $("input#inputImage").val("")
+        })
+        
+        $('#saveButton').on('click',async function () {
+            obj = cropper.getCroppedCanvas();
+            console.log(obj)
+            obj.toBlob((blob)=>{
+                
+                const formData = new FormData();
+                formData.append("image",blob,"newImage.png");
+
+                fetch("/updatedp", {
+                    method: "POST",
+                    body: formData
+                })
+                    .then(response => response.json())
+                    .then(data => {
+                        if(data.success){
+                            document.getElementById("currentImage").src = "/users/" + data.newImageUrl;
+                            $("#cropModal").modal("hide")
+                            console.log(data.message);
+                        }
+                    })
+                    .catch(error => {
+                        console.log(error.message)
+                    });
+
+            })
+        });
+    })
+</script>
+
+
 
     <div class="container d-flex justify-content-center">
         <div class="col-lg-4">
@@ -114,6 +265,8 @@
             </form>
         </div>
     </div>
+
+    
 
     <script>
         const editButton = document.getElementById('editButton');
@@ -150,32 +303,32 @@
             const name = document.getElementById("name").value;
             const phone = document.getElementById("phone").value;
 
-            function validate(){
+            function validate() {
                 console.log("heoo")
                 let nameRegex = /^[A-Za-z]+(?:\s[A-Za-z]+)?$/;
                 let phoneRegex = /^\d$/;
                 let nameError = document.getElementById("N");
-                let phoneError = document.getElementById("P"),isValid = true;
-                
-                if(!name.match(nameRegex)){
-                    nameError.textContent="Only Alphabets & avoid multiple spaces";
+                let phoneError = document.getElementById("P"), isValid = true;
+
+                if (!name.match(nameRegex)) {
+                    nameError.textContent = "Only Alphabets & avoid multiple spaces";
                     isValid = false
-                }else{
+                } else {
                     nameError.textContent = "";
                 }
-                
+
                 if (phone.length !== 10 && !phone.match(phoneRegex)) {
                     phoneError.textContent = "Enter a valid 10-digit number";
                     isValid = false;
-                }else{
+                } else {
                     phoneError.textContent = "";
                 }
 
                 console.log(isValid)
                 return isValid;
             }
-            
-            if(!validate()) return;
+
+            if (!validate()) return;
 
             fetch('/updateprofile', {
                 method: 'POST',
@@ -202,11 +355,11 @@
                         Toastify({
                             text: "Profile updation failed!",
                             backgroundColor: "#FD6C1F",
-                            duration: 3000, 
-                            close: true, 
+                            duration: 3000,
+                            close: true,
                             gravity: "top",
                             position: "center",
-                            stopOnFocus: true, 
+                            stopOnFocus: true,
                         }).showToast();
 
                     }

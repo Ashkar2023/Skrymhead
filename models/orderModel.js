@@ -32,6 +32,9 @@ const orderSchema = new mongoose.Schema({
         required:true,
         default:payment.PENDING
     },
+    payment_ref:{
+        type:String
+    },
     totalPrice:{
         type:Number,
         required:true
@@ -45,6 +48,9 @@ const orderSchema = new mongoose.Schema({
         default:Date.now
     },
     delivered_date:{
+        type:Date
+    },
+    return_date:{
         type:Date
     },
     items:[

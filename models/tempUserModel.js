@@ -1,11 +1,13 @@
+const { text } = require("express");
 const mongoose = require("mongoose");
+
 const tempUserSchema = new mongoose.Schema({
     email:{
         type:String,
         required:true,
         unique:true
     },
-    createdOn:{
+    createdAt:{
         type:Date,
         default:Date.now
     },
@@ -17,6 +19,5 @@ const tempUserSchema = new mongoose.Schema({
         type:Date      
     }
 })
-
 
 module.exports = mongoose.model("tempUser",tempUserSchema)

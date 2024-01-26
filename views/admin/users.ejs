@@ -1,110 +1,133 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" data-bs-theme="dark">
 
 <head>
-  <!-- Required meta tags -->
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-  <title>SKRYMHEAD</title>
-  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet"
-    integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
-  <style>
-    #logo {
-      margin-right: 5px;
-    }
-    body{
-      background-color: black;
-    }
-  </style>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <title>SKRYMHEAD</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://cdn.datatables.net/1.13.7/js/jquery.dataTables.min.js"></script>
+    <script src="https://cdn.datatables.net/1.13.7/js/dataTables.bootstrap5.min.js"></script>
+    <link rel="stylesheet" href="https://cdn.datatables.net/1.13.7/css/jquery.dataTables.min.css">
+    <style>
+        #logo {
+            margin-right: 5px;
+        }
+
+        body {
+            background-color: black;
+        }
+    </style>
 </head>
+
 <body>
 
-  <nav class=" navbar navbar-expand-lg bg-dark">
-    <a class="text-white navbar-brand" href="" style="padding-left: 15px; font-family: 'Lucida Sans'">
-      <span>
-        <h4><img src="/LOGO.png" id="logo" height="30px" alt="Logo"><strong>SKRYMHEAD</strong></h4>
-      </span>
-    </a>
-    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent"
-      aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
-      <span class="navbar-toggler-icon"></span>
-    </button>
-    <div class="collapse navbar-collapse" style="padding-right: 15px; margin-right: 10px;" id="navbarSupportedContent">
-      <ul class="navbar-nav navbar-light ms-auto ">
-        <li class="nav-item ">
-          <a href="/admin/dashboard" class="m-2" style="text-decoration: none; ">Dashboard
-          </a>
+    <nav class=" navbar navbar-expand-lg bg-dark">
+        <a class="text-white navbar-brand" href="" style="padding-left: 15px; font-family: 'Lucida Sans'">
+            <span>
+                <h4><img src="/LOGO.png" id="logo" height="30px" alt="Logo"><strong>SKRYMHEAD</strong></h4>
+            </span>
+        </a>
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" style="padding-right: 15px; margin-right: 10px;"
+            id="navbarSupportedContent">
+            <ul class="navbar-nav navbar-light ms-auto ">
+                <li class="nav-item ">
+                    <a href="/admin/dashboard" class="m-2" style="text-decoration: none; ">Dashboard
+                    </a>
 
-        </li>
-        <li class="nav-item active ">
-          <a href="/admin/products" class="m-2" style="text-decoration: none; ">Product</a>
+                </li>
+                <li class="nav-item active ">
+                    <a href="/admin/products" class="m-2" style="text-decoration: none; ">Product</a>
 
-        </li>
-        <li class="nav-item">
-          <a href="/admin/category" class="m-2" style="text-decoration: none; " >Category
-          </a>
-          
-        </li>
-        <li class="nav-item">
-          <a href="/admin/users" class="m-2" style="text-decoration: none; ">Users
-          </a>
+                </li>
+                <li class="nav-item">
+                    <a href="/admin/category" class="m-2" style="text-decoration: none; ">Category
+                    </a>
 
-        </li>
-        <li class="nav-item">
-					<a href="/admin/orders" class="m-2" style="text-decoration: none; ">Orders</a>
-				</li>
-        <li class="nav-item">
-          <a href="/admin/logout" class="m-2" style="text-decoration: none; ">logout
-          </a>
+                </li>
+                <li class="nav-item">
+                    <a href="/admin/users" class="m-2" style="text-decoration: none; ">Users
+                    </a>
 
-        </li>
-        </li>
-      </ul>
+                </li>
+                <li class="nav-item">
+                    <a href="/admin/orders" class="m-2" style="text-decoration: none; ">Orders</a>
+                </li>
+                <li class="nav-item">
+                    <a href="/admin/logout" class="m-2" style="text-decoration: none; ">logout
+                    </a>
+
+                </li>
+                </li>
+            </ul>
+        </div>
+    </nav>
+
+    <div class="container">
+        <div class="row">
+            <div class="col-md-10 pt-5">
+                <h1 class="text-white">USERS</h1>
+            </div>
+        </div>
     </div>
-  </nav>
 
-  <div class="container">
-    <div class="row">
-      <div class="col-md-10 pt-5">
-        <h1 class="text-white">USERS</h1>
-      </div>
+    <div class="container">
+        <div class="m-3 mt-5 px-4">
+            <table class="table table-bordered table-dark" id="userTable">
+                <thead class="table-light" style="font-family: Arial, Helvetica, sans-serif;">
+                    <tr>
+                        <th scope="col">No</th>
+                        <th scope="col">Name</th>
+                        <th scope="col">Mobile</th>
+                        <th scope="col">Email</th>
+                        <th scope="col">Options</th>
+                    </tr>
+                </thead>
+                <tbody style="font-family:'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;">
+                    <% users.forEach((user,index)=>{ %>
+                        <tr>
+                            <th scope="row">
+                                <%= index+1 %>
+                            </th>
+                            <td>
+                                <%= user.name %>
+                            </td>
+                            <td>
+                                <%= user.phone %>
+                            </td>
+                            <td>
+                                <%= user.email %>
+                            </td>
+                            <td>
+                                <% if(user.isBlocked){ %>
+                                    <a href="/admin/users/unblock?userid=<%= user._id %>"><button
+                                            class="btn btn-success" style="width: 6rem;">Unblock</button></a>
+                                    <% }else{ %>
+                                        <a href="/admin/users/block?userid=<%= user._id %>"><button
+                                                class="btn btn-danger" style="width: 6rem;">block</button></a>
+                                        <% } %>
+                            </td>
+                        </tr>
+                        <% }) %>
+                </tbody>
+
+            </table>
+        </div>
     </div>
-  </div>
+    <script>
+        $(document).ready(function () {
+            new DataTable('#userTable', {
+                "lengthMenu": [10, 20, 50],
+                "pageLength": 10
+            });
+        });
+    </script>
 
-  <div class="container">
-    <div class="m-3 mt-5 px-4">
-      <table class="table table-bordered table-dark" >
-        <thead class="table-light" style="font-family: Arial, Helvetica, sans-serif;">
-          <tr>
-            <th scope="col">No</th>
-            <th scope="col">Name</th>
-            <th scope="col">Mobile</th>
-            <th scope="col">Email</th>
-            <th scope="col">Options</th>
-          </tr>
-        </thead>
-        <tbody style="font-family:'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;">
-          <% users.forEach((user,index)=>{ %>
-            <tr>
-              <th scope="row"><%= index+1 %></th>
-              <td><%= user.name %></td>
-              <td><%= user.phone %></td>
-              <td><%= user.email %></td>
-              <td>
-                <% if(user.isBlocked){ %>
-                  <a href="/admin/users/unblock?userid=<%= user._id %>"><button  class="btn btn-success" style="width: 6rem;">Unblock</button></a>
-                  <% }else{ %>
-                    <a href="/admin/users/block?userid=<%= user._id %>"><button  class="btn btn-danger" style="width: 6rem;">block</button></a>
-                <% } %>
-              </td>
-            </tr>
-          <% }) %>
-        </tbody>
-
-      </table>
-    </div>
-  </div>
-
-  <!-- nav0 -->
-
-  <% include('../layouts/footer.ejs') %>
+    <% include('../layouts/footer.ejs') %>

@@ -1,0 +1,235 @@
+<!DOCTYPE html
+<html lang="en">
+
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>SKRYMHEAD - Coupons</title>
+	<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet"
+		integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
+    <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/toastify-js/src/toastify.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/toastify-js"></script>
+    <link rel="stylesheet" href="/css/fonts.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Gabarito:wght@700&display=swap" rel="stylesheet">
+    <style>
+        input::-webkit-inner-spin-button,
+        input::-webkit-outer-spin-button{
+            -webkit-appearance: none;
+            margin:0;
+        }
+        
+        input::placeholder{
+            color: rgb(192, 197, 197) !important;
+        }
+    </style>
+</head>
+
+<body>
+
+	<nav class="navbar navbar-expand-lg bg-dark">
+		<a class="text-white navbar-brand" href="#" style="padding-left: 15px; font-family: 'Lucida Sans' ">
+			<h4><strong>SKRYMHEAD</strong></h4>
+	
+		</a>
+		<button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent"
+			aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+			<span class="navbar-toggler-icon"></span>
+	
+		</button>
+		<div class="collapse navbar-collapse" style="-right: 15px; margin-right: 10px;"
+			id="navbarSupportedContent">
+			<ul class="navbar-nav navbar-light ms-auto ">
+				<li class="nav-item active ">
+					<a href="/admin/dashboard" class="m-2" style="text-decoration: none; ">Dashboard</a>
+				</li>
+				<li class="nav-item ">
+					<a href="/admin/products" class="m-2" style="text-decoration: none; ">Product</a>
+				</li>
+				<li class="nav-item">
+					<a href="/admin/category" class="m-2" style="text-decoration: none; ">Category</a>
+				</li>
+				<li class="nav-item">
+					<a href="/admin/users" class="m-2" style="text-decoration: none; ">Users</a>
+				</li>
+				<li class="nav-item">
+					<a href="/admin/orders" class="m-2" style="text-decoration: none; ">Orders</a>
+				</li>
+				<li class="nav-item">
+					<a href="/admin/coupons" class="m-2" style="text-decoration: none; ">Coupons</a> <!-- Add a link to the coupons page -->
+				</li>
+				<li class="nav-item">
+					<a href="/admin/logout" class="m-2" style="text-decoration: none; ">logout</a>
+				</li>
+			</ul>
+		</div>
+	</nav>
+
+    <div class="container">
+        <div>
+        </div>
+        <div class="row">
+            <div class="col-md-7 m-4" id="couponsTable">
+				<div>
+					<h2 class="viga">COUPONS</h2>
+				</div>
+				<table class="table">
+					<thead class="table-dark">
+						<tr>
+							<th>Coupon Code</th>
+							<th>Discount</th>
+							<th>Price Limit</th>
+							<th>Expiry Date</th>
+							<th >Status</th>
+						</tr>
+					</thead>
+					<tbody>
+                        <% coupons.forEach((coupon)=>{%>
+                            <tr>
+                                <td style="font-family: Gabarito;font-weight: 700;"><%= coupon.code %></td>
+                                <td class="text-secondary">&#8377;<%= coupon.discount %></td>
+                                <td class="text-secondary">&#8377;<%= coupon.price_limit %></td>
+                                <td class="text-secondary"><%= coupon.expiry_date.toLocaleDateString() %></td>
+                                <td class="w-25">
+                                    <% if(coupon.active){ %>
+                                        <button class="btn btn-success statusBtn w-75" data-id="<%= coupon._id %>">
+                                            active
+                                        </button>
+                                    <% }else{ %>
+                                        <button class="btn btn-danger statusBtn w-75" data-id="<%= coupon._id %>">
+                                            inactive
+                                        </button>
+                                    <% } %>
+                                </td>
+                            </tr>
+                        <% }) %>
+                        
+                        <% if(coupons.length===0){ %>
+                            <tr>
+                                <td></td>
+                                <td></td>
+                                <td colspan="3"> No Coupons found</td>
+                            </tr>
+                        <% } %>
+					</tbody>
+				</table>
+			</div>
+            <script>
+                document.getElementById("couponsTable").addEventListener("click",()=>{
+                    console.log(event.target.classList.contains("statusBtn"))
+                    if(event.target.classList.contains("statusBtn")){
+                        console.log("sdfsdf")
+                        let button = event.target;
+                        let couponId = button.dataset.id;
+                        
+                        fetch(`/admin/coupons/status/${couponId}`,{
+                            method: "PUT",
+                            headers: {
+                                "Content-Type": "application/json"
+                            }
+                        })
+                        .then(response =>{
+                            if(response.ok){
+                                return response.json();
+                            }
+                        })
+                        .then(data => {
+                            if (data.success) {
+                                if(data.status){
+                                    button.innerText="active";
+                                    button.classList.replace("btn-danger","btn-success")
+                                }else{
+                                    button.classList.replace("btn-success","btn-danger")
+                                    button.innerText="inactive"; 
+                                } 
+                            }
+                        })
+                        .catch(error =>{
+                            console.log(error.message);
+                        })
+                    }
+                })
+            </script>
+
+            <div class="col-md-4 m-4 border border-2 rounded-3 border-black p-3">
+                <h2 class="viga">ADD COUPON</h2>
+                <form id="couponForm">
+                    <div class="row">
+                        <div class="mb-3 col-7">
+                            <label for="code" class="form-label">Coupon Code</label>
+                            <input type="text" class="form-control border-1 shadow-sm" id="code" name="code" required placeholder="NEW@20">
+                        </div>
+                        <div class="mb-3 col-4">
+                            <label for="discount" class="form-label">Discount</label>
+                            <input type="number" class="form-control border-1 shadow-sm" id="discount" name="discount" required placeholder="Amount">
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="mb-3 col-4">
+                            <label for="price_limit" class="form-label">Price Limit</label>
+                            <input type="number" class="form-control border-1 shadow-sm" id="price_limit" name="price_limit" required placeholder="Amount">
+                        </div>
+                        <div class="mb-3 col-7">
+                            <label for="expire_in_days" class="form-label">Expiration Duration</label>
+                            <input type="number" class="form-control border-1 shadow-sm" id="expire_in_days" name="expire_in_days" required placeholder="In days">
+                        </div>
+                    </div>
+                        <button type="submit" class="btn btn-dark">Submit</button>
+                </form>
+            </div>
+        </div>
+    </div>
+    
+    <script>
+        let form = document.getElementById("couponForm");
+        form.addEventListener("submit",(event)=>{
+            event.preventDefault();
+
+            fetch("/admin/coupons/add",{
+                method:"POST",
+                body:new FormData(form)
+            })
+            .then((response)=>{
+                return response.json();
+            })
+            .then((data)=>{
+                if(data.success){
+                    Toastify({
+                        text: "Coupon created successfully!",
+                        duration: 2000,
+                        gravity: "top",
+                        position: "center",
+                        style: {
+                            background: "lime",
+                            color: "white",
+                        },
+                        offset:{
+                            y:20
+                        }
+                    }).showToast();
+                } else {
+                    Toastify({
+                        text: "Coupon creation failed!",
+                        duration: 2000,
+                        gravity: "top",
+                        position: "center",
+                        style: {
+                            background: "orangered",
+                            color: "white",
+                        },
+                        offset:{
+                            y:20
+                        }
+                    }).showToast();
+                }
+            })
+            .catch((error)=>{
+                console.log(error.message)
+            })
+            
+        })
+    </script>
+</body>
+
+</html>

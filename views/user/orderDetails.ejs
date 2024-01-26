@@ -28,21 +28,31 @@
                 <ul class="list-group list-group-flush">
                     <li class="list-group-item">ID: <span class="fw-bold">#<%= order.order_id %></span></li>
                     <li class="list-group-item d-flex justify-content-between">
+                        <% let currentDate=order.order_date %>
                         Order Date: <span class="text-muted">
                             <%= order.order_date.toUTCString() %>
                         </span>
                     </li>
                     <li class="list-group-item d-flex justify-content-between">
-                        <% let currentDate=order.order_date %>
-                            <% let returnDate=new Date(currentDate.setDate(currentDate.getDate()+7)) %>
-                                Return Valid till : <span class="text-muted">
-                                    <%= returnDate.toUTCString().slice(0,16) %>
-                                </span>
+                        Delivered Date : 
+                        <% if(order.delivered_date){ %>
+                            <span class="text-muted"><%= order.delivered_date.toUTCString() %></span>
+                        <% }else{ %>
+                            <span class="text-muted"> TBD </span>
+                        <% } %>
                     </li>
-                    <li class="list-group-item">Status:
+                    <li class="list-group-item d-flex justify-content-between">
+                        Return Valid till : 
+                        <% if(order.return_date){ %>
+                            <span class="text-muted"><%= order.return_date.toUTCString().slice(0,16) %></span>
+                        <% }else{ %>
+                            <span class="text-muted"> TBD </span>
+                        <% } %>
+                    </li>
+                    <li class="list-group-item d-flex justify-content-between">Status:
                         <% let stts=order.status; %>
                             <% if(order.CBA || stts==="Cancelled" || stts==="Returned" ){ %>
-                                <span class="badge bg-danger">
+                                <span class="badge bg-danger" id="status">
                                     <%= order.status %>
                                 </span>
                                 <% }else if(stts==="Shipped" || stts==="Processing" ){ %>
@@ -50,16 +60,16 @@
                                         <%= order.status %>
                                     </span>
                                     <% }else{ %>
-                                        <span class="badge bg-success">
+                                        <span class="badge bg-success" id='status'>
                                             <%= order.status %>
                                         </span>
                                         <% } %>
                     </li>
-                    <li class="list-group-item">Payment: <span class="badge bg-success">
+                    <li class="list-group-item d-flex justify-content-between">Payment: <span class="badge bg-light text-dark">
                         <%= order.payment_type %>
                         </span>
                     </li>
-                    <li class="list-group-item">Payment Status: <span class="text-secondary">
+                    <li class="list-group-item d-flex justify-content-between">Payment Status: <span class="badge bg-light text-dark">
                         <%= order.payment_status %>
                         </span>
                     </li>
@@ -92,11 +102,15 @@
                 </span>
                 <button class="btn btn-dark border rounded-0 mt-3" id="download"><i
                     class="bi bi-download me-2"></i>Download Invoice</button>
+
                 <% if(order.status=="Processing" || order.status=="Shipped" ){ %>
                     <button class="btn border mt-3 rounded-0 btn-danger" onclick="cancelOrder(<%= order.order_id %>)"
-                        id="cancel">Cancel
-                        Order</button>
-                    <% } %>
+                        id="cancel">Cancel Order</button>
+                <% }else if(order.status=="Delivered"){ %>
+                    <button class="btn border mt-3 rounded-0 btn-danger" 
+                        id="return" onclick="returnOrder(<%= order.order_id %>)">
+                        Return order</button>
+                <% } %>
             </div>
         </div>
 
@@ -165,7 +179,7 @@
                             if (data.success === true) {
                                 Swal.fire("Success!", "Order cancelled successfully.", "success");
                                 document.getElementById(`cancel`).remove();
-                                let sttsBadge = document.getElementById(`status`);
+                                let sttsBadge = document.getElementById("status");
                                 sttsBadge.textContent = "Cancelled";
                                 sttsBadge.classList.replace("bg-warning", "bg-danger")
                             } else {
@@ -175,6 +189,59 @@
                         .catch(error => {
                             console.error(error);
                             Swal.fire("Error!", "An error occurred during order cancellation.", "error");
+                        });
+                } else {
+                    Swal.fire("Cancelled", "Order cancellation canceled.", "info");
+                }
+            });
+        }
+
+        function returnOrder(id){
+            Swal.fire({
+                title: " Are you sure?",
+                text: "you cannot undo this action!",
+                icon: "warning",
+                showCancelButton: true, confirmButtonText: "Confirm",
+                cancelButtonText: "Cancel", confirmButtonColor: "#d33",
+                cancelButtonColor: "#3085d6",
+            }).then((result) => {
+                if (result.isConfirmed) {
+
+                    fetch("/returnorder", {
+                        method: "PUT",
+                        headers: {
+                            "Content-Type": "application/json",
+                        },
+                        body: JSON.stringify({
+                            orderId: id,
+                        }),
+                    })
+                        .then(response => {
+                            if(response.ok){
+                                return response.json();
+                            }else{
+                                throw new Error("An error occurred during order return initiation.")
+                            }
+                        })
+                        .then(data => {
+                            console.log(data.success)
+                            if (data.success === true) {
+                                Swal.fire({
+                                    title: "Success",
+                                    text: data.message,
+                                    icon: "success"
+                                })
+                                document.getElementById(`return`).remove();
+                                let sttsBadge = document.getElementById(`status`);
+                                sttsBadge.textContent = "Returned";
+                                sttsBadge.classList.replace("bg-success", "bg-danger")
+                            } else {
+                                Swal.fire("Failed!", "Order return initiation failed.", "error");
+                            }
+                        })
+                        .catch(error => {
+                            console.error(error.message);
+                            Swal.fire("Error!", error.message, "error");
                         });
                 } else {
                     Swal.fire("Cancelled", "Order cancellation canceled.", "info");

@@ -5,6 +5,10 @@ const categorySchema = new mongoose.Schema({
         type:String,
         required:true
     },
+    offer:{
+        type:Number,
+        default:0
+    },
     listed:{
         type:Boolean,
         default:true
