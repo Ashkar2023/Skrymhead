@@ -11,7 +11,7 @@
 									style="width: 24px;margin-right:5px;" alt="logo">SKRYMHEAD</h2>
 						</div>
 
-						<form action="/login" method="post" onsubmit="return validate()">
+						<form action="/login" method="post" onsubmit="return validate()" id="LoginForm">
 							<h4 class="text-white display-5 text-center">LOGIN</h4>
 							<br>
 
@@ -52,7 +52,7 @@
 									<div class="text-center pt-1 mb-5 pb-1">
 										<a class="text-muted text-decoration-none" href="">Forgot password?</a>
 										<button class="btn btn-success rounded-0 px-5 btn-block mb-3"
-											type="submit">Login</button>
+											type="submit" id="loginBtn">Login</button>
 									</div>
 
 									<div class="d-flex align-items-center justify-content-center pb-4">
@@ -101,5 +101,12 @@
 
 			return isValid;
 		}
+
+		addEventListener("keydown",(event)=>{
+			if(event.keyCode===13){
+				let btn = document.getElementById("loginBtn")
+				btn.click();
+			}
+		})
 	</script>
 	<%- include('../layouts/footer.ejs') %>

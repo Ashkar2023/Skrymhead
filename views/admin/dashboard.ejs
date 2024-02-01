@@ -2,63 +2,281 @@
 <html lang="en">
 
 <head>
-	<meta charset="UTF-8">
-	<meta name="viewport" content="width=device-width, initial-scale=1.0">
-	<title>SKRYMHEAD</title>
-	<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet"
-		integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SKRYMHEAD Dashboard</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/flatpickr@4.6.13/dist/flatpickr.min.js"></script>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr@4.6.13/dist/flatpickr.min.css">
+    <link rel="stylesheet" type="text/css" href="https://npmcdn.com/flatpickr/dist/themes/material_blue.css">
+
+    <style>
+        /* Custom styles */
+        body {
+            font-family: 'Arial', sans-serif;
+            background-color: #343a40; /* Dark background color */
+            color: #f8f9fa; /* Light text color */
+        }
+
+        .cfont{
+            font-family: Arial, Helvetica, sans-serif;
+            font-size: smaller;
+        }
+
+        .rows {
+            margin-bottom: 10px;
+        }
+
+        #reportRange::placeholder{
+            color:white;
+        }
+    </style>
 </head>
 
 <body>
 
+    <!-- Navbar -->
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+        <a class="navbar-brand" href="#">
+            <strong>SKRYMHEAD</strong>
+        </a>
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-bs-target="#navbarNav"
+            aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarNav">
+            <ul class="navbar-nav ms-auto">
+                <li class="nav-item">
+                    <a class="nav-link" href="/admin/dashboard">Dashboard</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="/admin/products">Product</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="/admin/category">Category</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="/admin/users">Users</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="/admin/orders">Orders</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="/admin/coupons">Coupons</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="/admin/banner">Banner</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link text-danger" href="/admin/logout">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-box-arrow-right" viewBox="0 0 16 16">
+							<path fill-rule="evenodd" d="M10 12.5a.5.5 0 0 1-.5.5h-8a.5.5 0 0 1-.5-.5v-9a.5.5 0 0 1 .5-.5h8a.5.5 0 0 1 .5.5v2a.5.5 0 0 0 1 0v-2A1.5 1.5 0 0 0 9.5 2h-8A1.5 1.5 0 0 0 0 3.5v9A1.5 1.5 0 0 0 1.5 14h8a1.5 1.5 0 0 0 1.5-1.5v-2a.5.5 0 0 0-1 0z"/>
+							<path fill-rule="evenodd" d="M15.854 8.354a.5.5 0 0 0 0-.708l-3-3a.5.5 0 0 0-.708.708L14.293 7.5H5.5a.5.5 0 0 0 0 1h8.793l-2.147 2.146a.5.5 0 0 0 .708.708z"/>
+						</svg>
+                    </a>
+                </li>
+            </ul>
+        </div>
+    </nav>
 
-	<nav class=" navbar navbar-expand-lg bg-dark">
-		<a class="text-white navbar-brand" href="#" style="padding-left: 15px; font-family: 'Lucida Sans' ">
-			<h4><strong>SKRYMHEAD</strong></h4>
-		</a>
-		<!-- <img src="/public/images/zel_logo.jpg"  width="45" height="45" alt=""> -->
-		<button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent"
-			aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
-			<span class="navbar-toggler-icon"></span>
-		</button>
-		<div class="collapse navbar-collapse" style="padding-right: 15px; margin-right: 10px;"
-			id="navbarSupportedContent">
-			<ul class="navbar-nav navbar-light ms-auto ">
-				<li class="nav-item active ">
-					<a href="/admin/dashboard" class="m-2" style="text-decoration: none; ">Dashboard</a>
-				</li>
-				<li class="nav-item ">
-					<a href="/admin/products" class="m-2" style="text-decoration: none; ">Product</a>
-				</li>
-				<li class="nav-item">
-					<a href="/admin/category" class="m-2" style="text-decoration: none; ">Category</a>
-				</li>
-				<li class="nav-item">
-					<a href="/admin/users" class="m-2" style="text-decoration: none; ">Users</a>
-				</li>
-				<li class="nav-item">
-					<a href="/admin/orders" class="m-2" style="text-decoration: none; ">Orders</a>
-				</li>
-				<li class="nav-item">
-					<a href="/admin/coupons" class="m-2" style="text-decoration: none; ">Coupons</a>
-				</li>
-				<li class="nav-item">
-					<a href="/admin/logout" class="m-2" style="text-decoration: none; ">logout
-					</a>
+    <!-- Main content -->
+    <div class="container mt-5">
 
-				</li>
-			</ul>
-		</div>
-	</nav>
+        <div class="row">
 
+            <div class="col-md-7 border rounded-3" id="chartWrapper">
+                <canvas id="chart"></canvas>
+            </div>
 
-	<div class="m-5 pt-5">
-		<div>
-			<h2>DASHBOARD</h2>
-		</div>
+            <div class="cfont col-md-5">
+                <div class="col-md-12 row rows ">
+                    
+                    <div class="col-md-6 individual-data-card pe-0">
+                        <div class="card bg-transparent border ">
+                            <div class="card-body text-center text-white">
+                                <h6 class="card-title">Total Users</h6>
+                                <p class="card-text"><%= users %></p>
+                            </div>
+                        </div>
+                    </div>
 
+                    <div class="col-md-6 individual-data-card">
+                        <div class="card bg-transparent border ">
+                            <div class="card-body text-center text-white">
+                                <h6 class="card-title">Total Orders</h6>
+                                <p class="card-text"><%= orders.total_count %></p>
+                            </div>
+                        </div>
+                    </div>
 
-	</div>
+                </div>
 
+                <div class="col-md-12 row rows">
+
+                    <div class="col-md-6 individual-data-card pe-0">
+                        <div class="card bg-transparent border ">
+                            <div class="card-body text-center text-white">
+                                <h6 class="card-title">Total Revenue</h6>
+                                <p class="card-text">&#8377; <%= orders.revenue %></p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-md-6 individual-data-card ">
+                        <div class="card bg-transparent border ">
+                            <div class="card-body text-center text-white">
+                                <h6 class="card-title">Avg Daily Revenue</h6>
+                                <p class="card-text">&#8377; <%= parseInt(orders.daily_avg) %></p>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+
+                <div class="col-md-12 row d-flex align-content-end" style="height:200px">
+                    <div class="col-md-12 mt-2 pt-3" id="salesReportWrapper">
+                        <div class="row">
+                            <div class="col-6">
+                                <div class="group">
+                                    <input type="text" class="form-control text-light bg-transparent" placeholder="Select Dates" id="reportRange">
+                                </div>
+                            </div>
+                           
+                            <div class="col-6 text-center">
+                                <button type="button" class="btn btn-light w-100" id="downloadReport" onclick="downloadReport()" ><i class="bi bi-file-earmark-arrow-down-fill"></i> Sales Report</button>
+                            </div>
+                        </div>
+                        <div class="row mt-3" style="display: none;">
+                            <div class="col-6 d-flex justify-content-around">
+                                <button class="btn btn-outline-secondary">Week</button>
+                                <button class="btn btn-outline-secondary" id="selectMonth">Month</button>
+                                <button class="btn btn-outline-secondary" id="selectYear">Year</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+
+        <div style="display: none;">
+            <div id="salesReport">
+                <div class="text-center">
+                    <h3 id="header" style="color:black"></h3>
+                </div>
+                <table class="table" id="SRtable">
+                    <thead class="table-dark">
+                        <tr>
+                            <th>Order Date</th>
+                            <th>Status</th>
+                            <th>Total Price</th>
+                            <th>Payment Type</th>
+                            <th>Customer Email</th>
+                            <th>Customer Name</th>
+                            <th>Order ID</th>
+                        </tr>
+                    </thead>
+                    <tbody id="tableBody">
+        
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"
+        integrity="sha512-GsLlZN/3F2ErC5ifS5QtgpiJtWd43JWSuIgh7mbzZ8zBps+dvLusV+eNQATqgA/HdeKFVgA5v3S/cIrLF7QnIg=="
+        crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+        <script src="/js/flatpickr.js"></script>
+    </div>
+    
+    
+    <% let order = JSON.stringify(orders.orders) %>
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            const ctx = document.getElementById("chart").getContext("2d");
+
+            const data = JSON.parse('<%- order %>');
+
+            const labels = data.map(item => item.date);
+            const counts = data.map(item => item.count);
+            const total_price = data.map(item => item.total_price);
+
+            const ordersChart = new Chart(ctx, {
+                type: 'line',
+                data: {
+                    labels: labels,
+                    datasets: [{
+                        label: 'Daily Orders',
+                        data: counts,
+                        borderColor: '#32CD32', 
+                        backgroundColor: 'rgba(0, 0, 0, 0)', 
+                        borderWidth: 2,
+                        pointRadius: 5,
+                        pointBackgroundColor: '#32CD32', 
+                        pointBorderColor: '#32CD32', 
+                        pointHoverRadius: 8 
+                    },
+                    {
+                        label: 'Daily Revenue',
+                        data: total_price,
+                        borderColor: '#ff0000',
+                        backgroundColor: 'rgba(0, 0, 0, 0)', 
+                        borderWidth: 2,
+                        pointRadius: 5,
+                        pointBackgroundColor: '#ff0000', 
+                        pointBorderColor: '#ff0000', 
+                        pointHoverRadius: 8 
+                    }
+                    ]
+                },
+                options: {
+                    scales: {
+                        y: {
+                            beginAtZero: true,
+                            title: {
+                                display: true,
+                                text: 'Numbers',
+                                color: '#ffffff' // Light color for axis title
+                            },
+                            ticks: {
+                                color: '#f8f9fa' // Light color for axis labels
+                            }
+                        },
+                        x: {
+                            title: {
+                                display: true,
+                                text: 'Date',
+                                color: '#f8f9fa' // Light color for axis title
+                            },
+                            ticks: {
+                                color: '#f8f9fa' // Light color for axis labels
+                            }
+                        }
+                    },
+                    plugins: {
+                        legend:{
+                            labels:{
+                                color:"#ffffff"
+                            }
+                        },
+                        title: {
+                            display: true,
+                            text: 'Orders Line Chart',
+                            color: '#ffffff' // Light color for chart title
+                        }
+                    }
+                }
+            });
+        });
+
+    </script>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL"
+        crossorigin="anonymous"></script>
+    
 </body>
 </html>

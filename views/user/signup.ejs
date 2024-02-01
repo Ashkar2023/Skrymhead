@@ -59,10 +59,14 @@
 									<form action="/signup" method="post" onsubmit="return validate()">
 
 												<div class="form-outline mb-4">
-													<label class="form-label text-white">Email</label>
+													<label class="form-label text-white">Email<span class="text-danger">*</span></label>
 													<input name="email" class="form-control" id="email"
 														placeholder="useremail@123.com" />
 													<small id="emailError" class="text-danger"></small>
+												</div>
+												<div class="form-outline mb-4">
+													<label class="form-label text-white">Refferal code</label>
+													<input name="referral" class="form-control" id="referral">
 												</div>
 
 												<div class="text-center pt-1 mb-5 pb-1">

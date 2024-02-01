@@ -131,7 +131,15 @@
                     <%= userData.email %>
                 </span>
             </div>
-
+            <div class="d-flex justify-content-center text-center mtext-103">
+                <div class="text-center border-1 border-black border px-3 py-2"><b>Referral Code : </b><span id="referralCode"><%= userData.referral_code %></span><button class="btn btn-light border-0 ms-2 bi bi-copy" onclick="copyCode()"></button></div>
+            </div>
+            <script>
+                function copyCode(){
+                    let code = document.getElementById("referralCode").textContent;
+                    navigator.clipboard.writeText(code);
+                }
+            </script>
         </div>
     </div>
 

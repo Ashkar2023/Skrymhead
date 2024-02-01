@@ -11,6 +11,10 @@ const cartSchema = new Schema({
         type:String
     },
     discount:{
+        type:Number,
+        default:0
+    },
+    price_limit:{
         type:Number
     },
     items:[

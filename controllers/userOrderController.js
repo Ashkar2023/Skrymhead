@@ -15,48 +15,118 @@ async function aggregateTotal(id) {
 
 		const CART = await Cart.aggregate([
 			{
-				$match: { "user_id": new ObjectId(id) }
+			  $match: {
+				user_id: new ObjectId(id),
+			  },
 			},
 			{
-				$unwind: "$items"
+			  $unwind: "$items",
 			},
 			{
-				$lookup: {
-					from: "variants",
-					localField: "items.variant_id",
-					foreignField: "_id",
-					as: "items.variant_id"
-				}
+			  $lookup: {
+				from: "products",
+				localField: "items.product_id",
+				foreignField: "_id",
+				as: "items.product_id",
+			  },
 			},
 			{
-				$lookup: {
-					from: "products",
-					localField: "items.product_id",
-					foreignField: "_id",
-					as: "items.product_id"
-				}
+			  $lookup: {
+				from: "categories",
+				localField: "items.product_id.category",
+				foreignField: "_id",
+				as: "items.category",
+			  },
+			},
+			{
+			  $lookup: {
+				from: "variants",
+				localField: "items.variant_id",
+				foreignField: "_id",
+				as: "items.variant_id",
+			  },
+			},
+			{
+			  $addFields: {
+				"items.product_id": {
+				  $arrayElemAt: ["$items.product_id", 0],
+				},
+				"items.variant_id": {
+				  $arrayElemAt: ["$items.variant_id", 0],
+				},
+				"items.category": {
+				  $arrayElemAt: ["$items.category", 0],
+				},
+			  },
+			},
+			{
+			  $addFields: {
+				"items.greater_offer": {
+				  $max: [
+					"$items.product_id.product_offer",
+					"$items.category.offer",
+				  ],
+				},
+			  },
+			},
+			{
+			  $addFields: {
+				"items.offer_price": {
+				  $cond: {
+					if: {
+					  $gt: ["$items.greater_offer", 0],
+					},
+					then: {
+					  $subtract: [
+						"$items.variant_id.price",
+						{
+						  $multiply: [
+							{
+							  $divide: [
+								"$items.greater_offer",
+								100,
+							  ],
+							},
+							"$items.variant_id.price",
+						  ],
+						},
+					  ],
+					},
+					else: "$items.variant_id.price",
+				  },
+				},
+			  },
+			},
+			{
+			  $group: {
+				_id: "$_id",
+				discount: {
+				  $first: "$discount",
+				},
+				user_id: {
+				  $first: "$user_id",
+				},
+				items: {
+				  $push: "$items",
+				},
+				total: {
+				  $sum:{
+						$multiply: [
+						  "$items.quantity",
+						  "$items.offer_price",
+						],
+					  },
+					},
+				},
 			},
 			{
 				$addFields: {
-					"items.variant_id": { $arrayElemAt: ["$items.variant_id", 0] } //used to extract the object from the array after lookup and assign it to the top level field
-				}
-			},
-			{
-				$group: {
-					_id: "$_id",
-					user_id: { $first: "$user_id" },
-					items: { $push: "$items" },
 					total: {
-						$sum: {
-							$multiply: [
-								"$items.quantity",
-								"$items.variant_id.price"
-							]
-						}
-					}
-				}
-			}
-		]);
+						$subtract: ["$total", "$discount"],
+					},
+				},
+			},
+		  ]);
 
 		return CART;
 	} catch (error) {
@@ -156,7 +226,11 @@ async function updateOrder(newOrderId, user, paymentStatus, paymentID) {
 			}
 
 			const removeItems = await Cart.findOneAndUpdate({ user_id: new ObjectId(user) }, { $set: { items: [] } });
-			console.log("successfully updated order!");
+
+			cart.coupon=null;
+			cart.discount = 0;
+			cart.price_limit = 0;
+			cart.save();
 
 		} else if (paymentStatus === "payment failed") {
 			const order = await Order.findOneAndUpdate({ order_id: newOrderId }, { $set: { payment_status: payment.FAILED, payment_ref: paymentID, items: items, status: payment.FAILED } });

@@ -52,6 +52,7 @@ user_router.post("/login",userController.verifyLogin);
 
 // User Pages
 user_router.get("/home",auth.userValid,auth.userIn,userController.getHome);
+user_router.post("/search",auth.userValid,auth.userIn,userController.search);
 user_router.get("/shop",auth.userValid,auth.userIn,userController.getShop);
 user_router.post("/filterproducts",auth.userValid,auth.userIn,upload.none(),userController.getFilteredProducts);
 user_router.get("/shop/product",auth.userValid,auth.userIn,userController.getProduct);

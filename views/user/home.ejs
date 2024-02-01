@@ -47,6 +47,15 @@
 		html{
 			scroll-behavior: smooth;
 		}
+
+		#searchResultWrapper{
+			background-color: rgb(253, 249, 245);
+			border: solid 1px rgb(195, 188, 188);
+		}
+
+		#searchResults .results:not(:last-child){
+			border-bottom: 0.7px solid black;
+		}
 	</style>
 </head>
 <body class="animsition">
@@ -83,10 +92,11 @@
 						</li>
 					</ul>
 				</div>
+				
 	
 				<div class="navbar-text me-5">
 					<div class="wrap-icon-header flex-w flex-r-m">
-						<div class="icon-header-item cl2 hov-cl1 trans-04 p-l-22 p-r-11 js-show-modal-search">
+						<div class="icon-header-item cl2 hov-cl1 trans-04 p-l-22 p-r-11 js-show-modal-search" onclick="focusInput()">
 							<i class="zmdi zmdi-search"></i>
 						</div>
 	
@@ -107,76 +117,64 @@
 		</nav>
 
 
-		<!-- Modal Search -->
-		<div class="modal-search-header flex-c-m trans-04 js-hide-modal-search">
+		<!--////////////////////////////// Modal Search //////////////////////////-->
+		
+		<div class="modal-search-header d-flex justify-content-center trans-04 js-hide-modal-search">
 			<div class="container-search-header">
 				<form class="wrap-search-header flex-w p-l-15">
 					<button class="flex-c-m trans-04">
 						<i class="zmdi zmdi-search"></i>
 					</button>
-					<input class="plh3" type="text" name="search" placeholder="Search...">
+					<input class="plh3" type="text" name="look" placeholder="Search..." spellcheck="false">
 				</form>
 				
-				<button class="flex-c-m btn-hide-modal-search trans-04 js-hide-modal-search">
+				<button class="flex-c-m btn-hide-modal-search trans-04 js-hide-modal-search" onclick="clearInput()">
 					<img src="images/icons/icon-close2.png" alt="CLOSE">
 				</button>
+
+				<div id="searchResultWrapper">
+					<ul id="searchResults">
+					</ul>
+				</div>
+
 			</div>
 		</div>
 	</header>
+
+	<script src="/js/search.js"></script>
 		
 
 	<!-- Slider -->
 	<section class="section-slide">
 		<div class="wrap-slick1">
 			<div class="slick1">
-				<div class="item-slick1" style="background-image: url(images/BOSE-banner.jpg);">
-					<div class="container h-full">
-						<div class="flex-col-l-m h-full p-t-100 p-b-30 respon5">
-							
-							<div class="layer-slick1 animated visible-false" data-appear="fadeInUp" data-delay="500">
-								<h2 class="cl10 respon1" style="font-family: 'Montserrat-Bold';">
-									BOSE
-								</h2>
-							</div>
-							
-							<div class="layer-slick1 animated visible-false" data-appear="fadeInDown" data-delay="0">
-								<span class="ltext-101 cl10 p-b-43 respon2">
-									QuietComfort
-								</span>
-							</div>
+
+				<% banner.images.forEach(image=>{ %>
+					<div class="item-slick1" style="background-image: url(images/<%= image.url %>);">
+						<div class="container h-full">
+							<div class="flex-col-l-m h-full p-t-100 p-b-30 respon5">
 								
-							<div class="layer-slick1 animated visible-false" data-appear="zoomIn" data-delay="1200">
-								<a href="product.html" class="flex-c-m text-white stext-101 cl0 size-101 bg5 m-t-25 bor1 hov-btn1 p-lr-15 trans-04">
-									Shop Now
-								</a>
+								<div class="layer-slick1 animated visible-false" data-appear="fadeInUp" data-delay="500">
+									<h2 class="cl10 respon1" style="font-family: 'Montserrat-Bold';">
+										BOSE
+									</h2>
+								</div>
+								
+								<div class="layer-slick1 animated visible-false" data-appear="fadeInDown" data-delay="0">
+									<span class="ltext-101 cl10 p-b-43 respon2">
+										QuietComfort
+									</span>
+								</div>
+									
+								<div class="layer-slick1 animated visible-false" data-appear="zoomIn" data-delay="1200">
+									<a href="<%= image.link %>" class="flex-c-m text-white stext-101 cl0 size-101 bg5 m-t-25 bor1 hov-btn1 p-lr-15 trans-04">
+										Shop Now
+									</a>
+								</div>
 							</div>
 						</div>
 					</div>
-				</div>
-				<div class="item-slick1" style="background-image: url(images/banner2.webp);">
-					<div class="container h-full">
-						<div class="flex-col-l-m h-full p-t-100 p-b-30 respon5">
-							
-							<div class="layer-slick1 animated visible-false" data-appear="fadeInUp" data-delay="500">
-								<h2 class="cl9 respon1" style="font-family: 'Montserrat-Bold';">
-									BEATS
-								</h2>
-							</div>
-							
-							<div class="layer-slick1 animated visible-false" data-appear="fadeInDown" data-delay="0">
-								<span class="ltext-101 cl9 p-b-43 respon2">
-									Headphones
-								</span>
-							</div>
-								
-							<div class="layer-slick1 animated visible-false" data-appear="zoomIn" data-delay="1200">
-								<a href="product.html" class="flex-c-m text-white stext-101 text-dark size-101 bg9 m-t-25 bor1 hov-btn1 p-lr-15 trans-04">
-									Shop Now
-								</a>
-							</div>
-						</div>
-					</div>
-				</div>
+				<% }) %>
 								
 			</div>
 		</div>
@@ -190,249 +188,6 @@
 				<h1 class="cl5 viga">
 					Trending Products
 				</h1>
-			</div>
-
-			<div class="flex-w flex-sb-m p-b-52">
-				<!-- filter -->
-				<!-- <div class="flex-w flex-l-m filter-tope-group m-tb-10">
-					<button class="stext-106 cl6 hov1 bor3 trans-04 m-r-32 m-tb-5 how-active1" data-filter="*">
-						All Products
-					</button>
-
-					<button class="stext-106 cl6 hov1 bor3 trans-04 m-r-32 m-tb-5" data-filter=".women">
-						Women
-					</button>
-
-					<button class="stext-106 cl6 hov1 bor3 trans-04 m-r-32 m-tb-5" data-filter=".men">
-						Men
-					</button>
-
-					<button class="stext-106 cl6 hov1 bor3 trans-04 m-r-32 m-tb-5" data-filter=".bag">
-						Bag
-					</button>
-
-					<button class="stext-106 cl6 hov1 bor3 trans-04 m-r-32 m-tb-5" data-filter=".shoes">
-						Shoes
-					</button>
-
-					<button class="stext-106 cl6 hov1 bor3 trans-04 m-r-32 m-tb-5" data-filter=".watches">
-						Watches
-					</button>
-				</div> -->
-
-				<!-- <div class="flex-w flex-c-m m-tb-10">
-					<div class="flex-c-m stext-106 cl6 size-104 bor4 pointer hov-btn3 trans-04 m-r-8 m-tb-4 js-show-filter">
-						<i class="icon-filter cl2 m-r-6 fs-15 trans-04 zmdi zmdi-filter-list"></i>
-						<i class="icon-close-filter cl2 m-r-6 fs-15 trans-04 zmdi zmdi-close dis-none"></i>
-						 Filter
-					</div>
-
-					<div class="flex-c-m stext-106 cl6 size-105 bor4 pointer hov-btn3 trans-04 m-tb-4 js-show-search">
-						<i class="icon-search cl2 m-r-6 fs-15 trans-04 zmdi zmdi-search"></i>
-						<i class="icon-close-search cl2 m-r-6 fs-15 trans-04 zmdi zmdi-close dis-none"></i>
-						Search
-					</div>
-				</div>
-				
-				Search product
-				<div class="dis-none panel-search w-full p-t-10 p-b-15">
-					<div class="bor8 dis-flex p-l-15">
-						<button class="size-113 flex-c-m fs-16 cl2 hov-cl1 trans-04">
-							<i class="zmdi zmdi-search"></i>
-						</button>
-
-						<input class="mtext-107 cl2 size-114 plh2 p-r-15" type="text" name="search-product" placeholder="Search">
-					</div>	
-				</div> -->
-
-				<!-- Filter -->
-				<!-- <div class="dis-none panel-filter w-full p-t-10">
-					<div class="wrap-filter flex-w bg6 w-full p-lr-40 p-t-27 p-lr-15-sm">
-						<div class="filter-col1 p-r-15 p-b-27">
-							<div class="mtext-102 cl2 p-b-15">
-								Sort By
-							</div>
-
-							<ul>
-								<li class="p-b-6">
-									<a href="#" class="filter-link stext-106 trans-04">
-										Default
-									</a>
-								</li>
-
-								<li class="p-b-6">
-									<a href="#" class="filter-link stext-106 trans-04">
-										Popularity
-									</a>
-								</li>
-
-								<li class="p-b-6">
-									<a href="#" class="filter-link stext-106 trans-04">
-										Average rating
-									</a>
-								</li>
-
-								<li class="p-b-6">
-									<a href="#" class="filter-link stext-106 trans-04 filter-link-active">
-										Newness
-									</a>
-								</li>
-
-								<li class="p-b-6">
-									<a href="#" class="filter-link stext-106 trans-04">
-										Price: Low to High
-									</a>
-								</li>
-
-								<li class="p-b-6">
-									<a href="#" class="filter-link stext-106 trans-04">
-										Price: High to Low
-									</a>
-								</li>
-							</ul>
-						</div>
-
-						<div class="filter-col2 p-r-15 p-b-27">
-							<div class="mtext-102 cl2 p-b-15">
-								Price
-							</div>
-
-							<ul>
-								<li class="p-b-6">
-									<a href="#" class="filter-link stext-106 trans-04 filter-link-active">
-										All
-									</a>
-								</li>
-
-								<li class="p-b-6">
-									<a href="#" class="filter-link stext-106 trans-04">
-										$0.00 - $50.00
-									</a>
-								</li>
-
-								<li class="p-b-6">
-									<a href="#" class="filter-link stext-106 trans-04">
-										$50.00 - $100.00
-									</a>
-								</li>
-
-								<li class="p-b-6">
-									<a href="#" class="filter-link stext-106 trans-04">
-										$100.00 - $150.00
-									</a>
-								</li>
-
-								<li class="p-b-6">
-									<a href="#" class="filter-link stext-106 trans-04">
-										$150.00 - $200.00
-									</a>
-								</li>
-
-								<li class="p-b-6">
-									<a href="#" class="filter-link stext-106 trans-04">
-										$200.00+
-									</a>
-								</li>
-							</ul>
-						</div>
-
-						<div class="filter-col3 p-r-15 p-b-27">
-							<div class="mtext-102 cl2 p-b-15">
-								Color
-							</div>
-
-							<ul>
-								<li class="p-b-6">
-									<span class="fs-15 lh-12 m-r-6" style="color: #222;">
-										<i class="zmdi zmdi-circle"></i>
-									</span>
-
-									<a href="#" class="filter-link stext-106 trans-04">
-										Black
-									</a>
-								</li>
-
-								<li class="p-b-6">
-									<span class="fs-15 lh-12 m-r-6" style="color: #4272d7;">
-										<i class="zmdi zmdi-circle"></i>
-									</span>
-
-									<a href="#" class="filter-link stext-106 trans-04 filter-link-active">
-										Blue
-									</a>
-								</li>
-
-								<li class="p-b-6">
-									<span class="fs-15 lh-12 m-r-6" style="color: #b3b3b3;">
-										<i class="zmdi zmdi-circle"></i>
-									</span>
-
-									<a href="#" class="filter-link stext-106 trans-04">
-										Grey
-									</a>
-								</li>
-
-								<li class="p-b-6">
-									<span class="fs-15 lh-12 m-r-6" style="color: #00ad5f;">
-										<i class="zmdi zmdi-circle"></i>
-									</span>
-
-									<a href="#" class="filter-link stext-106 trans-04">
-										Green
-									</a>
-								</li>
-
-								<li class="p-b-6">
-									<span class="fs-15 lh-12 m-r-6" style="color: #fa4251;">
-										<i class="zmdi zmdi-circle"></i>
-									</span>
-
-									<a href="#" class="filter-link stext-106 trans-04">
-										Red
-									</a>
-								</li>
-
-								<li class="p-b-6">
-									<span class="fs-15 lh-12 m-r-6" style="color: #aaa;">
-										<i class="zmdi zmdi-circle-o"></i>
-									</span>
-
-									<a href="#" class="filter-link stext-106 trans-04">
-										White
-									</a>
-								</li>
-							</ul>
-						</div>
-
-						<div class="filter-col4 p-b-27">
-							<div class="mtext-102 cl2 p-b-15">
-								Tags
-							</div>
-
-							<div class="flex-w p-t-4 m-r--5">
-								<a href="#" class="flex-c-m stext-107 cl6 size-301 bor7 p-lr-15 hov-tag1 trans-04 m-r-5 m-b-5">
-									Fashion
-								</a>
-
-								<a href="#" class="flex-c-m stext-107 cl6 size-301 bor7 p-lr-15 hov-tag1 trans-04 m-r-5 m-b-5">
-									Lifestyle
-								</a>
-
-								<a href="#" class="flex-c-m stext-107 cl6 size-301 bor7 p-lr-15 hov-tag1 trans-04 m-r-5 m-b-5">
-									Denim
-								</a>
-
-								<a href="#" class="flex-c-m stext-107 cl6 size-301 bor7 p-lr-15 hov-tag1 trans-04 m-r-5 m-b-5">
-									Streetstyle
-								</a>
-
-								<a href="#" class="flex-c-m stext-107 cl6 size-301 bor7 p-lr-15 hov-tag1 trans-04 m-r-5 m-b-5">
-									Crafts
-								</a>
-							</div>
-						</div>
-					</div>
-				</div> -->
 			</div>
 
 			<div class="row isotope-grid">
@@ -452,7 +207,7 @@
 									<a href="shop/product?id=<%= product._id %>" class="text-decoration-none text-secondary ">
 										<%= product.brand+" "+product.model %>
 									</a>
-									<button class="btn btn-dark px-3 border rounded-5" onclick="addToCart('<%= product._id %>','<%= product.variants[0]._id %>')"><i class="bi bi-cart"></i></button>
+									<button class="btn btn-dark px-3 border rounded-5" onclick="addToCart('<%= product._id %>','<%= product.variants[0]._id %>',<%= product.variants[0].stock %>)"><i class="bi bi-cart"></i></button>
 								</div>
 								<div>
 									<span class="stext-105">
@@ -462,9 +217,19 @@
 								</div>
 							</div>
 							<script>								
-								function addToCart(product,variant){
+								function addToCart( product, variant, stock ){
 									let notify = document.querySelector("#cartNotify");
 									
+									if(stock<1){
+										Swal.fire({
+  											icon: 'info',
+  											title: "Insufficient stock",
+  											timer: 1000,
+  											showConfirmButton: false 
+										});
+										return;
+									}
+
 									fetch("/addtocart",{
 										method:"PUT",
 										headers:{

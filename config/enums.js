@@ -21,9 +21,16 @@ const sort = {
   "newest":{createdOn:-1}
 }
 
+const monthNames = [
+  "January", "February", "March", "April",
+  "May", "June", "July", "August",
+  "September", "October", "November", "December"
+];
+
 module.exports = {
   payment,
   order,
-  sort
+  sort,
+  monthNames
 };
 

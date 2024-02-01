@@ -30,6 +30,9 @@ const userSchema = new mongoose.Schema({
         type:String,
         default:"1.png"
     },
+    referral_code:{
+        type:String
+    },
     addresses:[address.schema]
 })
 

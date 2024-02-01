@@ -122,6 +122,10 @@ const addProduct = async (req, res) => {
             })
 
             const variantsaved = await variantAdd.save();
+
+            productData.variants.push(variantsaved._id);
+            await productData.save();
+
         })
 
         res.redirect("/admin/products?success=true");
@@ -274,9 +278,9 @@ const addOffer = async(req,res)=>{
 
 const removeOffer = async(req,res)=>{
     try{
-        const deleted = await Product.findByIdAndUpdate(req.session.productId,{$unset:{product_offer:1}},{new:true});
+        const removed = await Product.findByIdAndUpdate(req.session.productId,{$set:{product_offer:0}},{new:true});
 
-        if(deleted){
+        if(removed){
             res.status(200).json({message:"Offer removed successfully",success:true});
         }else{
             res.status(400).json({message:"Offer removal failed",success:false});

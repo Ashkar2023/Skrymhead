@@ -1,4 +1,3 @@
-const { text } = require("express");
 const mongoose = require("mongoose");
 
 const tempUserSchema = new mongoose.Schema({
@@ -17,6 +16,9 @@ const tempUserSchema = new mongoose.Schema({
     },
     expireAt:{
         type:Date      
+    },
+    referred_by:{
+        type:String
     }
 })
 

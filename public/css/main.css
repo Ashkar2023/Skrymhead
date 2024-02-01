@@ -557,8 +557,8 @@ Input, textarea : 14px/1.6 '', Arial, sans-serif;
 .btn-hide-modal-search {
   position: absolute;
   padding: 5px;
-  right: 0;
-  top: -45px;
+  right: 20px;
+  top: 20px;
   opacity: 0.8;
 }
 

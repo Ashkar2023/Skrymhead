@@ -53,62 +53,69 @@
 			max-height: 310px;
 			overflow-y: scroll;
 		}
-
-		.gabarito{
+	
+		.gabarito {
 			font-family: "gabarito";
-			color:#465f52;
+			color: #465f52;
 		}
-
+	
+		#couponBox:hover {
+			transform: translate(-5px, -5px);
+			box-shadow: 1px 1px black,2px 2px black,3px 3px black,4px 4px black,5px 5px black;
+			transition: transform 0.4s ease, box-shadow 0.4s ease;
+		}
+		
 		#couponBox{
-			box-shadow:7px 7px black;
+			transition: transform 0.4s ease, box-shadow 0.4s ease;
 		}
-
+	
+	
 		.form-label::before {
 			content: '*';
 			color: red;
 			margin-left: 3px;
 		}
-
+	
 		.form-label.optional::before {
 			content: none;
 		}
-
+	
 		/* Custom scrollbar styles */
 		#addressWrapper::-webkit-scrollbar {
 			width: 5px;
 		}
-
+	
 		#addressWrapper::-webkit-scrollbar-track {
 			background: transparent;
 		}
-
+	
 		#addressWrapper {
 			scroll-behavior: smooth;
 		}
-
+	
 		#addressWrapper::-webkit-scrollbar-thumb {
 			background: #373535;
 			border-radius: 50px;
 		}
-
+	
 		#addressWrapper::-webkit-scrollbar-thumb:hover {
 			background: #555;
 		}
-
+	
 		.bg-good {
 			background-color: #faf5ea;
 		}
-
+	
 		#summaryWrapper {
 			border: 1px solid black;
 		}
-
+	
 		input[type="radio"]:checked {
 			background-color: #000;
 			border: none;
 		}
-
-		input[type="text"]::placeholder{
+	
+		input[type="text"]::placeholder {
 			font-size: 13px;
 			font-family: system-ui, sans-serif;
 			color: #cec2c2;
@@ -560,7 +567,7 @@
 	<!-- checkout logic -->
 	<div class="container m-t-150">
 		<div class="row">
-			<div class="col-lg-5 border border-black mb-5 p-0 text-dark bg-good">
+			<div class="col-lg-4 border border-black mb-5 p-0 text-dark bg-good">
 				<div>
 					<div class="col-md-12 bg-good d-flex justify-content-center align-items-center sticky-top mb-3"
 						style="height: 50px;">
@@ -639,8 +646,8 @@
 			</div>
 
 
-
-			<div class="col-lg-7 m-lr-auto m-b-50" id="summary">
+			<!-- Cart Items -->
+			<div class="col-lg-8 m-b-50" id="summary">
 				<div class="bor10 p-lr-40 p-t-30 p-b-40 m-l-63 m-r-40 m-lr-0-xl p-lr-15-sm" id="summaryWrapper">
 					<h4 class="mtext-109 text-dark p-b-30">
 						Order summary
@@ -650,26 +657,36 @@
 							<thead class="mtext-106 border-bottom ">
 								<tr>
 									<th class="text-center" colspan="2">Item</th>
-									<th>Quantity</th>
+									<th>Price</th>
+									<th>Qty</th>
 									<th>Subtotal</th>
 								</tr>
 							</thead>
 							<tbody class="">
 								<% cart.items.forEach((item,index)=>{ %>
 									<tr>
-										<% let subtotal=item.variant_id.price * item.quantity; %>
-											<td><img height="50px"
-													src="/products/<%= item.product_id.brand+' '+item.product_id.model +'/'+ item.product_id.images[0].url %>"
-													id="image<%= index %>"></td>
-											<td id='name<%= index %>'>
-												<%= item.product_id.brand+" "+item.product_id.model %></td>
+										<% 
+											let price = item.variant_id.price - (item.greater_offer/100) * item.variant_id.price;
+											let subtotal = price * item.quantity;
+											
+										%>
+									<td><img height="50px"
+											src="/products/<%= item.product_id.brand+' '+item.product_id.model +'/'+ item.product_id.images[0].url %>"
+											id="image<%= index %>">
+									</td>
+									<td id='name<%= index %>'>
+										<%= item.product_id.brand+" "+item.product_id.model %>
+									</td>
+									<td class="text-center text-danger" id='unitPrice<%= index %>'>
+										&#8377;<%= price %>
+									</td>
 									<td class=" text-center" id='quantity<%= index %>'>
-													<%= item.quantity %>
-											</td>
-											<td class="subtotal" id='subtotal<%= index %>'>
-												<i class="bi bi-currency-rupee" style="font-size: small;"></i>
-												<%= subtotal %>
-											</td>
+										x<%= item.quantity %>
+									</td>
+									<td class="subtotal text-danger" id='subtotal<%= index %>'>
+										<i class="bi bi-currency-rupee" style="font-size: small;"></i>
+										<%= subtotal %>
+									</td>
 									</tr>
 									<% }) %>
 							</tbody>
@@ -716,7 +733,7 @@
 						</button>
 					</div>
 
-					<div class="col-md-12 border border-dark my-3 bg-light" id="couponBox">
+					<div class="col-md-12 border border-dark mt-4 bg-light" id="couponBox">
 						<div class="p-3">
 							<h4 class="mtext-103 cl2">
 								Apply Coupon
@@ -734,7 +751,7 @@
 						let beforeCouponWrapper = document.getElementById("beforeCouponWrapper");
 						let subtotals = document.querySelectorAll(".subtotal");
 						let couponRemoveBtn = document.getElementById("couponRemoveBtn");
-						let subtotalValues = Array.from(subtotals).map(subtotal => parseFloat(subtotal.textContent));
+						let subtotalValues = Array.from(subtotals).map(subtotal => parseInt(subtotal.textContent));
 
 						let TOTAL = subtotalValues.reduce((a, b) => a + b);
 						

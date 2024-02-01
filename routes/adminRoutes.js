@@ -3,13 +3,15 @@ const fs = require("fs");
 const admin_router = express.Router();
 const path = require("path")
 const bodyParser = require("body-parser");
+const multer = require("multer");
+
+const adminAuth = require("../authentication/adminAuth");
 const adminController = require("../controllers/adminController");
 const adminCategoryController = require("../controllers/adminCategoryController");
 const adminProductController = require("../controllers/adminProductController");
 const adminOrderController = require("../controllers/adminOrderController");
 const adminCouponController = require("../controllers/adminCouponController");
-const adminAuth = require("../authentication/adminAuth");
-const multer = require("multer")
+const adminBannerController = require("../controllers/adminBannerController");
 
 //middlewares
 admin_router.use(express.json());
@@ -66,9 +68,22 @@ const uploads2 = multer({storage:storage2});
 const formStorage = multer.memoryStorage();
 const formUploads = multer({storage:formStorage});
 
+const bannerStorage = multer.diskStorage({
+    destination:function(req,file,cb){
+        const folder = path.join(__dirname,"../public/images");
+        cb(null,folder)
+    },
+    filename:function(req,file,cb){
+        cb(null,file.originalname);
+    }
+})
+
+const bannerUploads = multer({storage:bannerStorage});
+
 // Basic ROUTES
 admin_router.get('/login',adminAuth.adminNotIn,adminController.getLogin);
 admin_router.post('/login',adminController.verifyLogin);
+admin_router.post('/salesreport',adminAuth.adminIn,adminController.salesReport);
 admin_router.get("/dashboard",adminAuth.adminIn,adminController.getDashboard);
 admin_router.get("/logout",adminAuth.adminIn,adminController.logout)
 
@@ -112,6 +127,12 @@ admin_router.get("/orders",adminAuth.adminIn,adminOrderController.getOrders);
 admin_router.get("/orderdetails/:id",adminAuth.adminIn,adminOrderController.orderDetails);
 admin_router.put("/cancelorder",adminAuth.adminIn,adminOrderController.cancelOrder);
 admin_router.put("/markasdelivered",adminAuth.adminIn,adminOrderController.markAsDelivered);
+
+// Banner ROUTES
+admin_router.get("/banner",adminAuth.adminIn,adminBannerController.getBanner)
+admin_router.post("/banner/addimages",adminAuth.adminIn,bannerUploads.array("images",5),adminBannerController.addImages)
+admin_router.post("/banner/deleteimage",adminAuth.adminIn,adminBannerController.deleteImage)
+admin_router.post("/banner/updateurl",adminAuth.adminIn,adminBannerController.updateUrl)
 
 
 

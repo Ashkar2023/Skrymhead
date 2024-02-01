@@ -104,7 +104,7 @@ const postEditCategory = async (req, res) => {
 const removeCategoryOffer = async(req,res)=>{
     try{
         const categoryId = req.session.newid;
-        const deleted = await Category.findByIdAndUpdate(categoryId,{$unset:{offer:1}},{new:true});
+        const deleted = await Category.findByIdAndUpdate(categoryId,{$set:{offer:0}},{new:true});
 
         if(deleted){
             res.status(200).json({message:"Offer removed successfully",success:true});

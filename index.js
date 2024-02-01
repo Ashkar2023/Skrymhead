@@ -19,10 +19,10 @@ const mongoDBconnect = async () => {
             console.log(`Server On :\n => http://localhost:${port} \n => http://localhost:${port}/admin/login`)
         })
     } catch (error) {
-        console.log("Mongodb connection failed : ", error.message)
+        console.log("Mongodb connection failed : ", error.stack)
     }
 }
-mongoDBconnect()
+mongoDBconnect();
 
 // Middlewares
 app.set("view engine", "ejs")

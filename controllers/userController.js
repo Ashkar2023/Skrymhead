@@ -2,6 +2,7 @@ const bcrypt = require("bcrypt");
 const nodemailer = require("nodemailer");
 const mongoose = require("mongoose");
 const { ObjectId } = require("mongodb");
+const crypto = require("crypto");
 
 // models/schema
 const User = require("../models/userModel");
@@ -10,6 +11,7 @@ const TempUser = require("../models/tempUserModel");
 const Products = require("../models/productModel");
 const Category = require("../models/categoryModel");
 const Wallet = require("../models/walletModel");
+const Banner = require("../models/bannerModel");
 
 //modules
 const {sort} = require("../config/enums");
@@ -39,6 +41,7 @@ const securePassword = async (password) => {
 
 const insertTempUser = async (req, res) => {
     const Email = req.body.email;
+    const referral = req.body.referral || null;
     try {
         const userData = await User.findOne({ email: Email });
         const tempUser = await TempUser.findOne({ email: Email });
@@ -62,6 +65,7 @@ const insertTempUser = async (req, res) => {
             let newTempUser = new TempUser({
                 email: Email,
                 otp: OTP,
+                referred_by:referral,
                 expireAt: date
             })
             const insertComplete = await newTempUser.save();
@@ -140,6 +144,16 @@ const updateOTP = async (req, res) => {
     }
 }
 
+function generateRefferral(Email,name){
+    let hash = crypto.createHash("sha256");
+    let string = Email+name;
+    hash.update(string);
+    const code = hash.digest("hex").slice(0,10).toUpperCase();
+
+    console.log(code)
+    return code;
+}
+
 const verifyOTP = async (req, res) => {
     try {
         const Email = req.session.Email;
@@ -154,7 +168,8 @@ const verifyOTP = async (req, res) => {
                 email: Email,
                 name: formData.name,
                 phone: formData.phone,
-                password: hashPassword
+                password: hashPassword,
+                referral_code:generateRefferral(Email,formData.name)
             })
 
             let insertUser = await newUser.save();
@@ -171,6 +186,15 @@ const verifyOTP = async (req, res) => {
                 res.redirect("/login");
             }
 
+            if(tempUser.referred_by){
+                const referrer = await User.findOne({referral_code:tempUser.referred_by});
+                
+                if(referrer){
+                    const udpateWallet = await Wallet.findOneAndUpdate({user_id:new ObjectId(referrer._id)},{$inc:{balance:500},$push:{transactions:{type:"credit",amount:500,order_id:null}}});
+                    console.log(udpateWallet)
+                }
+            }
+
         } else {
             req.session.otpErrMsg = "Invalid OTP!"
             res.redirect('/verifyotp');
@@ -178,6 +202,7 @@ const verifyOTP = async (req, res) => {
 
     } catch (error) {
         console.log(error.message)
+        console.log(error.stack)
     }
 }
 
@@ -249,9 +274,32 @@ const getHome = async (req, res) => {
 
         const products = await Products.find({listed:true}).populate("variants").limit(4);
         const cart = await Cart.findOne({user_id:new ObjectId(req.session.userid)});
+        const banner = await Banner.findOne({name:"home"});
 
-        res.render('user/home', { products: products, cartitems: cart.items.length })
+        res.render('user/home', { products: products, cartitems: cart.items.length, banner: banner })
     } catch (error) {
+        console.log(error.message)
+    }
+}
+
+
+const search = async(req,res)=>{
+    try{
+        const search = req.body.search;
+        const found = await Products.find({ $or: [ {"brand": { $regex : search, $options :"i" } }, {"model": {$regex : search, $options :"i" } } ] })
+                        .select(["brand", "model","category"])
+                        .populate("category")
+                        .sort([["brand","asc"],["model","asc"]])
+
+        if(found){
+            res.status(200);
+            res.json({message : "search successfull!", success : true, products : found});
+        }else{
+            res.status(400).json({message:"couldn't search products", success:true});
+        }
+        
+    }catch(error){
+        res.status(500).send("Internal server error!");
         console.log(error.message)
     }
 }
@@ -414,6 +462,7 @@ const logout = async (req, res) => {
 module.exports = {
     getLogin,
     getHome,
+    search,
     getShop,
     getVariant,
     getProduct,

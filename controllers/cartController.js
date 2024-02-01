@@ -131,14 +131,24 @@ const cartItemDelete = async (req, res) => {
 
 const getCheckout = async (req, res) => {
     try {
-        const cart = await Cart.findOne({ user_id: req.session.userid }).populate("user_id").populate("items.variant_id").populate("items.product_id");
+        const cart = await aggregateCart(req.session.userid);
         const user = await User.findById(req.session.userid);
 
-        if (cart.items.length === 0) {
+        console.log(cart[0])
+        if(cart[0].price_limit >= cart[0].total ){
+            console.log("hellp")
+            const cart = await Cart.findOne({user_id:req.session.userid})
+            cart.discount = 0;
+            cart.price_limit = 0;
+            cart.coupon = null;
+            cart.save();
+        }
+
+        if (cart[0].items.length === 0) {
             res.redirect("/cart");
             return
         }
-        res.render("user/checkout", { cart: cart, addresses: user.addresses });
+        res.render("user/checkout", { cart: cart[0], addresses: user.addresses });
     } catch (error) {
         console.log(error.message)
     }
@@ -187,13 +197,15 @@ const applyCoupon = async(req,res)=>{
 
         if(cartCoupon){
             return res.status(400).json({message:"A coupon has already been applied.",success:false, color:"#ff9800"});
+       
         }else if(coupon && coupon.price_limit <= req.body.total){
-            const cart = await Cart.findOneAndUpdate({user_id:req.session.userid},{$set:{coupon:req.body.coupon,discount:coupon.discount}});
+
+            const cart = await Cart.findOneAndUpdate({user_id:req.session.userid},{$set:{coupon:req.body.coupon, discount:coupon.discount, price_limit:coupon.price_limit}});
             return res.status(200).json({message:"Coupon applied successfully",success:true, code: coupon.code, discount: coupon.discount});
         }else if(coupon){
             return res.status(400).json({message:`This coupon's eligiible only for orders o/a ${coupon.price_limit}`,success:false, color:"#ff9800"});
         }else{
-            return res.status(400).json({message:"Coupon not found",success:false});
+            return res.status(400).json({message:"Coupon not found",success:false});min
         }
 
     }catch(error){
@@ -204,7 +216,7 @@ const applyCoupon = async(req,res)=>{
 
 const removeCoupon = async(req,res)=>{
     try{
-        const cart = await Cart.findOneAndUpdate({user_id:req.session.userid},{$unset:{coupon:1,discount:1}});
+        const cart = await Cart.findOneAndUpdate({user_id:req.session.userid},{$set:{discount:0, price_limit:0},$unset:{coupon:1}});
         
         if(cart){
             res.status(200).json({message:"Coupon removed successfully",success:true});
@@ -216,6 +228,131 @@ const removeCoupon = async(req,res)=>{
         console.log(error.message)
         res.status(500).send("Internal server error");
     }
+}
+
+async function aggregateCart(id) {
+	try {
+
+        const CART = await Cart.aggregate([
+            {
+                $match: {
+                    user_id: new ObjectId(id),
+                },
+            },
+            {
+                $unwind: "$items",
+            },
+            {
+                $lookup: {
+                    from: "products",
+                    localField: "items.product_id",
+                    foreignField: "_id",
+                    as: "items.product_id",
+                },
+            },
+            {
+                $lookup: {
+                    from: "categories",
+                    localField: "items.product_id.category",
+                    foreignField: "_id",
+                    as: "items.category",
+                },
+            },
+            {
+                $lookup: {
+                    from: "variants",
+                    localField: "items.variant_id",
+                    foreignField: "_id",
+                    as: "items.variant_id",
+                },
+            },
+            {
+                $addFields: {
+                    "items.product_id": {
+                        $arrayElemAt: ["$items.product_id", 0],
+                    },
+                    "items.variant_id": {
+                        $arrayElemAt: ["$items.variant_id", 0],
+                    },
+                    "items.category": {
+                        $arrayElemAt: ["$items.category", 0],
+                    },
+                },
+            },
+            {
+                $addFields: {
+                    "items.greater_offer": {
+                        $max: [
+                            "$items.product_id.product_offer",
+                            "$items.category.offer",
+                        ],
+                    },
+                },
+            },
+            {
+                $addFields: {
+                    "items.offer_price": {
+                        $cond: {
+                            if: {
+                                $gt: ["$items.greater_offer", 0],
+                            },
+                            then: {
+                                $subtract: [
+                                    "$items.variant_id.price",
+                                    {
+                                        $multiply: [
+                                            {
+                                                $divide: [
+                                                    "$items.greater_offer",
+                                                    100,
+                                                ],
+                                            },
+                                            "$items.variant_id.price",
+                                        ],
+                                    },
+                                ],
+                            },
+                            else: "$items.variant_id.price",
+                        },
+                    },
+                },
+            },
+            {
+                $group: {
+                    _id: "$_id",
+                    discount: {
+                        $first: "$discount",
+                    },
+                    user_id: {
+                        $first: "$user_id",
+                    },
+                    items: {
+                        $push: "$items",
+                    },
+                    price_limit:{$first:"$price_limit"},
+                    total: {
+                        $sum: {
+                            $multiply: [
+                                "$items.quantity",
+                                "$items.offer_price",
+                            ],
+                        },
+                    },
+                },
+            },
+            {
+                $addFields: {
+                    total: {
+                        $subtract: ["$total", "$discount"],
+                    },
+                },
+            },
+        ]);
+
+		return CART;
+	} catch (error) {
+		console.log(error.message)
+	}
 }
 
 module.exports = {
