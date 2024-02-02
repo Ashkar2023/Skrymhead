@@ -281,26 +281,26 @@
 			});
 		});
 	
-		let expected = "http://localhost:8000/admin/addproduct";
-		let q = new URLSearchParams(window.location.search);
-		let success = q.get("success");
-		sessionStorage.setItem("shown",true);
-		let shown = sessionStorage.getItem("shown");
+		// let expected = "http://localhost:8000/admin/addproduct";
+		// let q = new URLSearchParams(window.location.search);
+		// let success = q.get("success");
+		// sessionStorage.setItem("shown",true);
+		// let shown = sessionStorage.getItem("shown");
 		
-		if (document.referrer.includes(expected) && success === 'true' && shown === true ) {
-			Toastify({
-				text: "Product added successfully",
-				duration: 1500,
-				gravity: "top",
-				position: "center",
-				backgroundColor: "#12BA85",
-				stopOnFocus: true,
-				offset: {
-					y: 20
-				}
-			}).showToast();
-			sessionStorage.setItem("shown",false);
-		}
+		// if (document.referrer.includes(expected) && success === 'true' && shown === true ) {
+		// 	Toastify({
+		// 		text: "Product added successfully",
+		// 		duration: 1500,
+		// 		gravity: "top",
+		// 		position: "center",
+		// 		backgroundColor: "#12BA85",
+		// 		stopOnFocus: true,
+		// 		offset: {
+		// 			y: 20
+		// 		}
+		// 	}).showToast();
+		// 	sessionStorage.setItem("shown",false);
+		// }
 	</script>
 
 	<% include('../layouts/footer.ejs') %>

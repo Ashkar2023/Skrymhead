@@ -178,7 +178,7 @@ const verifyOTP = async (req, res) => {
                 const user = await User.findOne({email:Email}); 
                 const newCart = new Cart({user_id:user._id,products:[]})
                 await newCart.save();
-                const wallet = new Wallet({user_id:user._id})
+                const wallet = new Wallet({user_id:user._id,balance:0, transactions:[]})
                 await wallet.save();
                 
                 delete Email;

@@ -8,6 +8,15 @@
   src: url('../fonts/Koulen/Koulen-Regular.ttf');
 }
 
+#searchResultWrapper{
+  background-color: rgb(253, 249, 245);
+  border: solid 1px rgb(195, 188, 188);
+}
+
+#searchResults .results:not(:last-child){
+  border-bottom: 0.7px solid black;
+}
+
 .btn:focus {
   box-shadow: none;
 }
@@ -69,7 +78,5 @@ input::-webkit-inner-spin-button {
   color: black;
 }
 
-.m-brand{
-  margin-left: 150px;
-}
+
 

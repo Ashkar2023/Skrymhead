@@ -238,7 +238,10 @@ accountController.getWalletPage = async(req,res)=>{
                 }
             },
             {
-                $unwind:"$transactions"
+                $unwind: {
+                    path: "$transactions",
+                    preserveNullAndEmptyArrays: true
+                }
             },
             {
                 $sort:{"transactions.date":-1}
@@ -253,7 +256,7 @@ accountController.getWalletPage = async(req,res)=>{
             }
         ])
 
-        res.render("user/wallet",{ wallet :wallet[0] });
+        res.render("user/wallet",{ wallet : wallet[0]});
     }catch(error){
         console.log(error.message)
     }

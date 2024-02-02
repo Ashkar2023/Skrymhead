@@ -32,6 +32,7 @@ const addToCategories = async (req, res) => {
             const newCat = new Category({
                 category: catEdited
             })
+            newCat.save();
             console.log("cat in")
             req.session.categoryMsg = "New Category Saved";
             res.redirect("/admin/category");
@@ -79,18 +80,18 @@ const postEditCategory = async (req, res) => {
         const newCategory = req.body.category;
         const newOffer = req.body.offer;
         const catEdited = newCategory.charAt(0).toUpperCase() + newCategory.slice(1).replace(/\s+/g, '-');
-        const regexx = new RegExp(catEdited, "i");
+        const regexx = new RegExp(catEdited);
         console.log(req.body)
-        // Check if the new category already exists
+
         const isFound = await Category.findOne({ category: { $regex: regexx } });
 
         if (isFound && !newOffer) {
             res.redirect("/admin/category");
         } else {
-            // Update the category
             const updatedCategory = await Category.findByIdAndUpdate(categoryId, { category: catEdited, offer: Number(newOffer) }, { new: true });
 
             if (updatedCategory) {
+                console.log(updatedCategory)
                 delete req.session.newid;
                 res.redirect("/admin/category");
             }

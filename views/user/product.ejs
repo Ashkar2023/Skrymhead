@@ -39,65 +39,65 @@
 	<link rel="stylesheet" type="text/css" href="/css/main.css">
 	<link rel="stylesheet" type="text/css" href="/css/util.css">
 	<link rel="stylesheet" type="text/css" href="/css/zoom.css">
-	<link rel="stylesheet" href="/css/fonts.css">
-	<!--===============================================================================================-->
+	<link rel="stylesheet" type="text/css" href="/css/fonts.css">
+	<style>
+		@media screen and (max-width:1024px){
+			.display-not{
+				display: none;
+			}
+		}
+	</style>
 </head>
 
 <body class="animsition">
 
 	<!-- Header -->
 	<header>
-		<nav class="navbar navbar-expand-lg border-bottom fixed-top bg-white border-3 border-black">
-			<div class="container-fluid">
-				<a class="m-brand navbar-brand d-flex align-items-center" href="#">
+		<nav class="navbar navbar-expand-md border-bottom fixed-top bg-white border-3 border-black">
+			<div class="container-fluid justify-content-around justify-content-md-between ms-lg-5 ms-md-5 me-lg-5">
+				<a class="navbar-brand d-flex align-items-center" href="/home">
 					<svg width="38" height="48" viewBox="0 0 38 48" fill="none" xmlns="http://www.w3.org/2000/svg">
-						<path
-							d="M34 1H4L1 5.63571M34 1L37 5.63571L25 24.1786M34 1L22 19.5429M1 5.63571H25L19 14.9071L16 10.2714M1 5.63571L16 28.8143L4 47.3571M1 5.63571L22 38.0857H16H28L10 10.2714M16 10.2714L28 28.8143M16 10.2714L37 42.7214M22 10.2714H10M10 10.2714L22 28.8143M37 42.7214L34 47.3571H4M37 42.7214H13L19 33.45M4 47.3571L1 42.7214L13 24.1786"
-							stroke="black" stroke-linecap="round" stroke-linejoin="round" />
+						<path d="M34 1H4L1 5.63571M34 1L37 5.63571L25 24.1786M34 1L22 19.5429M1 5.63571H25L19 14.9071L16 10.2714M1 5.63571L16 28.8143L4 47.3571M1 5.63571L22 38.0857H16H28L10 10.2714M16 10.2714L28 28.8143M16 10.2714L37 42.7214M22 10.2714H10M10 10.2714L22 28.8143M37 42.7214L34 47.3571H4M37 42.7214H13L19 33.45M4 47.3571L1 42.7214L13 24.1786" stroke="black" stroke-linecap="round" stroke-linejoin="round"/>
 					</svg>
 					<h1 class="m-2 text-dark koulen">SKRYMHEAD</h1>
 				</a>
-
+	
 				<button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav"
 					aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
 					<span class="navbar-toggler-icon"></span>
 				</button>
-
+				
 				<div class="collapse navbar-collapse me-5" id="navbarNav">
 					<ul class="navbar-nav ms-auto">
 						<li class="nav-item">
-							<a class="nav-link" href="/home">Home</a>
+							<a class="nav-link active" href="/home">Home</a>
 						</li>
 						<li class="nav-item">
-							<a class="nav-link active" href="/shop">Shop</a>
+							<a class="nav-link" href="/shop">Shop</a>
 						</li>
 						<li class="nav-item">
 							<a class="nav-link" href="#">Categories</a>
 						</li>
-						<li class="nav-item">
-							<a class="nav-link" href="contact.html">Help center</a>
-						</li>
 					</ul>
 				</div>
-
-				<div class="navbar-text me-5">
+				
+				
+	
+				<div class="navbar-text me-5 d-flex">
 					<div class="wrap-icon-header flex-w flex-r-m">
-						<div class="icon-header-item cl2 hov-cl1 trans-04 p-l-22 p-r-11 js-show-modal-search">
+						<div class="icon-header-item cl2 hov-cl1 trans-04 p-l-22 p-r-11 js-show-modal-search" onclick="focusInput()">
 							<i class="zmdi zmdi-search"></i>
 						</div>
-
+	
 						<div class="icon-header-item cl2 hov-cl1 trans-04 p-l-22 p-r-11 js-show-account">
 							<a href="/profile" style="color:inherit"><i class="zmdi zmdi-account-o"></i></a>
 						</div>
-
-						<div class="icon-header-item cl2 hov-cl1 trans-04 p-l-22 p-r-11 icon-header-noti"
-							data-notify="<%= cartitems %>">
+	
+						<div class="icon-header-item cl2 hov-cl1 trans-04 p-l-22 p-r-11 icon-header-noti" id="cartNotify" data-notify="<%= cartitems %>">
 							<a href="/cart"><i class="zmdi zmdi-shopping-cart"></i></a>
 						</div>
-
-						<a href="#"
-							class="dis-block icon-header-item cl2 hov-cl1 trans-04 p-l-22 p-r-11 icon-header-noti"
-							data-notify="0">
+	
+						<a href="#" class="dis-block icon-header-item cl2 hov-cl1 trans-04 p-l-22 p-r-11 icon-header-noti" data-notify="0">
 							<i class="zmdi zmdi-favorite-outline"></i>
 						</a>
 					</div>
@@ -105,24 +105,29 @@
 			</div>
 		</nav>
 
-
-		<!-- Modal Search -->
-		<div class="modal-search-header flex-c-m trans-04 js-hide-modal-search">
+		<div class="modal-search-header d-flex justify-content-center trans-04 js-hide-modal-search">
 			<div class="container-search-header">
-				<button class="flex-c-m btn-hide-modal-search trans-04 js-hide-modal-search">
-					<img src="images/icons/icon-close2.png" alt="CLOSE">
-				</button>
-
 				<form class="wrap-search-header flex-w p-l-15">
 					<button class="flex-c-m trans-04">
 						<i class="zmdi zmdi-search"></i>
 					</button>
-					<input class="plh3" type="text" name="search" placeholder="Search...">
+					<input class="plh3" type="text" name="look" placeholder="Search..." spellcheck="false">
 				</form>
+				
+				<button class="flex-c-m btn-hide-modal-search trans-04 js-hide-modal-search" onclick="clearInput()">
+					<img src="images/icons/icon-close2.png" alt="CLOSE">
+				</button>
+
+				<div id="searchResultWrapper">
+					<ul id="searchResults">
+					</ul>
+				</div>
+
 			</div>
 		</div>
 	</header>
 
+	<script src="/js/search.js"></script>
 
 	<!-- breadcrumb -->
 	<div class="container">
@@ -151,20 +156,18 @@
 									<div class="wrap-pic-w pos-relative" id="zoomdiv">
 										<img src="/products/<%= name+'/'+product.images[i].url %>" id="product"
 											alt="IMG-PRODUCT">
-									</div>
+								</div>
 							</div>
-
-
-							<% } %>
-
+								<% } %>
 						</div>
 					</div>
 				</div>
 			</div>
 
 
-			<div id="zoom" class="img-zoom-result"
+			<div id="zoom" class="img-zoom-result display-not"
 				style="position: absolute;top:250px;left:900px;z-index:3;background-color: aliceblue;"></div>
+
 			<div class="col-md-6 col-lg-5 p-b-30">
 				<div class="p-r-50 p-t-5 p-lr-0-lg">
 					<h4 class="mtext-105 cl2 js-name-detail p-b-14">
@@ -783,170 +786,6 @@
 		</span>
 	</div>
 
-	<!-- Modal1 -->
-	<div class="wrap-modal1 js-modal1 p-t-60 p-b-20">
-		<div class="overlay-modal1 js-hide-modal1"></div>
-
-		<div class="container">
-			<div class="bg0 p-t-60 p-b-30 p-lr-15-lg how-pos3-parent">
-				<button class="how-pos3 hov3 trans-04 js-hide-modal1">
-					<img src="/images/icons/icon-close.png" alt="CLOSE">
-				</button>
-
-				<div class="row">
-					<div class="col-md-6 col-lg-7 p-b-30">
-						<div class="p-l-25 p-r-30 p-lr-0-lg">
-							<div class="wrap-slick3 flex-sb flex-w">
-								<div class="wrap-slick3-dots"></div>
-								<div class="wrap-slick3-arrows flex-sb-m flex-w"></div>
-
-								<div class="slick3 gallery-lb">
-									<div class="item-slick3" data-thumb="/images/product-detail-01.jpg">
-										<div class="wrap-pic-w pos-relative">
-											<img src="/images/product-detail-01.jpg" alt="IMG-PRODUCT">
-
-											<a class="flex-c-m size-108 how-pos1 bor0 fs-16 cl10 bg0 hov-btn3 trans-04"
-												href="images/product-detail-01.jpg">
-												<i class="fa fa-expand"></i>
-											</a>
-										</div>
-									</div>
-
-									<div class="item-slick3" data-thumb="/images/product-detail-02.jpg">
-										<div class="wrap-pic-w pos-relative">
-											<img src="/images/product-detail-02.jpg" alt="IMG-PRODUCT">
-
-											<a class="flex-c-m size-108 how-pos1 bor0 fs-16 cl10 bg0 hov-btn3 trans-04"
-												href="images/product-detail-02.jpg">
-												<i class="fa fa-expand"></i>
-											</a>
-										</div>
-									</div>
-
-									<div class="item-slick3" data-thumb="/images/product-detail-03.jpg">
-										<div class="wrap-pic-w pos-relative">
-											<img src="/images/product-detail-03.jpg" alt="IMG-PRODUCT">
-
-											<a class="flex-c-m size-108 how-pos1 bor0 fs-16 cl10 bg0 hov-btn3 trans-04"
-												href="images/product-detail-03.jpg">
-												<i class="fa fa-expand"></i>
-											</a>
-										</div>
-									</div>
-								</div>
-							</div>
-						</div>
-					</div>
-
-					<div class="col-md-6 col-lg-5 p-b-30">
-						<div class="p-r-50 p-t-5 p-lr-0-lg">
-							<h4 class="mtext-105 cl2 js-name-detail p-b-14">
-								Lightweight Jacket
-							</h4>
-
-							<span class="mtext-106 cl2">
-								$58.79
-							</span>
-
-							<p class="stext-102 cl3 p-t-23">
-								Nulla eget sem vitae eros pharetra viverra. Nam vitae luctus ligula. Mauris consequat
-								ornare feugiat.
-							</p>
-
-							<!--  -->
-							<div class="p-t-33">
-								<div class="flex-w flex-r-m p-b-10">
-									<div class="size-203 flex-c-m respon6">
-										Size
-									</div>
-
-									<div class="size-204 respon6-next">
-										<div class="rs1-select2 bor8 bg0">
-											<select class="js-select2" name="time">
-												<option>Choose an option</option>
-												<option>Size S</option>
-												<option>Size M</option>
-												<option>Size L</option>
-												<option>Size XL</option>
-											</select>
-											<div class="dropDownSelect2"></div>
-										</div>
-									</div>
-								</div>
-
-								<div class="flex-w flex-r-m p-b-10">
-									<div class="size-203 flex-c-m respon6">
-										Color
-									</div>
-
-									<div class="size-204 respon6-next">
-										<div class="rs1-select2 bor8 bg0">
-											<select class="js-select2" name="time">
-												<option>Choose an option</option>
-												<option>Red</option>
-												<option>Blue</option>
-												<option>White</option>
-												<option>Grey</option>
-											</select>
-											<div class="dropDownSelect2"></div>
-										</div>
-									</div>
-								</div>
-
-								<div class="flex-w flex-r-m p-b-10">
-									<div class="size-204 flex-w flex-m respon6-next">
-										<div class="wrap-num-product flex-w m-r-20 m-tb-10">
-											<div class="btn-num-product-down cl8 hov-btn3 trans-04 flex-c-m">
-												<i class="fs-16 zmdi zmdi-minus"></i>
-											</div>
-
-											<input class="mtext-104 cl3 txt-center num-product" type="number"
-												name="num-product" value="1">
-
-											<div class="btn-num-product-up cl8 hov-btn3 trans-04 flex-c-m">
-												<i class="fs-16 zmdi zmdi-plus"></i>
-											</div>
-										</div>
-
-										<button
-											class="flex-c-m stext-101 cl0 size-101 bg1 bor1 hov-btn1 p-lr-15 trans-04 js-addcart-detail">
-											Add to cart
-										</button>
-									</div>
-								</div>
-							</div>
-
-							<!--  -->
-							<div class="flex-w flex-m p-l-100 p-t-40 respon7">
-								<div class="flex-m bor9 p-r-10 m-r-11">
-									<a href="#"
-										class="fs-14 cl3 hov-cl1 trans-04 lh-10 p-lr-5 p-tb-2 js-addwish-detail tooltip100"
-										data-tooltip="Add to Wishlist">
-										<i class="zmdi zmdi-favorite"></i>
-									</a>
-								</div>
-
-								<a href="#" class="fs-14 cl3 hov-cl1 trans-04 lh-10 p-lr-5 p-tb-2 m-r-8 tooltip100"
-									data-tooltip="Facebook">
-									<i class="fa fa-facebook"></i>
-								</a>
-
-								<a href="#" class="fs-14 cl3 hov-cl1 trans-04 lh-10 p-lr-5 p-tb-2 m-r-8 tooltip100"
-									data-tooltip="Twitter">
-									<i class="fa fa-twitter"></i>
-								</a>
-
-								<a href="#" class="fs-14 cl3 hov-cl1 trans-04 lh-10 p-lr-5 p-tb-2 m-r-8 tooltip100"
-									data-tooltip="Google Plus">
-									<i class="fa fa-google-plus"></i>
-								</a>
-							</div>
-						</div>
-					</div>
-				</div>
-			</div>
-		</div>
-	</div>
 
 	<!--===============================================================================================-->
 	<script src="https://cdn.jsdelivr.net/npm/toastify-js"></script>

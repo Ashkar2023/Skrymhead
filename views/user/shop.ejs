@@ -43,22 +43,20 @@
 
 	<!-- Header -->
 	<header class="">
-		<nav class="navbar navbar-expand-lg border-bottom fixed-top bg-white border-3 border-black">
-			<div class="container-fluid">
-				<a class="m-brand navbar-brand d-flex align-items-center " href="">
+		<nav class="navbar navbar-expand-md border-bottom fixed-top bg-white border-3 border-black">
+			<div class="container-fluid justify-content-around justify-content-md-between ms-lg-5 ms-md-5 me-lg-5">
+				<a class="navbar-brand d-flex align-items-center" href="/home">
 					<svg width="38" height="48" viewBox="0 0 38 48" fill="none" xmlns="http://www.w3.org/2000/svg">
-						<path
-							d="M34 1H4L1 5.63571M34 1L37 5.63571L25 24.1786M34 1L22 19.5429M1 5.63571H25L19 14.9071L16 10.2714M1 5.63571L16 28.8143L4 47.3571M1 5.63571L22 38.0857H16H28L10 10.2714M16 10.2714L28 28.8143M16 10.2714L37 42.7214M22 10.2714H10M10 10.2714L22 28.8143M37 42.7214L34 47.3571H4M37 42.7214H13L19 33.45M4 47.3571L1 42.7214L13 24.1786"
-							stroke="black" stroke-linecap="round" stroke-linejoin="round" />
+						<path d="M34 1H4L1 5.63571M34 1L37 5.63571L25 24.1786M34 1L22 19.5429M1 5.63571H25L19 14.9071L16 10.2714M1 5.63571L16 28.8143L4 47.3571M1 5.63571L22 38.0857H16H28L10 10.2714M16 10.2714L28 28.8143M16 10.2714L37 42.7214M22 10.2714H10M10 10.2714L22 28.8143M37 42.7214L34 47.3571H4M37 42.7214H13L19 33.45M4 47.3571L1 42.7214L13 24.1786" stroke="black" stroke-linecap="round" stroke-linejoin="round"/>
 					</svg>
 					<h1 class="m-2 text-dark koulen">SKRYMHEAD</h1>
 				</a>
-
+	
 				<button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav"
 					aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
 					<span class="navbar-toggler-icon"></span>
 				</button>
-
+				
 				<div class="collapse navbar-collapse me-5" id="navbarNav">
 					<ul class="navbar-nav ms-auto">
 						<li class="nav-item">
@@ -70,30 +68,26 @@
 						<li class="nav-item">
 							<a class="nav-link" href="#">Categories</a>
 						</li>
-						<li class="nav-item">
-							<a class="nav-link" href="#">Help center</a>
-						</li>
 					</ul>
 				</div>
-
-				<div class="navbar-text me-5">
+				
+				
+	
+				<div class="navbar-text me-5 d-flex">
 					<div class="wrap-icon-header flex-w flex-r-m">
-						<button class="icon-header-item cl2 hov-cl1 trans-04 p-l-22 p-r-11 js-show-modal-search">
+						<div class="icon-header-item cl2 hov-cl1 trans-04 p-l-22 p-r-11 js-show-modal-search" onclick="focusInput()">
 							<i class="zmdi zmdi-search"></i>
-						</button>
-
+						</div>
+	
 						<div class="icon-header-item cl2 hov-cl1 trans-04 p-l-22 p-r-11 js-show-account">
 							<a href="/profile" style="color:inherit"><i class="zmdi zmdi-account-o"></i></a>
 						</div>
-
-						<div class="icon-header-item cl2 hov-cl1 trans-04 p-l-22 p-r-11 icon-header-noti"
-							data-notify="<%= cartitems %>">
+	
+						<div class="icon-header-item cl2 hov-cl1 trans-04 p-l-22 p-r-11 icon-header-noti" id="cartNotify" data-notify="<%= cartitems %>">
 							<a href="/cart"><i class="zmdi zmdi-shopping-cart"></i></a>
 						</div>
-
-						<a href="#"
-							class="dis-block icon-header-item cl2 hov-cl1 trans-04 p-l-22 p-r-11 icon-header-noti"
-							data-notify="0">
+	
+						<a href="#" class="dis-block icon-header-item cl2 hov-cl1 trans-04 p-l-22 p-r-11 icon-header-noti" data-notify="0">
 							<i class="zmdi zmdi-favorite-outline"></i>
 						</a>
 					</div>
@@ -101,22 +95,29 @@
 			</div>
 		</nav>
 
-		<!-- Modal Search -->
-		<div class="modal-search-header flex-c-m trans-04 js-hide-modal-search">
+		<div class="modal-search-header d-flex justify-content-center trans-04 js-hide-modal-search">
 			<div class="container-search-header">
-				<div class="wrap-search-header flex-w p-l-15">
+				<form class="wrap-search-header flex-w p-l-15">
 					<button class="flex-c-m trans-04">
 						<i class="zmdi zmdi-search"></i>
 					</button>
-					<input class="plh3" type="text" id="searchInput" name="search" placeholder="Search...">
-				</div>
-
-				<button class="flex-c-m btn-hide-modal-search trans-04 js-hide-modal-search">
+					<input class="plh3" type="text" name="look" placeholder="Search..." spellcheck="false">
+				</form>
+				
+				<button class="flex-c-m btn-hide-modal-search trans-04 js-hide-modal-search" onclick="clearInput()">
 					<img src="images/icons/icon-close2.png" alt="CLOSE">
 				</button>
+
+				<div id="searchResultWrapper">
+					<ul id="searchResults">
+					</ul>
+				</div>
+
 			</div>
 		</div>
 	</header>
+
+	<script src="/js/search.js"></script>
 
 
 	<!-- filters -->
@@ -380,31 +381,8 @@
 							let greaterOffer;
 							product.product_offer >= product.category.offer ? greaterOffer = product.product_offer : greaterOffer = product.category.offer ;
 							let offerPrice = product.variants.price - (greaterOffer / 100) * product.variants.price;
-							
-							 	// newProducts += `
-								// 		<div class="col-sm-6 col-md-4 col-lg-3 p-b-35 isotope-item">
-								// 		<a href="shop/product?id=${product._id}"
-								// 			class="text-decoration-none stext-104 cl4 hov-cl1 trans-04 js-name-b2 p-b-6">
-								// 			<div class="block2">
-								// 			<div class="block2-pic hov-img0">
-								// 				<img src="products/${product.brand} ${product.model}/${product.images[0].url}"
-								// 				alt="IMG-PRODUCT">
-								// 			</div>
-								// 			<div class="block2-txt flex-w flex-t p-t-14">
-								// 				<div class="block2-txt-child1 flex-col-l text-decoration-none">
-								// 					${product.brand} ${product.model}
-								// 				</div>
-								// 				<span class="stext-105 cl3">
-								// 					<i class="bi bi-currency-rupee" style="font-size: medium;"></i>
-								// 					${product.variants.price.toLocaleString("en-IN")}
-								// 					<button class="btn btn-lg align-self-end" style='background-color:${product.variants.color};'></button>
-								// 				</span>
-								// 			</div>
-								// 			</div>
-								// 		</a>
-								// 		</div>`;
 
-								newProducts += `
+							newProducts += `
 									<div class="col-sm-6 col-md-4 col-lg-3 p-b-35 isotope-item">
 										<a href="shop/product?id=${product._id}" class="text-decoration-none stext-104 cl4 hov-cl1 trans-04 js-name-b2 p-b-6">
 											<div class="block2">
@@ -461,7 +439,7 @@
 											product.product_offer >= product.category.offer ? greaterOffer = product.product_offer : greaterOffer = product.category.offer ;   
 										 	let offerPrice = product.variants[0].price - (greaterOffer/100) * product.variants[0].price ;
 										%>
-										<% if(offerPrice){ %>
+										<% if(greaterOffer){ %>
 											<div class="stext-105 cl3 d-flex w-100 justify-content-between">
 												<p class="bi bi-currency-rupee" style="font-size: medium;"><span class=""><%= offerPrice %></span></p>
 												<div class="flex-r">
@@ -656,7 +634,7 @@
 	<script src="vendor/animsition/js/animsition.min.js"></script>
 	<!--===============================================================================================-->
 	<script src="vendor/bootstrap/js/popper.js"></script>
-	<script src="vendor/bootstrap/js/bootstrap.min.js"></script>
+	<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL" crossorigin="anonymous"></script>
 	<!--===============================================================================================-->
 	<script src="vendor/select2/select2.min.js"></script>
 	<script>

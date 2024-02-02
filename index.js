@@ -33,6 +33,11 @@ app.use(
         secret: process.env.SESSIONSECRET,
         resave: true,
         saveUninitialized: false,
+        cookie:{
+            maxAge: 21600000,
+            expires:false,
+            rolling:true
+        }
     }),
 )
 

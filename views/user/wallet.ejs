@@ -17,7 +17,7 @@
 <body>
 
     <nav class="navbar navbar-sm navbar-expand-lg border-bottom">
-        <div class="container-fluid">
+        <div class="container-fluid" style="z-index: 1;">
             <a class="navbar-brand d-flex align-items-center ms-5 " href="#">
                 <svg width="38" height="48" viewBox="0 0 38 48" fill="none" xmlns="http://www.w3.org/2000/svg">
                     <path
@@ -85,6 +85,7 @@
         </div>
     </div>
 
+    <script>console.log('<%= wallet %>')</script>
     <div class="container mt-5">
         <div class="row">
             <!-- Add Money Block -->
@@ -119,17 +120,21 @@
                     <div class="card-body">
                         <h5 class="card-title">Transaction History</h5>
                         <ul class="list-group">
-                        <% wallet.transactions.forEach((T)=>{ %>
-                            <li class="list-group-item d-flex justify-content-between align-items-center">
-                                <span class="w-25">Date : <%= new Date(T.date).toLocaleDateString()+" " %> <small class="text-muted"><%= new Date(T.date).toLocaleTimeString() %></small></span>
-                                <h6 class="">Order-ID #<%= T.order_id %></h6>
-                                <% if(T.type==="credit" ){ %>
-                                    <span class="badge bg-success">+<%= T.amount %></span>
-                                <% }else{ %>
-                                    <span class="badge bg-danger">-<%= T.amount %></span>
-                                <% } %>
-                            </li>
-                        <% }) %>
+                        <% if(wallet.transactions.length===0){ %>
+                            <li class="list-group-item d-flex justify-content-center align-items-center">No transactions found</li>
+                            <% }else{ %>
+                                <% wallet.transactions.forEach((T)=>{ %>
+                                    <li class="list-group-item d-flex justify-content-between align-items-center">
+                                        <span class="w-25">Date : <%= new Date(T.date).toLocaleDateString()+" " %> <small class="text-muted"><%= new Date(T.date).toLocaleTimeString() %></small></span>
+                                        <h6 class="">Order-ID #<%= T.order_id %></h6>
+                                        <% if(T.type==="credit" ){ %>
+                                            <span class="badge bg-success">+<%= T.amount %></span>
+                                        <% }else{ %>
+                                            <span class="badge bg-danger">-<%= T.amount %></span>
+                                        <% } %>
+                                    </li>
+                                <% }) %>
+                        <% } %>
                                 
                         </ul>
                     </div>

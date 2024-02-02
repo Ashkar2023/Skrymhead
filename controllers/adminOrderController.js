@@ -30,10 +30,11 @@ const cancelOrder = async(req,res)=>{
             }})
             
         if (order) {
-            res.status(200).json({message:"Order marked delivered!",success:true});
+            res.status(200).json({message:"Order cancelled!",success:true});
         } else {
-            res.status(400).json({message:"Marking delivered failed!",success:false});
+            res.status(400).json({message:"Order cancellation failed!",success:false});
         }
+        
     }catch(error){
         console.log(error.message)
         res.status(500).json("Internal server error!");
@@ -50,10 +51,11 @@ const markAsDelivered = async(req,res)=>{
             }})
             
         if (order) {
-            res.status(200).json({message:"Order cancelled!",success:true});
+            res.status(200).json({message:"Order marked delivered!",success:true});
         } else {
-            res.status(400).json({message:"Order cancellation failed!",success:false});
+            res.status(400).json({message:"Marking delivered failed!",success:false});
         }
+        
     }catch(error){
         console.log(error.message)
         res.status(500).json("Internal server error!");
