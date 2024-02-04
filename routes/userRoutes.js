@@ -2,18 +2,17 @@ const express = require("express")
 const path = require("path")
 const fs = require("fs")
 const user_router = express.Router();
-const bodyParser = require("body-parser");
 const multer = require("multer");
 const userController = require("../controllers/userController");
 const userAccountController = require("../controllers/userAccountController");
-const cartController = require("../controllers/cartController");
+const userCartController = require("../controllers/userCartController");
 const userOrderController = require("../controllers/userOrderController");
 const auth = require("../authentication/userAuth");
 
 
 //middlewares
-user_router.use(bodyParser.json());
-user_router.use(bodyParser.urlencoded({extended:true}));
+user_router.use(express.json());
+user_router.use(express.urlencoded({extended:true}));
 
 const storage = multer.memoryStorage();
 const upload = multer({storage:storage});
@@ -50,35 +49,36 @@ user_router.put("/updateotp",auth.userNotIn,userController.updateOTP)
 user_router.get("/login",auth.userNotIn,userController.getLogin);
 user_router.post("/login",userController.verifyLogin);
 
-// User Pages
+// Home / search / product / shop
 user_router.get("/home",auth.userValid,auth.userIn,userController.getHome);
 user_router.post("/search",auth.userValid,auth.userIn,userController.search);
 user_router.get("/shop",auth.userValid,auth.userIn,userController.getShop);
 user_router.post("/filterproducts",auth.userValid,auth.userIn,upload.none(),userController.getFilteredProducts);
 user_router.get("/shop/product",auth.userValid,auth.userIn,userController.getProduct);
 user_router.get("/product/variant/:index",auth.userValid,auth.userIn,userController.getVariant);
+user_router.post("/addreview",auth.userValid,auth.userIn,upload.none(),userController.addReview)
 
 
 // cart
-user_router.get("/cart",auth.userValid,auth.userIn,cartController.getCart);
-user_router.put("/addtocart",auth.userValid,auth.userIn,cartController.addToCart);
-user_router.put("/productaddtocart",auth.userValid,auth.userIn,cartController.productAddToCart);
-user_router.patch("/updatecart",auth.userValid,auth.userIn,cartController.updateCart);
-user_router.delete("/deletecartitem",auth.userValid,auth.userIn,cartController.cartItemDelete);
-user_router.post("/applycoupon",auth.userValid,auth.userIn,cartController.applyCoupon);
-user_router.delete("/removecoupon",auth.userValid,auth.userIn,cartController.removeCoupon);
-
+user_router.get("/cart",auth.userValid,auth.userIn,userCartController.getCart);
+user_router.put("/addtocart",auth.userValid,auth.userIn,userCartController.addToCart);
+user_router.put("/productaddtocart",auth.userValid,auth.userIn,userCartController.productAddToCart);
+user_router.patch("/updatecart",auth.userValid,auth.userIn,userCartController.updateCart);
+user_router.delete("/deletecartitem",auth.userValid,auth.userIn,userCartController.cartItemDelete);
+user_router.post("/applycoupon",auth.userValid,auth.userIn,userCartController.applyCoupon);
+user_router.delete("/removecoupon",auth.userValid,auth.userIn,userCartController.removeCoupon);
 
 // checkout
-user_router.get("/checkout",auth.userValid,auth.userIn,cartController.getCheckout);
-user_router.post("/checkoutaddaddress",auth.userValid,auth.userIn,upload.none(),cartController.checkoutAddAddress);
+user_router.get("/checkout",auth.userValid,auth.userIn,userCartController.getCheckout);
+user_router.post("/checkoutaddaddress",auth.userValid,auth.userIn,upload.none(),userCartController.checkoutAddAddress);
 
 // order
 user_router.put("/order",auth.userValid,auth.userIn,userOrderController.createOrder);
 user_router.post("/create-online-order",auth.userValid,auth.userIn,userOrderController.createOrder);
 user_router.post("/create-payment-intent",auth.userValid,auth.userIn,userOrderController.createPaymentIntent);
+
 // webhook & sse
-user_router.post("/webhook",express.json({raw:"application/json"}),userOrderController.listenToStripe);
+user_router.post("/webhook",userOrderController.listenToStripe);
 user_router.get("/sseconnect",auth.userValid,auth.userIn,userOrderController.sseSetup);
 
 

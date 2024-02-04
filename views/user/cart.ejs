@@ -40,60 +40,51 @@
 
 	<!-- Header -->
 	<header>
-		<nav class="navbar navbar-expand-lg border-bottom fixed-top bg-white border-3 border-black
-			<div class=" container-fluid">
-			<a class="m-brand navbar-brand d-flex align-items-center" href="#">
-				<svg width="38" height="48" viewBox="0 0 38 48" fill="none" xmlns="http://www.w3.org/2000/svg">
-					<path
-						d="M34 1H4L1 5.63571M34 1L37 5.63571L25 24.1786M34 1L22 19.5429M1 5.63571H25L19 14.9071L16 10.2714M1 5.63571L16 28.8143L4 47.3571M1 5.63571L22 38.0857H16H28L10 10.2714M16 10.2714L28 28.8143M16 10.2714L37 42.7214M22 10.2714H10M10 10.2714L22 28.8143M37 42.7214L34 47.3571H4M37 42.7214H13L19 33.45M4 47.3571L1 42.7214L13 24.1786"
-						stroke="black" stroke-linecap="round" stroke-linejoin="round" />
-				</svg>
-				<h1 class="m-2 text-dark koulen">SKRYMHEAD</h1>
-			</a>
-
-			<button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav"
-				aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
-				<span class="navbar-toggler-icon"></span>
-			</button>
-
-			<div class="collapse navbar-collapse me-5" id="navbarNav">
-				<ul class="navbar-nav ms-auto">
-					<li class="nav-item">
-						<a class="nav-link" href="/home">Home</a>
-					</li>
-					<li class="nav-item">
-						<a class="nav-link" href="/shop">Shop</a>
-					</li>
-					<li class="nav-item">
-						<a class="nav-link" href="#">Categories</a>
-					</li>
-					<li class="nav-item">
-						<a class="nav-link" href="contact.html">Help center</a>
-					</li>
-				</ul>
-			</div>
-
-			<div class="navbar-text me-5">
-				<div class="wrap-icon-header flex-w flex-r-m">
-					<div class="icon-header-item cl2 hov-cl1 trans-04 p-l-22 p-r-11 js-show-modal-search">
-						<i class="zmdi zmdi-search"></i>
-					</div>
-
-					<div class="icon-header-item cl2 hov-cl1 trans-04 p-l-22 p-r-11 js-show-account">
-						<a href="/profile" style="color:inherit"><i class="zmdi zmdi-account-o"></i></a>
-					</div>
-
-					<div class="icon-header-item cl2 hov-cl1 trans-04 p-l-22 p-r-11 icon-header-noti" id="notify"
-						data-notify="<%= cart.items.length %>">
-						<a href="/cart"><i class="zmdi zmdi-shopping-cart"></i></a>
-					</div>
-
-					<a href="#" class="dis-block icon-header-item cl2 hov-cl1 trans-04 p-l-22 p-r-11 icon-header-noti"
-						data-notify="0">
-						<i class="zmdi zmdi-favorite-outline"></i>
-					</a>
+		<nav class="navbar navbar-expand-md border-bottom fixed-top bg-white border-3 border-black">
+			<div class="container-fluid justify-content-around justify-content-md-between ms-lg-5 ms-md-5 me-lg-5">
+				<a class="navbar-brand d-flex align-items-center" href="/home">
+					<svg width="38" height="48" viewBox="0 0 38 48" fill="none" xmlns="http://www.w3.org/2000/svg">
+						<path d="M34 1H4L1 5.63571M34 1L37 5.63571L25 24.1786M34 1L22 19.5429M1 5.63571H25L19 14.9071L16 10.2714M1 5.63571L16 28.8143L4 47.3571M1 5.63571L22 38.0857H16H28L10 10.2714M16 10.2714L28 28.8143M16 10.2714L37 42.7214M22 10.2714H10M10 10.2714L22 28.8143M37 42.7214L34 47.3571H4M37 42.7214H13L19 33.45M4 47.3571L1 42.7214L13 24.1786" stroke="black" stroke-linecap="round" stroke-linejoin="round"/>
+					</svg>
+					<h1 class="m-2 text-dark koulen">SKRYMHEAD</h1>
+				</a>
+	
+				<button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav"
+					aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+					<span class="navbar-toggler-icon"></span>
+				</button>
+				
+				<div class="collapse navbar-collapse me-5" id="navbarNav">
+					<ul class="navbar-nav ms-auto">
+						<li class="nav-item">
+							<a class="nav-link" href="/home">Home</a>
+						</li>
+						<li class="nav-item">
+							<a class="nav-link" href="/shop">Shop</a>
+						</li>
+						<li class="nav-item">
+							<a class="nav-link" href="#">Categories</a>
+						</li>
+					</ul>
 				</div>
-			</div>
+				
+				
+	
+				<div class="navbar-text me-5 d-flex">
+					<div class="wrap-icon-header flex-w flex-r-m">
+						<div class="icon-header-item cl2 hov-cl1 trans-04 p-l-22 p-r-11 js-show-modal-search">
+							<i class="zmdi zmdi-search"></i>
+						</div>
+	
+						<div class="icon-header-item cl2 hov-cl1 trans-04 p-l-22 p-r-11 js-show-account">
+							<a href="/profile" style="color:inherit"><i class="zmdi zmdi-account-o"></i></a>
+						</div>
+	
+						<div class="icon-header-item cl2 hov-cl1 trans-04 p-l-22 p-r-11 icon-header-noti" id="cartNotify" data-notify="<%= cart.items.length %>">
+							<a href="/cart"><i class="zmdi zmdi-shopping-cart"></i></a>
+						</div>
+					</div>
+				</div>
 			</div>
 		</nav>
 

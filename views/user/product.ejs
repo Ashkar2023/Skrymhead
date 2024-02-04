@@ -14,7 +14,7 @@
 	<!--===============================================================================================-->
 	<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet"
 		integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
-	<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.2/font/bootstrap-icons.min.css">
+	<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
 	<!--===============================================================================================-->
 	<link rel="stylesheet" type="text/css" href="/fonts/font-awesome-4.7.0/css/font-awesome.min.css">
 	<!--===============================================================================================-->
@@ -40,6 +40,7 @@
 	<link rel="stylesheet" type="text/css" href="/css/util.css">
 	<link rel="stylesheet" type="text/css" href="/css/zoom.css">
 	<link rel="stylesheet" type="text/css" href="/css/fonts.css">
+	<link rel="stylesheet" type="text/css" href="/css/star.css">
 	<style>
 		@media screen and (max-width:1024px){
 			.display-not{
@@ -70,10 +71,10 @@
 				<div class="collapse navbar-collapse me-5" id="navbarNav">
 					<ul class="navbar-nav ms-auto">
 						<li class="nav-item">
-							<a class="nav-link active" href="/home">Home</a>
+							<a class="nav-link" href="/home">Home</a>
 						</li>
 						<li class="nav-item">
-							<a class="nav-link" href="/shop">Shop</a>
+							<a class="nav-link active" href="/shop">Shop</a>
 						</li>
 						<li class="nav-item">
 							<a class="nav-link" href="#">Categories</a>
@@ -82,7 +83,6 @@
 				</div>
 				
 				
-	
 				<div class="navbar-text me-5 d-flex">
 					<div class="wrap-icon-header flex-w flex-r-m">
 						<div class="icon-header-item cl2 hov-cl1 trans-04 p-l-22 p-r-11 js-show-modal-search" onclick="focusInput()">
@@ -96,10 +96,6 @@
 						<div class="icon-header-item cl2 hov-cl1 trans-04 p-l-22 p-r-11 icon-header-noti" id="cartNotify" data-notify="<%= cartitems %>">
 							<a href="/cart"><i class="zmdi zmdi-shopping-cart"></i></a>
 						</div>
-	
-						<a href="#" class="dis-block icon-header-item cl2 hov-cl1 trans-04 p-l-22 p-r-11 icon-header-noti" data-notify="0">
-							<i class="zmdi zmdi-favorite-outline"></i>
-						</a>
 					</div>
 				</div>
 			</div>
@@ -437,11 +433,7 @@
 					</li>
 
 					<li class="nav-item p-b-10">
-						<a class="nav-link" data-toggle="tab" href="#information" role="tab">Additional information</a>
-					</li>
-
-					<li class="nav-item p-b-10">
-						<a class="nav-link" data-toggle="tab" href="#reviews" role="tab">Reviews (1)</a>
+						<a class="nav-link" data-toggle="tab" href="#reviews" role="tab">Reviews</a>
 					</li>
 				</ul>
 
@@ -463,147 +455,132 @@
 					</div>
 
 					<!-- - -->
-					<div class="tab-pane fade" id="information" role="tabpanel">
-						<div class="row">
-							<div class="col-sm-10 col-md-8 col-lg-6 m-lr-auto">
-								<ul class="p-lr-28 p-lr-15-sm">
-									<li class="flex-w flex-t p-b-7">
-										<span class="stext-102 cl3 size-205">
-											Weight
-										</span>
-
-										<span class="stext-102 cl6 size-206">
-											0.79 kg
-										</span>
-									</li>
-
-									<li class="flex-w flex-t p-b-7">
-										<span class="stext-102 cl3 size-205">
-											Dimensions
-										</span>
-
-										<span class="stext-102 cl6 size-206">
-											110 x 33 x 100 cm
-										</span>
-									</li>
-
-									<li class="flex-w flex-t p-b-7">
-										<span class="stext-102 cl3 size-205">
-											Materials
-										</span>
-
-										<span class="stext-102 cl6 size-206">
-											60% cotton
-										</span>
-									</li>
-
-									<li class="flex-w flex-t p-b-7">
-										<span class="stext-102 cl3 size-205">
-											Color
-										</span>
-
-										<span class="stext-102 cl6 size-206">
-											Black, Blue, Grey, Green, Red, White
-										</span>
-									</li>
-
-									<li class="flex-w flex-t p-b-7">
-										<span class="stext-102 cl3 size-205">
-											Size
-										</span>
-
-										<span class="stext-102 cl6 size-206">
-											XL, L, M, S
-										</span>
-									</li>
-								</ul>
-							</div>
-						</div>
-					</div>
-
-					<!-- - -->
 					<div class="tab-pane fade" id="reviews" role="tabpanel">
 						<div class="row">
 							<div class="col-sm-10 col-md-8 col-lg-6 m-lr-auto">
 								<div class="p-b-30 m-lr-15-sm">
-									<!-- Review -->
-									<div class="flex-w flex-t p-b-68">
-										<div class="wrap-pic-s size-109 bor0 of-hidden m-r-18 m-t-6">
-											<img src="/images/avatar-01.jpg" alt="AVATAR">
-										</div>
 
-										<div class="size-207">
-											<div class="flex-w flex-sb-m p-b-17">
-												<span class="mtext-107 cl2 p-r-20">
-													Ariana Grande
-												</span>
+									
+									<div class="d-flex border" style="overflow-x: scroll; max-height: 300px; scroll-snap-type: x mandatory; scroll-behavior: smooth;">
 
-												<span class="fs-18 cl11">
-													<i class="zmdi zmdi-star"></i>
-													<i class="zmdi zmdi-star"></i>
-													<i class="zmdi zmdi-star"></i>
-													<i class="zmdi zmdi-star"></i>
-													<i class="zmdi zmdi-star-half"></i>
-												</span>
+										<% if(product.reviews.length===0){ %>
+											<div class="p-5 col-md-12 col-sm-12" style="scroll-snap-align: center;">
+												<div class="size-207 text-center">
+													<p class="stext-102">
+														<i class="bi bi-ban me-2"></i>No product reviews found
+													</p>
+												</div>
 											</div>
 
-											<p class="stext-102 cl6">
-												Quod autem in homine praestantissimum atque optimum est, id deseruit.
-												Apud ceteros autem philosophos
-											</p>
-										</div>
+										<% }else{ %>
+
+											<% product.reviews.forEach(review=>{ %>
+												<div class="p-5 col-md-12 col-sm-12" style="scroll-snap-align: center;">
+													<div class="wrap-pic-s size-108 bor0 of-hidden m-r-18 m-t-6">
+														<img src="/users/<%= review.user_id.image_url %>" alt="AVATAR">
+													</div>
+													<div class="size-207">
+														<div class="flex-w justify-content-start mtext-105 p-b-17">
+															<span class="mtext-107 cl2 p-r-5 viga">
+																<%= review.user_id.name %>
+															</span>
+															<div class="d-flex mtext-star">
+																<% for(let i= 1;i <= 5 ;i++ ){ %>
+
+																	<% if(i<=review.rating){ %>
+																		<i class="bi bi-star-fill text-warning"></i>
+																	<% }else{ %>
+																		<i class="bi bi-star-fill text-secondary"></i>
+																	<% } %>
+
+																<% } %>
+															</div>
+														</div>
+														<p class="stext-102 cl6">
+															<%= review.message %>
+														</p>
+													</div>
+												</div>
+											<% }) %>
+
+										<% } %>
+
 									</div>
 
-									<!-- Add review -->
-									<form class="w-full">
+									<!-- ///////////////////////////////// ADD REVIEW ////////////////////////////////////-->
+									<form class="w-full mt-4" id="reviewForm">
 										<h5 class="mtext-108 cl2 p-b-7">
 											Add a review
 										</h5>
 
-										<p class="stext-102 cl6">
+										
+										<p class="stext-102 cl6 mb-3">
 											Your email address will not be published. Required fields are marked *
 										</p>
-
-										<div class="flex-w flex-m p-t-50 p-b-23">
-											<span class="stext-102 cl3 m-r-16">
-												Your Rating
-											</span>
-
-											<span class="wrap-rating fs-18 cl11 pointer">
-												<i class="item-rating pointer zmdi zmdi-star-outline"></i>
-												<i class="item-rating pointer zmdi zmdi-star-outline"></i>
-												<i class="item-rating pointer zmdi zmdi-star-outline"></i>
-												<i class="item-rating pointer zmdi zmdi-star-outline"></i>
-												<i class="item-rating pointer zmdi zmdi-star-outline"></i>
-												<input class="dis-none" type="number" name="rating">
-											</span>
+										
+										<div class="d-flex col-12 rating justify-content-end" id="ratingDiv">
+											<% for(let i = 1;i<=5;i++){ %>
+												<input type="radio" id="<%= 'star'+i %>" value="<%= i %>" name="star">
+												<label for="<%= 'star'+i %>"></label>
+											<% } %>
 										</div>
 
 										<div class="row p-b-25">
 											<div class="col-12 p-b-5">
 												<label class="stext-102 cl3" for="review">Your review</label>
 												<textarea class="size-110 bor8 stext-102 cl2 p-lr-20 p-tb-10"
-													id="review" name="review"></textarea>
-											</div>
-
-											<div class="col-sm-6 p-b-5">
-												<label class="stext-102 cl3" for="name">Name</label>
-												<input class="size-111 bor8 stext-102 cl2 p-lr-20" id="name" type="text"
-													name="name">
-											</div>
-
-											<div class="col-sm-6 p-b-5">
-												<label class="stext-102 cl3" for="email">Email</label>
-												<input class="size-111 bor8 stext-102 cl2 p-lr-20" id="email"
-													type="text" name="email">
+													id="review" name="review" required minlength="10"></textarea>
 											</div>
 										</div>
 
-										<button
-											class="flex-c-m stext-101 cl0 size-112 bg7 bor11 hov-btn3 p-lr-15 trans-04 m-b-10">
+										<button type="submit" class="flex-c-m stext-101 cl0 size-112 bg7 bor11 hov-btn3 p-lr-15 trans-04 m-b-10">
 											Submit
 										</button>
 									</form>
+
+									<script>
+										let form = document.getElementById("reviewForm");
+										form.addEventListener("submit",(event)=>{
+											event.preventDefault();
+											let params = new URLSearchParams(window.location.search)
+											let formData = new FormData(form);
+											formData.append("productId",params.get("id"));
+
+											fetch("/addreview",{
+												method:"POST",
+												body:formData
+											})
+											.then(response=>{
+												if(response.ok || response.status===400){
+													return response.json();
+												}
+											})
+											.then(result => {
+												if (result.success) {
+													Swal.fire({
+														icon: 'success',
+														title: 'Success!',
+														text: result.message,
+														timer: 1300,
+														showConfirmButton: false
+													});
+												} else {
+													Swal.fire({
+														icon: 'error',
+														title: 'Error!',
+														text: result.message,
+														timer: 1500,
+														showConfirmButton: true
+													});
+												}
+											})
+											.catch(error => {
+												console.log(error.message)
+											})
+
+										})
+									</script>
+
 								</div>
 							</div>
 						</div>

@@ -2281,6 +2281,10 @@ input.num-product::-webkit-inner-spin-button {
   line-height: 1.333333;
 }
 
+.mtext-star{
+  font-size: 12px;
+}
+
 .mtext-100 {
   font-family: Helvetica, sans-serif;
   font-size: 14px;

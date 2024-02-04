@@ -10,7 +10,8 @@ const order = {
   DELIVERED: 'Delivered',
   RETURNED:"Returned",
   CANCELLED:"Cancelled",
-  CBA:"Cancelled by Admin"
+  CBA:"Cancelled by Admin",
+  FAILED:"Payment Failed"
 };
 
 const sort = {

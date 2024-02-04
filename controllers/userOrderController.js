@@ -2,12 +2,10 @@ const Order = require("../models/orderModel");
 const User = require("../models/userModel");
 const Cart = require("../models/cartModel");
 const Variant = require("../models/variantModel");
-const {payment} = require("../config/enums")
+const { payment , order : orderEnums} = require("../config/enums")
 
 const mongoose = require("mongoose");
 const { ObjectId } = require("mongodb");
-const { productAddToCart } = require("./cartController");
-const session = require("express-session");
 const stripe = require("stripe")(process.env.STRIPE_SECRET_KEY);
 
 async function aggregateTotal(id) {
@@ -227,15 +225,14 @@ async function updateOrder(newOrderId, user, paymentStatus, paymentID) {
 
 			const removeItems = await Cart.findOneAndUpdate({ user_id: new ObjectId(user) }, { $set: { items: [] } });
 
-			cart.coupon=null;
-			cart.discount = 0;
-			cart.price_limit = 0;
-			cart.save();
-
 		} else if (paymentStatus === "payment failed") {
-			const order = await Order.findOneAndUpdate({ order_id: newOrderId }, { $set: { payment_status: payment.FAILED, payment_ref: paymentID, items: items, status: payment.FAILED } });
+			const order = await Order.findOneAndUpdate({ order_id: newOrderId }, { $set: { payment_status: payment.FAILED, payment_ref: paymentID, items: items, status: orderEnums.FAILED } });
 		}
-		
+
+		cart.coupon=null;
+		cart.discount = 0;
+		cart.price_limit = 0;
+		cart.save();
 
 	} catch (error) {
 		console.log("From UpdateOrder: ", error.message);

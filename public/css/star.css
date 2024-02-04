@@ -1,0 +1,28 @@
+@import url("https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css");
+
+.rating input{
+    display: none;
+}
+
+.raitng label{
+    max-width: 40px;
+    display: block;
+    color: #7c7777;
+}
+
+.rating label::before{
+    content:'\F586';
+    margin: 0px 2px;
+    font-family: 'bootstrap-icons';
+    color: #FFC000;
+    cursor: pointer;
+}
+
+
+.rating input:checked ~ label::before{
+    color: #a9a9a9;
+}
+
+.rating input:checked + label::before {
+    color: #FFC000;
+}

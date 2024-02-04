@@ -6,7 +6,7 @@ const Order = require("../models/orderModel")
 const getLogin = (req, res) => {
     try {
         error = req.session.adminErrMsg;
-        res.render("admin/adminLogin", { alert: error });
+        res.render("admin/login", { alert: error });
         delete error;
     } catch (error) {
         console.log(error.message)

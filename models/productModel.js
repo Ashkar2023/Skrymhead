@@ -46,7 +46,26 @@ const productSchema = new mongoose.Schema({
     sales:{
         type:Number,
         default:0
-    }
+    },
+    reviews:[{
+        user_id:{
+            type:mongoose.Types.ObjectId,
+            required:true,
+            ref:"user"
+        },
+        rating:{
+            type:Number,
+            required:true
+        },
+        message:{
+            type:String,
+            required:true
+        },
+        createdAt:{
+            type:Date,
+            default:Date.now
+        }
+    }]
 })
 
 module.exports = mongoose.model("product",productSchema)

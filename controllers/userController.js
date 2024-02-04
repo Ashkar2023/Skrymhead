@@ -15,7 +15,6 @@ const Banner = require("../models/bannerModel");
 
 //modules
 const {sort} = require("../config/enums");
-const categoryModel = require("../models/categoryModel");
 
 
 //Controllers
@@ -87,7 +86,7 @@ function generateOTP() {
     let digits = "0123456789"
 
     while (i <= 4) {
-        const index = Math.floor(Math.random() * digits.length);
+        const index = crypto.randomInt(9)
         otp += digits[index];
         i++;
     }
@@ -100,13 +99,13 @@ const sendVerifyMail = async (name, email, otp) => {
         const transporter = nodemailer.createTransport({
             service: "gmail",
             auth: {
-                user: "ashkarmuhammed5@gmail.com",
-                pass: 'zyfa sozl zhgw znsf'
+                user: process.env.NODEMAILER_AUTH_EMAIL,
+                pass: process.env.NODEMAILER_AUTH_PWD
             }
         });
 
         const mailOptions = {
-            from: "muhammedashkar2023@gmail.com",
+            from: NODEMAILER_AUTH_EMAIL,
             to: email,
             subject: 'Mail verification',
             text: `Hi ${name}, your account verification OTP is ${otp}. Thank you for being a part of our creation.`
@@ -319,10 +318,14 @@ const getShop = async (req, res) => {
 const getProduct = async (req, res) => {
     try {
         const id = req.query.id;
-        const prd = await Products.findOne({ _id: id,listed:true}).populate("variants").populate("category");
+        const prd = await Products.findOne({ _id: id,listed:true})
+                    .populate("variants")
+                    .populate("category")
+                    .populate({ path: 'reviews.user_id',select:"name image_url"})
+                    
         const cart = await Cart.findOne({user_id:new ObjectId(req.session.userid)});
         const specification = prd.specification.split(".");
-        
+
         res.render("user/product", { product: prd, details: specification, cartitems: cart.items.length })
     } catch (error) {
         console.log(error.message)
@@ -441,8 +444,31 @@ const getVariant = async (req, res) => {
         if(variantDetails){
             res.status(200).json({variantData :variantDetails,success:true,index:index})
         }else{
-            res.status(400).json({message:"Can't find the product!",success:true})
+            res.status(400).json({message:"Can't find the product!",success:false})
         }
+    } catch (error) {
+        console.log(error.message)
+        res.status(500).send("internal server error");
+    }
+}
+
+const addReview = async(req,res)=>{
+    try{
+        const added = await Products.findByIdAndUpdate(req.body.productId,
+            {$push :{ reviews: 
+                {
+                    user_id:req.session.userid,
+                    message:req.body.review,
+                    rating:Number(req.body.star)
+                } 
+            }})
+
+        if(added){
+            res.status(200).json({success:true,message:"Review added successfully!"})
+        }else{
+            res.status(400).json({success:false,message:"Can't find the product!"})
+        }
+
     } catch (error) {
         console.log(error.message)
         res.status(500).send("internal server error");
@@ -473,5 +499,6 @@ module.exports = {
     insertTempUser,
     getOTP,
     verifyOTP,
+    addReview,
     logout
 }
