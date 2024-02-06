@@ -352,7 +352,7 @@ const listenToStripe = async(req,res)=>{
 		}
 
 		if (sseClient) {
-			if(result && result.status==="NOSTOCK"){
+			if(result){
 				sseClient.write(`data:${JSON.stringify(result)}\n\n`, (err) => {
 					if (err) {
 						console.error(`Error writing to SSE client: ${err.message}`);
