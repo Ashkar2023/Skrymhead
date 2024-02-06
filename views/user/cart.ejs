@@ -331,9 +331,6 @@
 
 								function updateCartPage(index, length0) {
 									let row = document.getElementById(`row${index}`);
-									let notify = document.getElementById("notify");
-									let notifyValue = Number(notify.dataset.notify);
-									notify.dataset.notify = notifyValue - 1;
 									row.remove();
 
 									if (length0) {

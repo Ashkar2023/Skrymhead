@@ -218,6 +218,8 @@ async function updateOrder(newOrderId, user, paymentStatus, paymentID) {
 		const cart = await Cart.findOne({ user_id: new ObjectId(user) });
 		const items = cart.items;
 
+		await checkStock(cart.items);
+
 		if (paymentStatus === "Paid" || paymentStatus === "Pending") {
 			const order = await Order.findOneAndUpdate({ order_id: newOrderId }, { $set: { payment_status: paymentStatus, items: items, payment_ref: paymentID } }, { new: true });
 
@@ -231,18 +233,40 @@ async function updateOrder(newOrderId, user, paymentStatus, paymentID) {
 			}
 
 			const removeItems = await Cart.findOneAndUpdate({ user_id: new ObjectId(user) }, { $set: { items: [] } });
+			
+			cart.coupon=null;
+			cart.discount = 0;
+			cart.price_limit = 0;
+			cart.save();
+			
+			return {
+				orderID:newOrderId,
+				message :"payment succeeded"
+			}
 
 		} else if (paymentStatus === "payment failed") {
 			const order = await Order.findOneAndUpdate({ order_id: newOrderId }, { $set: { payment_status: payment.FAILED, payment_ref: paymentID, items: items, status: orderEnums.FAILED } });
+			
+			cart.coupon=null;
+			cart.discount = 0;
+			cart.price_limit = 0;
+			cart.save();
+
+			return {
+				orderID:newOrderId,
+				message: paymentStatus
+			}
 		}
 
-		cart.coupon=null;
-		cart.discount = 0;
-		cart.price_limit = 0;
-		cart.save();
+		
 
 	} catch (error) {
 		console.log("From UpdateOrder: ", error.message);
+		return {
+			message:error.message,
+			orderID:newOrderId,
+			status :"NOSTOCK"
+		}
 	}
 }
 
@@ -304,6 +328,7 @@ const listenToStripe = async(req,res)=>{
 		metadata = event?.data.object.metadata;
 		paymentId = event?.data.object.id;
 		orderID = metadata?.order_id;
+		let result;
 		switch (event.type) {
 			case "payment_intent.created":
 				message = "payment order created";
@@ -313,26 +338,33 @@ const listenToStripe = async(req,res)=>{
 				break;
 			case 'charge.succeeded':
 				message = payment.PAID;
-				updateOrder( orderID , metadata.user_id, message,paymentId)
+				result = await updateOrder( orderID , metadata.user_id, message,paymentId)
 				break;
 			case "payment_intent.succeeded":
 				message = "payment succeeded";
 				break;
 			case "payment_intent.payment_failed":
 				message = "payment failed";
-				updateOrder(orderID, metadata.user_id, message, paymentId);
+				result = await updateOrder(orderID, metadata.user_id, message, paymentId);
 				break;
 			default:
 				console.log(`Unhandled event type ${event.type}`);
 		}
-		console.log(message,"\n",event,"\n",event.object,metadata?.user_id,"\n",orderID,"\n",paymentId);
 
 		if (sseClient) {
-            sseClient.write(`data:${JSON.stringify({message,orderID})}\n\n`, (err) => {
-                if (err) {
-                    console.error(`Error writing to SSE client: ${err.message}`);
-                }
-            });
+			if(result && result.status==="NOSTOCK"){
+				sseClient.write(`data:${JSON.stringify(result)}\n\n`, (err) => {
+					if (err) {
+						console.error(`Error writing to SSE client: ${err.message}`);
+					}
+				});
+			}else{
+				sseClient.write(`data:${JSON.stringify({status:message})}\n\n`, (err) => {
+					if (err) {
+						console.error(`Error writing to SSE client: ${err.message}`);
+					}
+				});
+			}
         }
 
 		res.json({received: true});

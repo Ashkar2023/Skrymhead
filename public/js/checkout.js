@@ -5,7 +5,7 @@ document.querySelector("#payment-form").addEventListener("submit", handleSubmit)
 
 async function initialize(newOrderId) {
 	try {
-		console.log("inside");
+		console.log("Payment Started");
 
 		const response = await fetch("/create-payment-intent", {
 			method: "POST",

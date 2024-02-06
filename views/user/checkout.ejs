@@ -133,6 +133,7 @@
 
 		eventSource.onmessage = (event) => {
 			const eventData = JSON.parse(event.data);
+			console.log(eventData);
 
 			if(eventData.message==="payment succeeded"){
 				$('#stripe-modal').modal('hide');
@@ -171,8 +172,21 @@
 						window.location.href = "/home";
 					}
 				});
-			}else{
-				console.log(eventData)
+			}else if(eventData.status==="NOSTOCK"){
+				let text = `<small>${eventData.message.slice(0,30)} <b>${eventData.message.slice(31)}</b></small>`;
+				Swal.fire({
+					title: "Insufficient stock",
+					icon: "error",
+					confirmButtonText: "OK",
+					confirmButtonText:"Go to Cart",
+					allowOutsideClick:false,
+					html:text,
+				})
+				.then(result=>{
+					if(result.isConfirmed) {
+						window.location.href = "/cart";
+					}
+				})
 			}
 			
 		}
