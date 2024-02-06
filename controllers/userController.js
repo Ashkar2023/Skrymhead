@@ -105,7 +105,7 @@ const sendVerifyMail = async (name, email, otp) => {
         });
 
         const mailOptions = {
-            from: NODEMAILER_AUTH_EMAIL,
+            from: process.env.NODEMAILER_AUTH_EMAIL,
             to: email,
             subject: 'Mail verification',
             text: `Hi ${name}, your account verification OTP is ${otp}. Thank you for being a part of our creation.`
