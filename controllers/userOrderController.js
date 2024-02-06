@@ -143,9 +143,15 @@ const sseSetup = (req,res)=>{
 	sseClient = res;
 
 	console.log("connection opened");
+	sseClient.write(`data: Connection Opened \n\n`,(err)=>{
+		if (err) {
+			console.error(`Error writing to SSE client: ${err.message}`);
+		}
+	})
 
     req.on("close", () => {
         sseClient = null;
+		console.log("connection closed")
     });
 }
 
