@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+    <title>Fine Logger</title>
+    <link rel="icon" type="image/x-icon" href="/images/icons/coin.png">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Raleway:wght@200;500&display=swap" rel="stylesheet">
+    <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/toastify-js/src/toastify.min.css">
+    <style>
+        .fs-med{
+            font-size: 0.9em;
+            font-family: 'Raleway', sans-serif;
+        }
+        .fs-small{
+            /* font-size: ; */
+            font-family: 'Raleway', sans-serif;
+            font-weight: 200;
+        }
+    </style>
+</head>
+<body class="bg-black">
+    <div class="container-fluid mt-5" style="background-image: url(/frank-septillion-Qrspubmx6kE-unsplash.jpg);">
+
+        <div class="row">
+            
+            <div class="">
+                <table class="table fs-med table-borderless table-dark">
+                    <thead>
+                        <tr>
+                            <th scope="col">Dev's</th>
+                            <th scope="col">Today</th>
+                            <th scope="col" class="text-danger">Total</th>
+                            <th scope="col"></th>
+                        </tr>
+                    </thead>
+                    <tbody class="fs-small" id="tableBody">
+                        <% fines.forEach(fine=>{ %>    
+                            <tr>
+                                <td>
+                                    <img src="/users/1.png" width="40px" alt="Dev images">
+                                    <%= fine.name %>
+                                </td>
+                                <td class="dailyTotal"><%= fine.dailyTotal %></td>
+                                <td class="text-danger total"><%= fine.total %></td>
+                                <td>
+                                    <button class="btn btn-sm btn-success" data-devid="<%= fine._id %>" >+5</button>
+                                </td>
+                            </tr>
+                        <% }) %>
+                    <tbody>
+                </table>
+            </div>
+
+            <script>
+                document.addEventListener("DOMContentLoaded",()=>{
+                    let table = document.getElementById("tableBody");
+                    const audio = new Audio("/audio/yeah-boy.mp3");
+
+                    table.addEventListener("click",(event)=>{
+                        if(event.target.classList.contains("btn")){
+                            let devID = event.target.dataset.devid;
+                            let dailyTotal = event.target.closest("tr").querySelector(".dailyTotal");
+                            let total = event.target.closest("tr").querySelector(".total");
+
+                            fetch("/fine/addfive",{
+                                method:"POST",
+                                headers:{
+                                    "Content-Type":"application/json",
+                                },
+                                body:JSON.stringify({
+                                    ID:devID
+                                })
+                            })
+                            .then(response=>{
+                                if(response.ok){
+                                    return response.json();
+                                }
+                            })
+                            .then(data=>{
+                                if(data.success){
+                                    dailyTotal.textContent = data.update.dailyTotal;
+                                    total.textContent = data.update.total;
+                                    
+                                    Toastify({
+                                        text: data.message,
+                                        avatar:"/images/coins.png",
+                                        duration: 2000, 
+                                        gravity: 'top',
+                                        position: 'center', // Align to the right
+                                        backgroundColor: "transparent", // Green background color
+                                        stopOnFocus: true // Stop timeout on hover/focus
+                                    }).showToast();
+                                    
+                                    audio.play();
+                                }else{
+                                    Toastify({
+                                        text: data.message,
+                                        duration: 2000, // 3 seconds
+                                        gravity: 'top', // Display at the top
+                                        position: 'center', // Align to the right
+                                        backgroundColor: 'transparent', // Green background color
+                                        stopOnFocus: true // Stop timeout on hover/focus
+                                    }).showToast();
+                                }
+                            })
+                            .catch(error=>{
+                                console.log(error.message);
+                            })
+                        }
+                    })
+                })
+            </script>
+
+        </div>
+    </div>
+    <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/toastify-js"></script>
+</body>
+</html

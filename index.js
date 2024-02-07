@@ -12,7 +12,7 @@ const port = process.env.PORT || 8000
 // Database connect
 const mongoDBconnect = async () => {
     try {
-        await mongoose.connect(process.env.DB_KEY)
+        const Skrymhead = await mongoose.connect(process.env.DB_KEY)
         console.log("MongoDB connected")
 
         app.listen(port, () => {
@@ -34,7 +34,7 @@ app.use(
         resave: true,
         saveUninitialized: false,
         cookie:{
-            maxAge: 21600000,
+            maxAge: 3600000,
             expires:false,
             rolling:true
         }
@@ -50,6 +50,9 @@ app.use("/", userRouter)
 
 const adminRouter = require("./routes/adminRoutes")
 app.use("/admin", adminRouter)
+
+const fineRouter = require("./routes/fineRoutes");
+app.use("/fine", fineRouter);
 
 deleteOTPs;
 
