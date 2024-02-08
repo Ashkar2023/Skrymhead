@@ -20,6 +20,12 @@
             font-family: 'Raleway', sans-serif;
             font-weight: 200;
         }
+        
+        .fs-big{
+            font-family: 'Raleway', sans-serif;
+            font-weight: 500;
+            font-size: 2rem;
+        }
     </style>
 </head>
 <body class="bg-black">
@@ -41,13 +47,14 @@
                         <% fines.forEach(fine=>{ %>    
                             <tr>
                                 <td>
-                                    <img src="/users/1.png" width="40px" alt="Dev images">
+                                    <img src="/images/<%= fine.image_url %>" width="40px" alt="Dev images">
                                     <%= fine.name %>
                                 </td>
                                 <td class="dailyTotal"><%= fine.dailyTotal %></td>
                                 <td class="text-danger total"><%= fine.total %></td>
-                                <td>
-                                    <button class="btn btn-sm btn-success" data-devid="<%= fine._id %>" >+5</button>
+                                <td class="fs-big">
+                                    <button class="btn add btn-sm btn-success px-3" data-devid="<%= fine._id %>" >+</button>
+                                    <button class="btn sub btn-sm btn-danger" data-devid="<%= fine._id %>" >-</button>
                                 </td>
                             </tr>
                         <% }) %>
@@ -62,7 +69,7 @@
                     const audio = new Audio("/audio/yeah-boy.mp3");
 
                     table.addEventListener("click",(event)=>{
-                        if(event.target.classList.contains("btn")){
+                        if(event.target.classList.contains("add")){
                             let devID = event.target.dataset.devid;
                             let dailyTotal = event.target.closest("tr").querySelector(".dailyTotal");
                             let total = event.target.closest("tr").querySelector(".total");
@@ -111,6 +118,55 @@
                             .catch(error=>{
                                 console.log(error.message);
                             })
+                        }else if(event.target.classList.contains("sub")){
+                            let devID = event.target.dataset.devid;
+                            let dailyTotal = event.target.closest("tr").querySelector(".dailyTotal");
+                            let total = event.target.closest("tr").querySelector(".total");
+
+                            fetch("/fine/subfive",{
+                                method:"POST",
+                                headers:{
+                                    "Content-Type":"application/json",
+                                },
+                                body:JSON.stringify({
+                                    ID:devID
+                                })
+                            })
+                            .then(response=>{
+                                if(response.ok){
+                                    return response.json();
+                                }
+                            })
+                            .then(data=>{
+                                if(data.success){
+                                    dailyTotal.textContent = data.update.dailyTotal;
+                                    total.textContent = data.update.total;
+                                    
+                                    Toastify({
+                                        text: data.message,
+                                        duration: 2000, 
+                                        gravity: 'bottom',
+                                        position: 'center', // Align to the right
+                                        backgroundColor: "transparent", // Green background color
+                                        stopOnFocus: true // Stop timeout on hover/focus
+                                    }).showToast();
+                                    
+                                    // audio.play();
+                                }else{
+                                    Toastify({
+                                        text: data.message,
+                                        duration: 2000, // 3 seconds
+                                        gravity: 'bottom', // Display at the top
+                                        position: 'center', // Align to the right
+                                        backgroundColor: 'transparent', // Green background color
+                                        stopOnFocus: true // Stop timeout on hover/focus
+                                    }).showToast();
+                                }
+                            })
+                            .catch(error=>{
+                                console.log(error.message);
+                            })
+
                         }
                     })
                 })

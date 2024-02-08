@@ -26,6 +26,21 @@ exports.addFive = async(req,res)=>{
     }
 }
 
+exports.subFive = async(req,res)=>{
+    try{
+        const fined = await Dev.findByIdAndUpdate(req.body.ID ,{$inc:{dailyTotal:-5, total:-5 }},{new:true});
+
+        if(fined){
+            res.status(200).json({message:"hmmmmm",success:true, update:fined });
+        }else{
+            res.status(400).json({message:"Failed to decrement fine",success:false});
+        }
+    }catch(error){
+        res.status(500).send("Internal server Error");
+        console.log(error.message)
+    }
+}
+
 exports.cleanUpTotal = async(req,res)=>{
     try{
         const cleaned = await Dev.findByIdAndUpdate(req.body.id ,{$set:{ total:0 }},{new:true});
