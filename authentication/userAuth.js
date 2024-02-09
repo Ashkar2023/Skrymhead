@@ -1,4 +1,5 @@
 const User = require("../models/userModel");
+
 const userIn = async(req,res,next)=>{
     try{
         if(req.session.user){

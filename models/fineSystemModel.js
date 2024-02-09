@@ -40,6 +40,7 @@ const fineLogSchema = mongoose.Schema({
     ]
 },{collection : "fineLog"})
 
+
 module.exports = {
     dev : mongoose.model("dev",devSchema),
     fineLog : mongoose.model("fineLog",fineLogSchema)

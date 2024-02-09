@@ -1,6 +1,7 @@
 const cron = require("node-schedule");
 const TempUser = require("./models/tempUserModel");
 const Coupon = require("./models/couponModel");
+const { dev : Dev} = require("./models/fineSystemModel");
 
 let schedule = cron.scheduleJob("*/30 * * * * *",async()=>{
     try{
@@ -18,5 +19,17 @@ let schedule = cron.scheduleJob("*/30 * * * * *",async()=>{
     }
 })
 
-module.exports = schedule;
+let total = cron.scheduleJob("46 12 * * *",async()=>{
+    try{
+        const calculated = await Dev.updateMany({},[ { $set: {total: {$add :["$dailyTotal","$total"] },dailyTotal : 0 } } ] );
+        console.log(calculated);
+    }catch(error){
+        console.log(error.message)
+    }
+})
+
+module.exports = {
+    schedule,
+    total
+}
 

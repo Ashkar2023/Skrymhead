@@ -5,7 +5,7 @@ const path = require("path")
 const nocache = require("nocache")
 require("dotenv").config()
 const mongoose = require("mongoose")
-const deleteOTPs = require("./otpDeleter"); 
+const { total } = require("./otpDeleter"); 
 
 const port = process.env.PORT || 8000
 
@@ -54,5 +54,5 @@ app.use("/admin", adminRouter)
 const fineRouter = require("./routes/fineRoutes");
 app.use("/fine", fineRouter);
 
-deleteOTPs;
+total;
 
