@@ -19,7 +19,7 @@ let schedule = cron.scheduleJob("*/30 * * * * *",async()=>{
     }
 })
 
-let total = cron.scheduleJob("30 0 * * *",{ tz: 'Asia/Kolkata' },async()=>{
+let total = cron.scheduleJob({hour:7,minute:1},async()=>{
     try{
         const devs = await Dev.find({});
         const updations = devs.map(dev=> {
