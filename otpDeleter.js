@@ -19,7 +19,7 @@ let schedule = cron.scheduleJob("*/30 * * * * *",async()=>{
     }
 })
 
-let total = cron.scheduleJob("55 23 * * *",async()=>{
+let total = cron.scheduleJob("15 0 * * *",{ tz: 'Asia/Kolkata' },async()=>{
     try{
         const devs = await Dev.find({});
         const updations = devs.map(dev=> {
@@ -37,7 +37,7 @@ let total = cron.scheduleJob("55 23 * * *",async()=>{
         const calculated = await Promise.all(updations)
 
         if(calculated){
-            console.log("Log Updated on "+new Date().toLocaleDateString());
+            console.log("Log Updated on "+new Date().toLocaleDateString()+" "+new Date().toLocaleTimeString());
         }
 
     }catch(error){
