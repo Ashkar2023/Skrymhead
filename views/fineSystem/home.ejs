@@ -58,6 +58,12 @@
         .head-icons{
             filter:drop-shadow(0px 0px 4px #ffc000);
         }
+
+        /* #fineTable-body{
+            height: 300px;
+            overflow:scroll;
+        } */
+
     </style>
 </head>
 
@@ -273,36 +279,34 @@
                             })
                             .then(data => {
                                 if(data.success){
-                                    const table = `<div class="log-wrapper">
-                                                        <table class="mt-1 table fs-med table-borderless table-dark">
-                                                            <thead>
-                                                                <tr>
-                                                                    <th scope="col">Date</th>
-                                                                    <th scope="col">Daily amount</th>
-                                                                    <th scope="col">Pending Total</th>
-                                                                    <th scope="col"></th>
-                                                                </tr>
-                                                            </thead>
-                                                            <tbody class="fs-small">
-                                                                ${data.details.log.map(detail => {
-                                                                    const date = moment(detail.date);
-                                                                    const  fd = date.format("DD ddd"); 
-                                                                    return `<tr>
-                                                                                <td>
-                                                                                    ${fd}
-                                                                                </td>
-                                                                                <td>
-                                                                                    ${detail.amount}
-                                                                                </td>
-                                                                                <td>
-                                                                                    ${detail.pending}    
-                                                                                </td>
-                                                                            </tr>`    
-                                                                }).join("")}
-                                                            <tbody>
-                                                        </table>
-                                                    </div>`
-                                    const button = `<div class="text-end"><a href="${`upi://pay?pa=ashkarmuhammed5@okaxis&cu=INR&am=${data.details.total}&tn=fine`}"><button class="btn btn-black border px-4 text-white align-bottom"><span class="material-icons me-1 align-text-top">send</span>Pay</button></a></div>`;
+                                    const table = `<div style="min-height:200px;max-height:300px;overflow:auto;"><table class="">
+                                                    <thead class="sticky-top bg-dark fs-med">
+                                                        <tr class="align-text-top">
+                                                            <th scope="col" style="width:30%;">Date</th>
+                                                            <th scope="col">Daily amount</th>
+                                                            <th scope="col">Pending Total</th>
+                                                            <th scope="col"></th>
+                                                        </tr>
+                                                    </thead>
+                                                    <tbody class="fs-small">
+                                                        ${data.details.log.map(detail => {
+                                                            const date = moment(detail.date);
+                                                            const  fd = date.format("DD ddd"); 
+                                                            return `<tr>
+                                                                        <td>
+                                                                            ${fd}
+                                                                        </td>
+                                                                        <td>
+                                                                            ${detail.amount}
+                                                                        </td>
+                                                                        <td>
+                                                                            ${detail.pending}    
+                                                                        </td>
+                                                                    </tr>`    
+                                                        }).join("")}
+                                                    <tbody>
+                                                    </table></div>`
+                                    const button = `<div class="text-end mt-2"><a href="${`upi://pay?pa=ashkarmuhammed5@okaxis&cu=INR&am=${data.details.total}&tn=fine`}"><button class="btn btn-black border px-4 text-white align-bottom"><span class="material-icons me-1 align-text-top">send</span>Pay</button></a></div>`;
                                     const htmlBlock = table+button;
                                     $('#modal-body').html(htmlBlock);
                                 }
@@ -324,10 +328,10 @@
 
     <!--////////////////////////////////  Modal ////////////////////////////////-->
     <div class="modal  fade" id="detailModal" tabindex="-1" role="dialog">
-        <div class="modal-dialog  mx-5 modal-dialog-centered" role="document">
+        <div class="modal-dialog  mx-3 modal-dialog-centered" role="document">
             <div class="modal-content bg-dark ">
                 <div class="modal-body text-white" id="modal-body">
-                    
+                   
                 </div>
             </div>
         </div>
