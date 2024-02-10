@@ -302,7 +302,7 @@
                                                             <tbody>
                                                         </table>
                                                     </div>`
-                                    const button = `<div class="text-end"><a href="${`upi://pay?pa=ashkarmuhammed5@okaxis&cu=INR&am=${data.amount}&tn=fine`}"><button class="btn btn-black border px-4 text-white align-bottom"><span class="material-icons me-1 align-text-top">send</span>Pay</button></a></div>`;
+                                    const button = `<div class="text-end"><a href="${`upi://pay?pa=ashkarmuhammed5@okaxis&cu=INR&am=${data.details.total}&tn=fine`}"><button class="btn btn-black border px-4 text-white align-bottom"><span class="material-icons me-1 align-text-top">send</span>Pay</button></a></div>`;
                                     const htmlBlock = table+button;
                                     $('#modal-body').html(htmlBlock);
                                 }
