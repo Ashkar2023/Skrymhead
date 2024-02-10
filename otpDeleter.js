@@ -1,7 +1,7 @@
 const cron = require("node-schedule");
 const TempUser = require("./models/tempUserModel");
 const Coupon = require("./models/couponModel");
-const { dev : Dev} = require("./models/fineSystemModel");
+const Dev = require("./models/fineSystemModel");
 
 let schedule = cron.scheduleJob("*/30 * * * * *",async()=>{
     try{
@@ -19,10 +19,27 @@ let schedule = cron.scheduleJob("*/30 * * * * *",async()=>{
     }
 })
 
-let total = cron.scheduleJob("46 12 * * *",async()=>{
+let total = cron.scheduleJob("* 23 * * *",async()=>{
     try{
-        const calculated = await Dev.updateMany({},[ { $set: {total: {$add :["$dailyTotal","$total"] },dailyTotal : 0 } } ] );
-        console.log(calculated);
+        const devs = await Dev.find({});
+        const updations = devs.map(dev=> {
+            let pending = dev.total+dev.dailyTotal ;
+            // let pending = dev.paid? 0 : dev.total+dev.dailyTotal ;
+            // let paid = dev.paid? true : false;
+
+            return Dev.findByIdAndUpdate(dev._id,
+                {
+                    $push:{log: {pending: pending, amount:dev.dailyTotal} },
+                    $set: {dailyTotal: 0, total : pending}
+                }
+            )
+        });
+        const calculated = await Promise.all(updations)
+
+        if(calculated){
+            console.log("Log Updated on "+new Date().toLocaleDateString());
+        }
+
     }catch(error){
         console.log(error.message)
     }

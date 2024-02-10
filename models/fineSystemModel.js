@@ -18,30 +18,31 @@ const devSchema = mongoose.Schema({
     image_url:{
         type:String,
         required:true
-    }
-})
-
-const fineLogSchema = mongoose.Schema({
-    name:{
-        type:String,
-        required:true
     },
-    Log:[
+    paid:{
+        type:Boolean,
+        default:false
+    },
+    log:[
         {
             date:{
                 type:Date,
-                required:true
+                default:Date.now,
             },
             amount:{
                 type:Number,
-                default:0,
+                default:0
+            },
+            pending:{
+                type:Number,
+                default:0
+            },paid:{
+                type:Boolean,
+                default:false
             }
         }
     ]
-},{collection : "fineLog"})
+})
 
 
-module.exports = {
-    dev : mongoose.model("dev",devSchema),
-    fineLog : mongoose.model("fineLog",fineLogSchema)
-} 
+module.exports = mongoose.model("dev",devSchema);

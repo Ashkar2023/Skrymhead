@@ -1,7 +1,7 @@
 const mongoose = require("mongoose");
 const jwt = require("jsonwebtoken");
 const adminModel = require("../models/adminModel");
-const { dev : Dev, fineLog : FineLog } = require("../models/fineSystemModel");
+const Dev = require("../models/fineSystemModel");
 
 exports.getPage = async(req,res)=>{
     try{
@@ -9,6 +9,21 @@ exports.getPage = async(req,res)=>{
         res.render("fineSystem/home",{ fines : fines});
     }catch(error){
         console.log(error.message)
+    }
+}
+
+exports.getDetails = async(req,res)=>{
+    try{
+        const details = await Dev.findById(req.body.ID).select("log total")
+
+        if(details){
+            return res.status(200).json({details:details, success:true});
+        }else{
+            return res.status(400).json({message:"Couldn't get details", success:false});
+        }
+    }catch(error){
+        console.log(error.message)
+        return res.status(500).send("Internal server Error!");
     }
 }
 
@@ -22,7 +37,7 @@ exports.getLogin = async(req,res)=>{
 
 exports.logout = async(req,res)=>{
     try{
-        res.cleearCookie("jwt");
+        res.clearCookie("jwt");
         res.render("fineSystem/login");
     }catch(error){
         console.log(error.message)
