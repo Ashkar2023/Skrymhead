@@ -8,7 +8,6 @@ const mongoose = require("mongoose")
 const { total } = require("./otpDeleter"); 
 
 const port = process.env.PORT || 8000
-
 // Database connect
 const mongoDBconnect = async () => {
     try {
